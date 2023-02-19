@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express';
-import { ForbiddenError } from '../core/ApiError';
+import { ForbiddenError } from '../core/apiError';
 import { PublicRequest } from '../types/app-request';
 
 export default (permission: string) =>

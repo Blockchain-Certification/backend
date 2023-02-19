@@ -1,7 +1,7 @@
-import Logger from './core/Logger';
+import Logger from './shared/core/logger';
 import { port } from './config';
 import app from './app';
-console.log(port);
+console.log('vao');
 app
   .listen(port, () => {
     Logger.info(`server running on port : ${port}`);

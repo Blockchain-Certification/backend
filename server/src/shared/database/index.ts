@@ -1,11 +1,7 @@
 import mongoose from 'mongoose';
-import Logger from '../core/Logger';
-import { db } from '../config';
-console.log(db);
-// Build the connection string
-const dbURI = `mongodb://${db.user}:${encodeURIComponent(db.password)}@${
-  db.host
-}:${db.port}/${db.name}`;
+import Logger from '../core/logger';
+import { db } from '../../config';
+
 
 const options = {
   autoIndex: true,
@@ -15,7 +11,7 @@ const options = {
   socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
 };
 
-Logger.debug(dbURI);
+Logger.debug(db.URI);
 
 function setRunValidators() {
   this.setOptions({ runValidators: true });
@@ -31,7 +27,7 @@ mongoose
     schema.pre('updateOne', setRunValidators);
     schema.pre('update', setRunValidators);
   })
-  .connect(dbURI, options)
+  .connect(db.URI, options)
   .then(() => {
     Logger.info('Mongoose connection done');
   })
@@ -43,7 +39,7 @@ mongoose
 // CONNECTION EVENTS
 // When successfully connected
 mongoose.connection.on('connected', () => {
-  Logger.debug('Mongoose default connection open to ' + dbURI);
+  Logger.debug('Mongoose default connection open to ' + db.URI);
 });
 
 // If the connection throws an error

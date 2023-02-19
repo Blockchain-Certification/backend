@@ -1,30 +1,34 @@
 import express, { Request, Response, NextFunction } from 'express';
-import Logger from './core/Logger';
+import Logger from './shared/core/logger';
 import cors from 'cors';
 import { corsUrl, environment } from './config';
-// import './database'; // initialize database
+import './shared/database/index'; // initialize database
+import { limiter } from './shared/core/utils';
 import {
   NotFoundError,
   ApiError,
   InternalError,
   ErrorType,
-} from './core/ApiError';
+} from '/../core/apiError';
+import helmet from 'helmet';
 
 process.on('uncaughtException', (e) => {
   Logger.error(e);
 });
 
 const app = express();
-
+// Apply the rate limiter middleware to all requests
+app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(
   express.urlencoded({ limit: '10mb', extended: true, parameterLimit: 50000 }),
 );
 app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
+app.use(helmet());
 
 // Routes
-app.use('/api', (req,res)=>{
-    res.send("asdasd");
+app.use('/api', (req, res) => {
+  res.send('asdasd');
 });
 
 // catch 404 and forward to error handler
@@ -44,7 +48,6 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
       `500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
     );
     Logger.error(err);
-    console.log("hello",environment);
     if (environment === 'development') {
       return res.status(500).send(err);
     }

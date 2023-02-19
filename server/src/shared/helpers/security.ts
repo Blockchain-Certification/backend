@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { ForbiddenError } from '../core/ApiError';
+import { ForbiddenError } from '../core/apiError';
 import { findIpAddress } from './utils';
 
 export function restrictIpAddress(req: Request, ipAddress: string) {
