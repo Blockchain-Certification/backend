@@ -9,8 +9,9 @@ import {
   ApiError,
   InternalError,
   ErrorType,
-} from '/../core/apiError';
+} from './shared/core/apiError';
 import helmet from 'helmet';
+import router from './router';
 
 process.on('uncaughtException', (e) => {
   Logger.error(e);
@@ -27,9 +28,7 @@ app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
 app.use(helmet());
 
 // Routes
-app.use('/api', (req, res) => {
-  res.send('asdasd');
-});
+app.use('/api/v1', router);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => next(new NotFoundError()));
