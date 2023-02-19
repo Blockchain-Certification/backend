@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import Logger from '../core/Logger';
 import { db } from '../config';
-
+console.log(db);
 // Build the connection string
 const dbURI = `mongodb://${db.user}:${encodeURIComponent(db.password)}@${
   db.host
