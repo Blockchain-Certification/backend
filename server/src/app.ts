@@ -12,6 +12,8 @@ import {
 } from './shared/core/apiError';
 import helmet from 'helmet';
 import router from './router';
+import apiKey from './shared/middlewares/apiKey';
+import morgan = require('morgan');
 
 process.on('uncaughtException', (e) => {
   Logger.error(e);
@@ -21,12 +23,14 @@ const app = express();
 // Apply the rate limiter middleware to all requests
 app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms  :date[clf]'));
 app.use(
   express.urlencoded({ limit: '10mb', extended: true, parameterLimit: 50000 }),
 );
 app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
 app.use(helmet());
-
+// sercure api key
+app.use(apiKey);
 // Routes
 app.use('/api/v1', router);
 

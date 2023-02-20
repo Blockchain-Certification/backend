@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { user } from './services/index';
-
 const router = Router();
 
 /*---------------------------------------------------------*/

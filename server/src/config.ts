@@ -4,7 +4,7 @@ export const port = process.env.PORT;
 export const timezone = process.env.TZ;
 
 export const db = {
-  URI : process.env.DB_URI || 'mongodb://localhost:27017/',
+  URI: process.env.DB_URI || 'mongodb://localhost:27017/',
   minPoolSize: parseInt(process.env.DB_MIN_POOL_SIZE || '5'),
   maxPoolSize: parseInt(process.env.DB_MAX_POOL_SIZE || '10'),
 };
@@ -19,3 +19,5 @@ export const tokenInfo = {
 };
 
 export const logDirectory = process.env.LOG_DIR;
+
+export const apiKey = process.env.API_KEY;
