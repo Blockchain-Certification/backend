@@ -1,2 +1,3 @@
 import { UserRepository } from './user.repository';
-export { UserRepository };
+import { InfoUserRepository } from './infoUser.repository';
+export { UserRepository,InfoUserRepository };

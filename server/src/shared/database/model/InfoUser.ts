@@ -4,28 +4,27 @@ export const DOCUMENT_NAME = 'InfoUser';
 export const COLLECTION_NAME = 'INFO_USERS';
 const phoneRegExp = /^[0-9]{10}$/; // Example phone number regular expression, adjust to your needs
 
-enum Gender {
+export enum Gender {
   MALE = 'MALE',
   FEMALE = 'FEMALE',
   Other = 'OTHER',
 }
 export default interface InfoUser {
-  _id: Types.ObjectId;
-  id?: string;
-  name?: string;
-  email?: string;
-  phone?: string;
-  address?: string;
+  _id?: Types.ObjectId;
+  identity: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
   dateOfBirth?: Date;
   gender?: Gender;
   nation?: string;
-  publicKey?: string;
-  idUser: User;
+  idUser: Types.ObjectId;
 }
 
 const schema = new Schema<InfoUser>(
   {
-    id: { type: Schema.Types.String, required: true },
+    identity: { type: Schema.Types.String, required: true },
     idUser: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     name: { type: Schema.Types.String, required: true },
     email: { type: Schema.Types.String, required: true },
@@ -46,7 +45,6 @@ const schema = new Schema<InfoUser>(
       default: Gender.FEMALE,
     },
     nation: { type: Schema.Types.String, required: false },
-    publicKey: { type: Schema.Types.String, required: true },
   },
   { versionKey: false, timestamps: true },
 );

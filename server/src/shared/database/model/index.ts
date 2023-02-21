@@ -1,5 +1,5 @@
 import User, { UserModel, Role } from './User';
-import InfoUser, { InfoUserModel } from './InfoUser';
+import InfoUser, { InfoUserModel, Gender } from './InfoUser';
 import GraduationCourse, { GraduationCourseModel } from './GraduationCourse';
 import GraduationYear, { GraduationYearModel } from './GraduationYear';
 import TypeDepartment, { TypeDepartmentModel } from './TypeDepartment';
@@ -17,5 +17,6 @@ export {
   TypeDepartmentModel,
   DAC,
   DACModel,
-  Role
+  Role,
+  Gender,
 };

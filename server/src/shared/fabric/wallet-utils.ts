@@ -4,6 +4,11 @@ import fs from 'fs';
 import path from 'path';
 import logger from '../core/logger';
 
+export interface HexKey{
+  publicKey: string,
+  privateKey: string
+  userName: string
+}
 /**
  * Adds a new user/entity to the wallet. Creates a separate json file to store hex keys of the user.
  * @param {FabricCAServices.IEnrollResponse} enrollmentObject

@@ -36,7 +36,7 @@ const schema = new Schema<User>(
       ],
       required: true,
     },
-    publicKey: { type: Schema.Types.String, required: true },
+    publicKey: { type: Schema.Types.String, required: false, default: '' },
   },
   { versionKey: false, timestamps: true },
 );
