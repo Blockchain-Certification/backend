@@ -5,8 +5,8 @@ export const COLLECTION_NAME = 'GRADUATION_YEAR';
 
 export default interface GraduationYear {
   _id: Types.ObjectId;
-  id: string;
-  year : Date;
+  id?: string;
+  year?: Date;
 }
 
 const schema = new Schema<GraduationYear>(
@@ -17,9 +17,8 @@ const schema = new Schema<GraduationYear>(
   { versionKey: false, timestamps: true },
 );
 
-
 export const GraduationYearModel = model<GraduationYear>(
-    DOCUMENT_NAME,
-    schema,
-    COLLECTION_NAME
-  );
+  DOCUMENT_NAME,
+  schema,
+  COLLECTION_NAME,
+);

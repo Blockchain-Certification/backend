@@ -10,10 +10,10 @@ enum Type {
 
 export default interface TypeDepartment {
   _id: Types.ObjectId;
-  id: string;
-  name: string;
-  type: Type;
-  level: string | undefined;
+  id?: string;
+  name?: string;
+  type?: Type;
+  level?: string | undefined;
 }
 
 const schema = new Schema<TypeDepartment>(

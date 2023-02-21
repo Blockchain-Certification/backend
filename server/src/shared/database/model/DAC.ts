@@ -21,22 +21,22 @@ export default interface DAC {
   _id: Types.ObjectId;
   idNumber: string; // IDENTIFICATION NUMBER
   registrationNum: string; // REGISTRATION NUMBER
-  idU: Types.ObjectId; //idIdentityUniversity
-  idSt: Types.ObjectId; //idIdentityStudent
-  idYear: Types.ObjectId;
-  idCourse: Types.ObjectId;
-  idDepartment: Types.ObjectId;
-  studentName: string;
-  universityName: string;
-  dateOfBirth: Date;
-  year: Date;
-  nameCourse: string;
-  major: string;
-  nameDepartment: string;
-  ranking: Ranking;
-  dateOfIssuing: Date;
-  formOfTraining: FormOfTraining;
-  CPGA: string;
+  idU?: Types.ObjectId; //idIdentityUniversity
+  idSt?: Types.ObjectId; //idIdentityStudent
+  idYear?: Types.ObjectId;
+  idCourse?: Types.ObjectId;
+  idDepartment?: Types.ObjectId;
+  studentName?: string;
+  universityName?: string;
+  dateOfBirth?: Date;
+  year?: Date;
+  nameCourse?: string;
+  major?: string;
+  nameDepartment?: string;
+  ranking?: Ranking;
+  dateOfIssuing?: Date;
+  formOfTraining?: FormOfTraining;
+  CPGA?: string;
 }
 
 const schema = new Schema<DAC>(

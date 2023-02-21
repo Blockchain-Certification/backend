@@ -1,3 +1,4 @@
+import path from 'path';
 // Mapper for environment variables
 export const environment = process.env.NODE_ENV;
 export const port = process.env.PORT;
@@ -21,3 +22,13 @@ export const tokenInfo = {
 export const logDirectory = process.env.LOG_DIR;
 
 export const apiKey = process.env.API_KEY;
+
+// hyperledger fabric
+export const fabric = {
+  ccPath: process.env.CCP_PATH || '',
+  walletPath: path.resolve(__dirname, '..', 'wallet') || '',
+  channelName: process.env.FABRIC_CHANNEL_NAME || '',
+  chaincodeName: process.env.FABRIC_CHAINCODE_NAME || '',
+  enrollAdminName : process.env.FABRIC_ENROLL_ADMIN_NAME || 'admin',
+  enrollAdminPassword : process.env.FABRIC_ENROLL_PASSWORD || 'adminpw',
+};

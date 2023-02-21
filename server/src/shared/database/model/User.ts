@@ -3,7 +3,7 @@ import { model, Schema, Types } from 'mongoose';
 export const DOCUMENT_NAME = 'User';
 export const COLLECTION_NAME = 'USERS';
 
-enum Role {
+export enum Role {
   DOET = ' DOET', //Department of Education and Training (DOET).
   STUDENT = 'STUDENT',
   UNIVERSITY = 'UNIVERSITY',
@@ -11,12 +11,10 @@ enum Role {
 
 export default interface User {
   _id: Types.ObjectId;
-  userName?: string;
-  password?: string;
-  roles?: Role[];
+  userName: string;
+  password: string;
+  roles: Role[];
   publicKey?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
 const schema = new Schema<User>(
@@ -39,8 +37,6 @@ const schema = new Schema<User>(
       required: true,
     },
     publicKey: { type: Schema.Types.String, required: true },
-    createdAt: { type: Schema.Types.Date, default: Date.now },
-    updatedAt: { type: Schema.Types.Date, default: Date.now },
   },
   { versionKey: false, timestamps: true },
 );

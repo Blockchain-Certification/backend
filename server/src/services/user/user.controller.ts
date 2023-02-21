@@ -10,9 +10,11 @@ export class UserController {
     this.userService = userService;
   }
 
-  public getList = asyncHandler(async (req: Request, res: Response) : Promise<User[]> => {
-     return this.userService.getList();
-  });
-
-  
+  public getList = asyncHandler(
+    async (req: Request, res: Response): Promise<string> => {
+      await this.userService.getList();
+      res.send('hello');
+      return '';
+    },
+  );
 }

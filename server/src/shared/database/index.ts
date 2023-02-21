@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import Logger from '../core/logger';
 import { db } from '../../config';
 
-
 const options = {
   autoIndex: true,
   minPoolSize: db.minPoolSize, // Maintain up to x socket connections
@@ -18,7 +17,6 @@ function setRunValidators() {
 }
 
 mongoose.set('strictQuery', true);
-
 // Create the database connection
 mongoose
   .plugin((schema: any) => {
@@ -40,6 +38,7 @@ mongoose
 // When successfully connected
 mongoose.connection.on('connected', () => {
   Logger.debug('Mongoose default connection open to ' + db.URI);
+  
 });
 
 // If the connection throws an error

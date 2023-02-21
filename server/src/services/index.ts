@@ -1,2 +1,3 @@
 import user from './user/user.routes';
-export { user };
+import {auth} from './auth';
+export { user,auth };
