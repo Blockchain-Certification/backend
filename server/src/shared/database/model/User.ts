@@ -1,4 +1,5 @@
-import { model, Schema, Types } from 'mongoose';
+import { model, Schema, Types, Document } from 'mongoose';
+import bcrypt from 'bcrypt';
 
 export const DOCUMENT_NAME = 'User';
 export const COLLECTION_NAME = 'USERS';
@@ -15,6 +16,7 @@ export default interface User {
   password: string;
   roles: Role[];
   publicKey?: string;
+  isValidPassword(password: string): Promise<boolean>;
 }
 
 const schema = new Schema<User>(
@@ -44,5 +46,21 @@ const schema = new Schema<User>(
 schema.index({ _id: 1, status: 1 });
 schema.index({ status: 1 });
 schema.index({ userName: 1 });
+
+schema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
+  const salt = await bcrypt.genSalt(12);
+  const hashedPassword = await bcrypt.hash(this.password, salt);
+  this.password = hashedPassword;
+  next();
+});
+
+schema.methods.isValidPassword = async function (
+  password: string,
+): Promise<boolean> {
+  return bcrypt.compare(password, this.password);
+};
 
 export const UserModel = model<User>(DOCUMENT_NAME, schema, COLLECTION_NAME);

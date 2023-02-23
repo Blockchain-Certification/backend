@@ -17,6 +17,7 @@ export const tokenInfo = {
   refreshTokenValidity: parseInt(process.env.REFRESH_TOKEN_VALIDITY_SEC || '0'),
   issuer: process.env.TOKEN_ISSUER || '',
   audience: process.env.TOKEN_AUDIENCE || '',
+  secret : process.env.TOKEN_SECRET || ''
 };
 
 export const logDirectory = process.env.LOG_DIR;

@@ -7,7 +7,6 @@ const router = Router();
 
 export default router.use(
   asyncHandler(async (req: PublicRequest, res: Response, next) => {
-    console.log('vao');
     await enrollAdmin();
     return next();
   }),

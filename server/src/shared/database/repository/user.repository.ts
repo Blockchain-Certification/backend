@@ -9,7 +9,11 @@ export class UserRepository {
     return UserModel.create(user);
   }
 
-  public async findByName(userName: string): Promise<User | null> {
+  public async findByUserName(userName: string): Promise<User | null> {
     return UserModel.findOne({ userName: userName });
+  }
+
+  public async isValidPassword(password: string): Promise<boolean> {
+    return true;
   }
 }
