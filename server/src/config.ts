@@ -25,7 +25,7 @@ export const apiKey = process.env.API_KEY;
 
 // hyperledger fabric
 export const fabric = {
-  ccPath: process.env.CCP_PATH || '',
+  ccpPath: process.env.CCP_PATH || '',
   walletPath: path.resolve(__dirname, '..', 'wallet') || '',
   channelName: process.env.FABRIC_CHANNEL_NAME || '',
   chaincodeName: process.env.FABRIC_CHAINCODE_NAME || '',

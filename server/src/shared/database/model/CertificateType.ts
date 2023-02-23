@@ -1,14 +1,14 @@
 import { model, Schema, Types } from 'mongoose';
 
-export const DOCUMENT_NAME = 'TypeDepartment';
-export const COLLECTION_NAME = 'TYPE_DEPARTMENTS';
+export const DOCUMENT_NAME = 'CertificateType';
+export const COLLECTION_NAME = 'CERTIFICATE_TYPE';
 
 enum Type {
   DIPLOMA = 'DIPLOMA',
   CERTIFICATE = 'CERTIFICATE',
 }
 
-export default interface TypeDepartment {
+export default interface CertificateType {
   _id: Types.ObjectId;
   id?: string;
   name?: string;
@@ -16,7 +16,7 @@ export default interface TypeDepartment {
   level?: string | undefined;
 }
 
-const schema = new Schema<TypeDepartment>(
+const schema = new Schema<CertificateType>(
   {
     id: { type: Schema.Types.String, required: true },
     name: { type: Schema.Types.String, required: true },
@@ -31,7 +31,7 @@ const schema = new Schema<TypeDepartment>(
   { versionKey: false, timestamps: true },
 );
 
-export const TypeDepartmentModel = model<TypeDepartment>(
+export const CertificateTypeModel = model<CertificateType>(
   DOCUMENT_NAME,
   schema,
   COLLECTION_NAME,

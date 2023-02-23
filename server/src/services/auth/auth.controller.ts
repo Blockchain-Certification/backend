@@ -10,8 +10,8 @@ export default class AuthController {
 
   public register = asyncHandler(async (req: Request, res: Response) => {
     await this.authService.register(req.body);
-    await new SuccessResponse('Created successfully',{'success' : true}).send(
-      res,
-    );
+    await new SuccessResponse('Created successfully', {
+      success: true,
+    }).send(res);
   });
 }
