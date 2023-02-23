@@ -63,10 +63,10 @@ async function registerUser(identity: string) {
     }
 
     // Check to see if we've already enrolled the admin user.
-    const adminIdentity = await wallet.get('admin');
+    const adminIdentity = await wallet.get(fabric.enrollAdminName);
     if (!adminIdentity) {
       throw Error(
-        'An identity for the admin user "admin" does not exist in the wallet',
+        `An identity for the admin user ${fabric.enrollAdminName} does not exist in the wallet`,
       );
     }
 
@@ -74,7 +74,7 @@ async function registerUser(identity: string) {
     const provider = wallet
       .getProviderRegistry()
       .getProvider(adminIdentity.type);
-    const adminUser = await provider.getUserContext(adminIdentity, 'admin');
+    const adminUser = await provider.getUserContext(adminIdentity, fabric.enrollAdminName);
 
     // Register the user, enroll the user, and import the new identity into the wallet.
     const secret = await ca.register(

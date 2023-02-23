@@ -32,6 +32,7 @@ export default class AuthService {
     this.infoUserRepository = infoUserRepository;
   }
 
+  
   public async register(listUser: newUser[]): Promise<void> {
     if (this.hasDuplicate(listUser)) {
       throw new BadRequestError(
@@ -44,19 +45,16 @@ export default class AuthService {
       await this.checkRegister(user);
     }
 
-    for (let i = 0; i < listUser.length; i++) {
-      const user: newUser = listUser[i];
-      await this.createUser(user);
-    }
-    // const promises: Promise<void>[] = [];
-    // await Promise.all(
-    //   listUser.map(async (user: newUser) => {
-    //     promises.push(this.createUser(user));
-    //   }),
-    // ).catch((err) => {
-    //   throw new BadRequestError(err);
-    // });
+    const promises: Promise<void>[] = [];
+    await Promise.all(
+      listUser.map(async (user: newUser) => {
+        promises.push(this.createUser(user));
+      }),
+    ).catch((err) => {
+      throw new BadRequestError(err);
+    });
   }
+
 
   private async createUser(newUser: newUser): Promise<any> {
     const [user, infoUser] = await Promise.all([

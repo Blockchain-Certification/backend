@@ -12,7 +12,7 @@ export interface ArgsFunctionCallChainCode {
 
 /**
  * Do all initialization needed to invoke chaincode
- * @param userEmail
+ * @param identityUser
  * @returns {Promise<{contract: Contract, gateway: Gateway, network: Network} | Error>} Network objects needed to interact with chaincode
  */
 async function connectToNetwork(identityUser: string) {
