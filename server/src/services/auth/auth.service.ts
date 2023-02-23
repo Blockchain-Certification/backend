@@ -10,6 +10,8 @@ import { registerUser } from '../../shared/fabric/enrollment';
 import { Types } from 'mongoose';
 import { invokeChaincode } from '../../shared/fabric/chaincode';
 import { getUserData } from './utils';
+import { MailNodeMailerProvider } from '../../shared/helpers/mailer/nodemailer';
+import { register } from '../../shared/helpers/mailer/html/register';
 import { createTokens } from '../../shared/helpers/jwt.utils';
 export interface newUser {
   userName: string;
@@ -33,15 +35,18 @@ export default class AuthService {
   private userRepository: UserRepository;
   private infoUserRepository: InfoUserRepository;
   private keyStoreRepository: KeyStoreRepository;
+  private readonly mailNodeMailerProvider: MailNodeMailerProvider;
 
   constructor(
     userRepository: UserRepository,
     infoUserRepository: InfoUserRepository,
     keyStoreRepository: KeyStoreRepository,
+    mailNodeMailerProvider: MailNodeMailerProvider,
   ) {
     this.userRepository = userRepository;
     this.infoUserRepository = infoUserRepository;
     this.keyStoreRepository = keyStoreRepository;
+    this.mailNodeMailerProvider = mailNodeMailerProvider;
   }
 
   public async login({ userName, password }: userLogin) {
@@ -57,7 +62,7 @@ export default class AuthService {
     await this.keyStoreRepository.create(user, accessTokenKey, refreshTokenKey);
     const tokens = await createTokens(user, accessTokenKey, refreshTokenKey);
     const userData = await getUserData(user);
-    
+
     return {
       tokens,
       userData,
@@ -124,7 +129,20 @@ export default class AuthService {
 
     const createdUser = await this.userRepository.create(user as User);
     infoUser.idUser = createdUser._id;
-    await this.infoUserRepository.create(infoUser);
+    const createdInfo = await this.infoUserRepository.create(infoUser);
+
+    await this.mailNodeMailerProvider.sendEmail({
+      to: {
+        name: createdInfo.name,
+        email: createdInfo.email,
+      },
+      subject: 'Đăng ký Tài Khoản HUFLIT-VBCC',
+      body: register({
+        userName: createdUser.userName,
+        password: user.password,
+        name: createdInfo.name,
+      }),
+    });
   }
 
   private async checkRegister({
