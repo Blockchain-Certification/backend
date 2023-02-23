@@ -1,5 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import morgan = require('morgan');
+import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import Logger from './shared/core/logger';
 import cors from 'cors';
 import { corsUrl, environment } from './config';
@@ -11,16 +13,15 @@ import {
   InternalError,
   ErrorType,
 } from './shared/core/apiError';
-import helmet from 'helmet';
 import router from './router';
-import apiKey from './shared/middlewares/apiKey';
 process.on('uncaughtException', (e) => {
   Logger.error(e);
 });
 
-fabricLoader
+fabricLoader;
 const app = express();
 // Apply the rate limiter middleware to all requests
+app.use(cookieParser());
 app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(
@@ -31,10 +32,10 @@ app.use(
 app.use(
   express.urlencoded({ limit: '10mb', extended: true, parameterLimit: 50000 }),
 );
-app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
+app.use(
+  cors({ origin: corsUrl, optionsSuccessStatus: 200, credentials: true }),
+);
 app.use(helmet());
-// sercure api key
-app.use(apiKey);
 
 // Routes
 app.use('/api/v1', router);

@@ -38,7 +38,7 @@ class EducertContract extends Contract {
    * @param {String} publicKey
    * @param {String} address
    */
-  async registerUniversity(ctx, name, publicKey, address, description) {
+  async registerUniversity(ctx, name, publicKey, address) {
     console.log("============= START : Register University ===========");
     //todo Add validation.
     const university = new UniversityProfile(name, publicKey, address);

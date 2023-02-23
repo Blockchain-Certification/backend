@@ -1,11 +1,6 @@
 import rateLimit from 'express-rate-limit';
-import asyncHandler from '../helpers/asyncHandler';
-import { PublicRequest } from '../types/app-request';
-import { Response } from 'express';
-import { enrollAdmin } from '../fabric';
-import { Router } from 'express';
 
-const router = Router();
+import { enrollAdmin } from '../fabric';
 
 export const enum Header {
   API_KEY = 'x-api-key',

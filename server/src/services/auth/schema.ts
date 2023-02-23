@@ -13,7 +13,8 @@ export default {
         .required()
         .min(9)
         .max(12)
-        .pattern(/^[0-9]+$/),
+        .pattern(/^[0-9]+$/)
+        .valid(Joi.ref('identity')),
       password: Joi.string().required().min(6),
       roles: Joi.array()
         .items(Joi.string().valid(...Object.values(Role)))
@@ -38,4 +39,12 @@ export default {
         .regex(/^[0-9]{12}$/),
     }),
   ),
+  login: Joi.object().keys({
+    userName: Joi.string()
+      .required()
+      .min(9)
+      .max(12)
+      .pattern(/^[0-9]+$/),
+    password: Joi.string().required().min(6),
+  }),
 };
