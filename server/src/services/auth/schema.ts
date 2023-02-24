@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import { Role, Gender } from '../../shared/database/model';
+import { JoiAuthBearer } from '../../shared/helpers/validator';
 
 const now = Date.now();
 
@@ -46,5 +47,11 @@ export default {
       .max(12)
       .pattern(/^[0-9]+$/),
     password: Joi.string().required().min(6),
+  }),
+  auth: Joi.object().keys({
+    access_token: Joi.string().required(),
+    Path: Joi.string().required(),
+    Expires: Joi.date().required(),
+    refresh_token: Joi.string().required(),
   }),
 };
