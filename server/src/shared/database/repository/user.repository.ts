@@ -12,8 +12,8 @@ export class UserRepository {
   public async findByUserName(userName: string): Promise<User | null> {
     return UserModel.findOne({ userName: userName });
   }
-
-  public async isValidPassword(password: string): Promise<boolean> {
-    return true;
+  
+  public async findById(id: string): Promise<User | null> {
+    return UserModel.findById(id);
   }
 }

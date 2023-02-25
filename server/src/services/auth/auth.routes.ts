@@ -27,7 +27,11 @@ router.post('/register', validator(schema.register), authController.register);
 router.post('/', validator(schema.login), authController.login);
 router.post(
   '/refresh',
-  // validator(schema.auth, ValidationSource.COOKIES),
+  validator(schema.auth, ValidationSource.COOKIES),
   authController.refreshToken,
 );
-export default router;
+router.delete(
+  '/logout',
+  validator(schema.auth, ValidationSource.COOKIES),
+  authController.logout,
+);export default router;

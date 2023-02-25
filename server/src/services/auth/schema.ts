@@ -50,8 +50,7 @@ export default {
   }),
   auth: Joi.object().keys({
     access_token: Joi.string().required(),
-    Path: Joi.string().required(),
-    Expires: Joi.date().required(),
     refresh_token: Joi.string().required(),
+
   }),
 };

@@ -12,7 +12,13 @@ import { invokeChaincode } from '../../shared/fabric/chaincode';
 import { getUserData } from './utils';
 import { MailNodeMailerProvider } from '../../shared/helpers/mailer/nodemailer';
 import { register } from '../../shared/helpers/mailer/html/register';
-import { createTokens } from '../../shared/helpers/jwt.utils';
+import {
+  createTokens,
+  validateTokenData,
+} from '../../shared/helpers/jwt.utils';
+import { Tokens } from '../../shared/types/app-request';
+import JWT from '../../shared/core/JWT';
+import { Token } from 'nodemailer/lib/xoauth2';
 export interface newUser {
   userName: string;
   password: string;
@@ -56,17 +62,46 @@ export default class AuthService {
     const isValidPassword = await user.isValidPassword(password);
     if (!isValidPassword) throw new AuthFailureError('Invalid password');
 
-    const accessTokenKey = crypto.randomBytes(64).toString('hex');
-    const refreshTokenKey = crypto.randomBytes(64).toString('hex');
-
-    await this.keyStoreRepository.create(user, accessTokenKey, refreshTokenKey);
-    const tokens = await createTokens(user, accessTokenKey, refreshTokenKey);
+    const tokens = await this.createTokens(user);
     const userData = await getUserData(user);
 
     return {
       tokens,
       userData,
     };
+  }
+
+  public async logout() : Promise<void> {
+      // await this.keyStoreRepository. //TODO:
+    }
+  public async refreshToken({
+    accessToken,
+    refreshToken,
+  }: Tokens): Promise<Tokens> {
+    const accessTokenPayload = await JWT.decode(accessToken);
+    validateTokenData(accessTokenPayload);
+
+    const user = await this.userRepository.findById(accessTokenPayload.sub);
+    if (!user) throw new AuthFailureError('User not registered');
+
+    const refreshTokenPayload = await JWT.decode(refreshToken);
+    await validateTokenData(refreshTokenPayload);
+
+    if (accessTokenPayload.sub !== refreshTokenPayload.sub)
+      throw new AuthFailureError('Invalid access token');
+
+    const keystore = await this.keyStoreRepository.find(
+      user,
+      accessTokenPayload.prm,
+      refreshTokenPayload.prm,
+    );
+
+    if (!keystore) throw new AuthFailureError('Invalid access token');
+    await this.keyStoreRepository.remove(keystore._id);
+
+    const tokens = await this.createTokens(user);
+
+    return tokens;
   }
 
   public async register(listUser: newUser[]): Promise<void> {
@@ -89,6 +124,14 @@ export default class AuthService {
     ).catch((err) => {
       throw new BadRequestError(err);
     });
+  }
+
+  private async createTokens(user: User): Promise<Tokens> {
+    const accessTokenKey = crypto.randomBytes(64).toString('hex');
+    const refreshTokenKey = crypto.randomBytes(64).toString('hex');
+
+    await this.keyStoreRepository.create(user, accessTokenKey, refreshTokenKey);
+    return await createTokens(user, accessTokenKey, refreshTokenKey);
   }
 
   private async createUser(newUser: newUser): Promise<any> {
