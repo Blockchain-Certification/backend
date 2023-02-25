@@ -1,6 +1,9 @@
 import { Request } from 'express';
 import moment from 'moment';
 import Logger from '../core/logger';
+import asyncHandler from './asyncHandler';
+import { ProtectedRequest } from 'app-request';
+import { Role } from '../database/model';
 
 export function findIpAddress(req: Request) {
   try {
@@ -19,3 +22,9 @@ export function findIpAddress(req: Request) {
 export function addMillisToCurrentDate(millis: number) {
   return moment().add(millis, 'ms').toDate();
 }
+
+export const role = (...role: Role[]) =>
+  asyncHandler(async (req: ProtectedRequest, res, next) => {
+    req.currentRoles = role;
+    next();
+  });
