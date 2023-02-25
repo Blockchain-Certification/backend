@@ -13,7 +13,7 @@ declare interface Tokens {
 }
 
 declare interface RoleRequest extends PublicRequest{
-  currentRole : Role[];
+  currentRoles : Role[];
 }
 
 declare interface ProtectedRequest extends RoleRequest{
