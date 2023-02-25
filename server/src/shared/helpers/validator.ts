@@ -9,6 +9,7 @@ export enum ValidationSource {
   HEADER = 'headers',
   QUERY = 'query',
   PARAM = 'params',
+  COOKIES = 'cookies'
 }
 
 export const JoiObjectId = () =>

@@ -8,7 +8,9 @@ import {
 import { MailNodeMailerProvider } from '../../shared/helpers/mailer/nodemailer';
 import AuthController from './auth.controller';
 import schema from './schema';
-import validator from '../../shared/helpers/validator';
+import validator, { ValidationSource } from '../../shared/helpers/validator';
+import authentication from '../../shared/middlewares/authentication';
+
 const router = Router();
 
 const userRepository = new UserRepository();
@@ -25,5 +27,15 @@ const authController = new AuthController(authService);
 
 router.post('/register', validator(schema.register), authController.register);
 router.post('/', validator(schema.login), authController.login);
-
+router.post(
+  '/refresh',
+  validator(schema.auth, ValidationSource.COOKIES),
+  authController.refreshToken,
+);
+router.delete(
+  '/logout',
+  validator(schema.auth, ValidationSource.COOKIES),
+  authentication,
+  authController.logout,
+);
 export default router;
