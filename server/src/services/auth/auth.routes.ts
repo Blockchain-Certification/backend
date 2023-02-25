@@ -9,6 +9,8 @@ import { MailNodeMailerProvider } from '../../shared/helpers/mailer/nodemailer';
 import AuthController from './auth.controller';
 import schema from './schema';
 import validator, { ValidationSource } from '../../shared/helpers/validator';
+import authentication from '../../shared/middlewares/authentication';
+
 const router = Router();
 
 const userRepository = new UserRepository();
@@ -33,5 +35,7 @@ router.post(
 router.delete(
   '/logout',
   validator(schema.auth, ValidationSource.COOKIES),
+  authentication,
   authController.logout,
-);export default router;
+);
+export default router;

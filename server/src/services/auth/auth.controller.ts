@@ -60,11 +60,7 @@ export default class AuthController {
   );
   
   public logout = asyncHandler(async(req: ProtectedRequest, res: Response) => {
-    const token = {
-      accessToken: req.cookies.access_token,
-      refreshToken: req.cookies.refresh_token,
-    };
-    await this.authService.logout();
+    await this.authService.logout(req.keyStore._id);
     new SuccessMsgResponse('Logout success').send(res);
   })
 

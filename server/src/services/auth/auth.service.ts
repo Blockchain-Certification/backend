@@ -71,9 +71,9 @@ export default class AuthService {
     };
   }
 
-  public async logout() : Promise<void> {
-      // await this.keyStoreRepository. //TODO:
-    }
+  public async logout(id: Types.ObjectId): Promise<void> {
+     this.keyStoreRepository.remove(id);
+  }
   public async refreshToken({
     accessToken,
     refreshToken,
