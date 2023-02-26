@@ -3,7 +3,7 @@ import { model, Schema, Types } from 'mongoose';
 export const DOCUMENT_NAME = 'CertificateType';
 export const COLLECTION_NAME = 'CERTIFICATE_TYPE';
 
-enum Type {
+export enum Type {
   DIPLOMA = 'DIPLOMA',
   CERTIFICATE = 'CERTIFICATE',
 }
@@ -11,9 +11,9 @@ enum Type {
 export default interface CertificateType {
   _id: Types.ObjectId;
   id?: string;
-  name?: string;
-  type?: Type;
-  level?: string | undefined;
+  name: string;
+  type: Type;
+  level: number | null;
 }
 
 const schema = new Schema<CertificateType>(
@@ -30,6 +30,16 @@ const schema = new Schema<CertificateType>(
   },
   { versionKey: false, timestamps: true },
 );
+
+schema.pre('save', async function (next) {
+  if (this.isNew) {
+    const count = await CertificateTypeModel.countDocuments();
+    const nextIdNumber = count + 1;
+    const nextId = `LCC${nextIdNumber.toString().padStart(4, '0')}`;
+    this.id = nextId;
+  }
+  return next();
+});
 
 export const CertificateTypeModel = model<CertificateType>(
   DOCUMENT_NAME,

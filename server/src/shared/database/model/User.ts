@@ -5,7 +5,7 @@ export const DOCUMENT_NAME = 'User';
 export const COLLECTION_NAME = 'USERS';
 
 export enum Role {
-  DOET = ' DOET', //Department of Education and Training (DOET).
+  DOET = 'DOET', //Department of Education and Training (DOET).
   STUDENT = 'STUDENT',
   UNIVERSITY = 'UNIVERSITY',
 }
@@ -15,7 +15,7 @@ export default interface User {
   userName: string;
   password: string;
   roles: Role[];
-  publicKey?: string;
+  publicKey: string;
   isValidPassword(password: string): Promise<boolean>;
 }
 
