@@ -4,4 +4,9 @@ export class DACRepository{
     {
         return  DACModel.findOne({typeCertificate:name});
     }
+
+    public async findByCourse(name : string) : Promise<DAC| null>
+    {
+      return DACModel.findOne({nameCourse: name});
+    }
 }

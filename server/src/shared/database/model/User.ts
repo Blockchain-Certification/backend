@@ -5,7 +5,7 @@ export const DOCUMENT_NAME = 'User';
 export const COLLECTION_NAME = 'USERS';
 
 export enum Role {
-  DOET = ' DOET', //Department of Education and Training (DOET).
+  DOET = 'DOET', //Department of Education and Training (DOET).
   STUDENT = 'STUDENT',
   UNIVERSITY = 'UNIVERSITY',
 }

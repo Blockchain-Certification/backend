@@ -1,56 +1,60 @@
 import { Response } from 'express';
 import { ProtectedRequest } from 'app-request';
 import asyncHandler from '../../shared/helpers/asyncHandler';
-import CertificateTypeService from './certifcatesType.service';
+import service from './service';
 import {
   SuccessMsgResponse,
   SuccessResponse,
 } from '../../shared/core/apiResponse';
 import { Types } from 'mongoose';
-CertificateTypeService;
-export default class CertificateTypeController {
-  private certificateTypeService: CertificateTypeService;
-
-  constructor(certificateTypeService: CertificateTypeService) {
-    this.certificateTypeService = certificateTypeService;
+service;
+export default class Controller {
+  private service : any;
+  constructor(featureService: any) {
+    this.service = featureService;
   }
 
   public getList = asyncHandler(
     async (req: ProtectedRequest, res: Response) => {
       const { page, limit } = req.query;
 
-      const data = await this.certificateTypeService.getList(
+      const data = await this.service.getList(
         parseInt(page as string),
         parseInt(limit as string),
       );
+
       return new SuccessResponse('Get list successfully', {
         success: true,
-        certTypes: data,
+        data: data,
+        pagination: {
+          page,
+          limit,
+        },
       }).send(res);
     },
   );
 
   public create = asyncHandler(async (req: ProtectedRequest, res: Response) => {
-    const newCertType = await this.certificateTypeService.create(req.body);
+    const data = await this.service.create(req.body);
     return new SuccessResponse('Create successfully', {
       success: true,
-      certType: newCertType,
+      data: data,
     }).send(res);
   });
 
   public edit = asyncHandler(async (req: ProtectedRequest, res: Response) => {
-    const editCert = await this.certificateTypeService.edit(
+    const data = await this.service.edit(
       new Types.ObjectId(req.params.id),
       req.body,
     );
-    return new SuccessResponse('Create successfully', {
+    return new SuccessResponse('Edit successfully', {
       success: true,
-      certType: editCert,
+      data: data,
     }).send(res);
   });
 
   public delete = asyncHandler(async (req: ProtectedRequest, res: Response) => {
-    await this.certificateTypeService.delete(new Types.ObjectId(req.params.id));
+    await this.service.delete(new Types.ObjectId(req.params.id));
     return new SuccessMsgResponse('Delete CertificateType successfully').send(
       res,
     );

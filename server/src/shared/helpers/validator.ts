@@ -54,20 +54,4 @@ export default (
     }
   };
 
-interface attribute {
-  field: string;
-  value: any;
-}
-export const checkExistedDAC = async (
-  { field, value }: attribute,
-  model: any,
-) => {
-  
-
-  function clearCharacter(name : string)
-  {
-    return name.toLowerCase().replace(/\s+/g, '');
-  }
-};
-
 
