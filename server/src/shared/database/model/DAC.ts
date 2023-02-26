@@ -21,18 +21,15 @@ export default interface DAC {
   _id: Types.ObjectId;
   idNumber: string; // IDENTIFICATION NUMBER
   registrationNum: string; // REGISTRATION NUMBER
-  idU?: Types.ObjectId; //idIdentityUniversity
-  idSt?: Types.ObjectId; //idIdentityStudent
-  idYear?: Types.ObjectId;
-  idCourse?: Types.ObjectId;
-  idDepartment?: Types.ObjectId;
+  iU?: string; //idIdentityUniversity
+  iSt?: string; //idIdentityStudent
   studentName?: string;
   universityName?: string;
   dateOfBirth?: Date;
   year?: Date;
   nameCourse?: string;
   major?: string;
-  nameDepartment?: string;
+  typeCertificate?: string;
   ranking?: Ranking;
   dateOfIssuing?: Date;
   formOfTraining?: FormOfTraining;
@@ -43,30 +40,15 @@ const schema = new Schema<DAC>(
   {
     idNumber: { type: Schema.Types.String, required: true },
     registrationNum: { type: Schema.Types.String, required: true },
-    idU: { type: Schema.Types.ObjectId, required: true, ref: 'InfoUser' },
-    idSt: { type: Schema.Types.ObjectId, required: true, ref: 'InfoUser' },
-    idYear: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'GraduationYear',
-    },
-    idCourse: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'GraduationCourse',
-    },
-    idDepartment: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'TypeDepartment',
-    },
+    iU: { type: Schema.Types.ObjectId, required: true },
+    iSt: { type: Schema.Types.ObjectId, required: true },
     studentName: { type: Schema.Types.String, required: true },
     universityName: { type: Schema.Types.String, required: true },
     dateOfBirth: { type: Schema.Types.Date, required: true },
     year: { type: Schema.Types.Date, required: true },
     nameCourse: { type: Schema.Types.String, required: true },
     major: { type: Schema.Types.String, required: true },
-    nameDepartment: { type: Schema.Types.String, required: true },
+    typeCertificate: { type: Schema.Types.String, required: true },
     ranking: {
       type: Schema.Types.String,
       required: true,

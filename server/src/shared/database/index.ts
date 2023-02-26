@@ -8,6 +8,7 @@ const options = {
   maxPoolSize: db.maxPoolSize, // Maintain up to x socket connections
   connectTimeoutMS: 60000, // Give up initial connection after 10 seconds
   socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+  dbName: 'certificates',
 };
 
 Logger.debug(db.URI);

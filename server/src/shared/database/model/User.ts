@@ -15,7 +15,7 @@ export default interface User {
   userName: string;
   password: string;
   roles: Role[];
-  publicKey?: string;
+  publicKey: string;
   isValidPassword(password: string): Promise<boolean>;
 }
 

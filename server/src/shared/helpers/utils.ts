@@ -3,8 +3,7 @@ import moment from 'moment';
 import Logger from '../core/logger';
 import asyncHandler from './asyncHandler';
 import { ProtectedRequest } from 'app-request';
-import { Role } from '../database/model';
-
+import { Role  } from '../database/model';
 export function findIpAddress(req: Request) {
   try {
     if (req.headers['x-forwarded-for']) {
@@ -28,3 +27,11 @@ export const role = (...role: Role[]) =>
     req.currentRoles = role;
     next();
   });
+
+
+// export const getField = (fied: string): Promise<string> => {
+//   switch(true)
+//   {
+
+//   }
+// };

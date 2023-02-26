@@ -51,4 +51,5 @@ router.delete(
   authController.logout,
 );
 
+
 export default router;

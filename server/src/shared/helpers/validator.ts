@@ -3,13 +3,14 @@ import { Request, Response, NextFunction } from 'express';
 import Logger from '../core/logger';
 import { BadRequestError } from '../core/apiError';
 import { Types } from 'mongoose';
-
+import asyncHandler from './asyncHandler';
+import { DACModel } from '../database/model';
 export enum ValidationSource {
   BODY = 'body',
   HEADER = 'headers',
   QUERY = 'query',
   PARAM = 'params',
-  COOKIES = 'cookies'
+  COOKIES = 'cookies',
 }
 
 export const JoiObjectId = () =>
@@ -52,3 +53,21 @@ export default (
       next(error);
     }
   };
+
+interface attribute {
+  field: string;
+  value: any;
+}
+export const checkExistedDAC = async (
+  { field, value }: attribute,
+  model: any,
+) => {
+  
+
+  function clearCharacter(name : string)
+  {
+    return name.toLowerCase().replace(/\s+/g, '');
+  }
+};
+
+
