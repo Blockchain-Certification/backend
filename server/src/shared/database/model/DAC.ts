@@ -16,7 +16,10 @@ enum FormOfTraining {
   DISTANCE_LEARNING = 'DISTANCE_LEARNING',
   GUIDED_SELF_LEARNING = 'GUIDED_SELF_LEARNING',
 }
-
+enum DACGender {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+}
 export default interface DAC {
   _id: Types.ObjectId;
   idNumber: string; // IDENTIFICATION NUMBER
@@ -34,6 +37,7 @@ export default interface DAC {
   dateOfIssuing?: Date;
   formOfTraining?: FormOfTraining;
   CPGA?: string;
+  gender?:DACGender;
 }
 
 const schema = new Schema<DAC>(
@@ -61,6 +65,7 @@ const schema = new Schema<DAC>(
       enum: Object.values(FormOfTraining),
     },
     CPGA: { type: Schema.Types.String, required: true },
+    gender : { type: Schema.Types.String, required: true}
   },
   { versionKey: false, timestamps: true },
 );

@@ -36,7 +36,6 @@ export const checkUpBlockchain = async (
 ): Promise<void> => {
   const dacRepository = new DACRepository();
   const existedDAC = await selectFunction();
-  console.log('existed', existedDAC);
   if (existedDAC && existedDAC.registrationNum !== undefined)
     throw new BadRequestError(
       'Data that is on the blockchain cannot be change',
@@ -73,4 +72,8 @@ export const isValidName = async (
     if (typeof +name === 'number') return name;
     return name.toLowerCase().replace(/\s+/g, '');
   }
+};
+
+export const filterNull = async (list: any) => {
+  return await list.filter((el:any)=> el.idUser !== null);
 };

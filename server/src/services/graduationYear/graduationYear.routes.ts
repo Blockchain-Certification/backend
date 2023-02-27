@@ -16,7 +16,7 @@ const dacRepository = new DACRepository();
 const graduationYearService = new Service(graduationYearRepo, dacRepository);
 const graduationYearController = new Controller(graduationYearService);
 
-router.use(authentication, role(Role.UNIVERSITY), authorization);
+router.use(authentication, role(Role.DOET), authorization);
 
 router.post('/', validator(schema.create), graduationYearController.create);
 

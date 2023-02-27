@@ -1,4 +1,4 @@
-import user from './user/user.routes';
+import {user} from './user';
 import { auth } from './auth';
 import { certificateType } from './certificateType';
 import { graduationCourse } from './graduationCourse';
