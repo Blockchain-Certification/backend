@@ -50,4 +50,8 @@ export class UserService {
     await this.infoUserRepository.delete(id);
     await this.userRepository.delete(user.idUser);
   }
+
+  public async detail(id : Types.ObjectId) : Promise<any> {
+    return this.infoUserRepository.findByIdAndAccountUser(id);
+  }
 }

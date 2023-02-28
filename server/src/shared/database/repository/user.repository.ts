@@ -29,6 +29,7 @@ export class UserRepository {
       .exec();
     return data;
   }
+
   public async findByRoleAndPagination({
     page,
     limit,
@@ -45,5 +46,9 @@ export class UserRepository {
 
   public async delete(id : Types.ObjectId) : Promise<void> {
     await UserModel.remove(id);
+  }
+
+  public async isValidRole(identity : string, role : Role) : Promise<User | null> {
+    return await UserModel.findOne({ userName: identity, roles: { $in: [`${role}`] } })
   }
 }

@@ -45,9 +45,9 @@ export default class CertificateTypeService {
     if (!cert) throw new BadRequestError('Certificate type not exist');
 
     const existedDAC = await this.dacRepository.findByTypeCert(cert.name);
-    if (existedDAC && existedDAC.registrationNum !== undefined)
+    if (existedDAC && existedDAC.length > 0)
       throw new BadRequestError(
-        'Data that is on the blockchain cannot be change',
+        'Data that is on the DAC cannot be change',
       );
   }
 

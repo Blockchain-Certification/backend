@@ -14,12 +14,13 @@ import {
   ErrorType,
 } from './shared/core/apiError';
 import router from './router';
+
 process.on('uncaughtException', (e) => {
   Logger.error(e);
 });
-
 fabricLoader;
 const app = express();
+
 // Apply the rate limiter middleware to all requests
 app.use(cookieParser());
 app.use(limiter);
@@ -33,7 +34,7 @@ app.use(
   express.urlencoded({ limit: '10mb', extended: true, parameterLimit: 50000 }),
 );
 app.use(
-  cors({ origin: corsUrl, optionsSuccessStatus: 200, credentials: true }),
+  cors({ origin: 'http://localhost:3000', optionsSuccessStatus: 200, credentials: true }),
 );
 app.use(helmet());
 

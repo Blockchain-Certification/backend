@@ -49,4 +49,14 @@ export class UserController {
     await this.userService.delete(new Types.ObjectId(req.params.id));
     return new SuccessMsgResponse('Delete User successfully').send(res);
   });
+
+  public detail = asyncHandler(async (req: ProtectedRequest, res: Response) => {
+    const user = await this.userService.detail(
+      new Types.ObjectId(req.params.id),
+    );
+    return new SuccessResponse('Get detail successfully', {
+      success: true,
+      data: user,
+    }).send(res);
+  });
 }

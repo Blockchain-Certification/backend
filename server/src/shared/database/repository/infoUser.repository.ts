@@ -7,9 +7,8 @@ export class InfoUserRepository {
     return InfoUserModel.create(user);
   }
 
-  public async findByIdentity(identity: string): Promise<string | undefined> {
-    const user = await InfoUserModel.findOne({ identity });
-    return user?.identity;
+  public async findByIdentity(identity: string): Promise<InfoUser | null> {
+    return await InfoUserModel.findOne({ identity });
   }
   public async findByEmail(email: string): Promise<string | undefined> {
     const user = await InfoUserModel.findOne({ email });

@@ -24,13 +24,16 @@ export default class GraduationCourseRepository {
     return await GraduationCourseModel.findById(id);
   }
 
+  public async findByCourse(course: string): Promise<GraduationCourse | null> {
+    return await GraduationCourseModel.findOne({ name: course });
+  }
+
   public async update(
     id: Types.ObjectId,
     body: GraduationCourse,
   ): Promise<void> {
     await GraduationCourseModel.updateOne({ _id: id }, { $set: { ...body } });
   }
-
 
   public async delete(id: Types.ObjectId): Promise<void> {
     await GraduationCourseModel.remove(id);

@@ -32,6 +32,13 @@ router.get(
   userController.getList,
 );
 
+router.get(
+  '/:id',
+  validator(schema.userId, ValidationSource.PARAM),
+  userController.detail,
+);
+
+// consider
 router.patch(
   '/:id',
   validator(schema.userId, ValidationSource.PARAM),
@@ -44,4 +51,5 @@ router.delete(
   validator(schema.userId, ValidationSource.PARAM),
   userController.delete,
 );
+
 export default router;

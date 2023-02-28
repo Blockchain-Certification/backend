@@ -5,6 +5,8 @@ import {
   certificateType,
   graduationCourse,
   graduationYear,
+  dac,
+  recipentProfile,
 } from './services/index';
 import permission from './shared/middlewares/permission';
 import { Permission } from './shared/database/model/ApiKey';
@@ -23,5 +25,6 @@ router.use('/auth', auth);
 router.use('/certType', certificateType);
 router.use('/graduationCourse', graduationCourse);
 router.use('/graduationYear', graduationYear);
-
+router.use('/dac', dac);
+router.use('/recipentProfile', recipentProfile);
 export default router;

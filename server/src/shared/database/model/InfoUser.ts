@@ -7,14 +7,14 @@ const phoneRegExp = /^[0-9]{10}$/; // Example phone number regular expression, a
 export enum Gender {
   MALE = 'MALE',
   FEMALE = 'FEMALE',
-  Other = 'null',
+  Other = 'OTHER',
 }
 export default interface InfoUser {
   _id?: Types.ObjectId;
   identity: string;
   name: string;
   email: string;
-  phone?: string;
+  phone: string;
   address: string;
   dateOfBirth?: Date;
   gender?: Gender;
@@ -30,18 +30,21 @@ const schema = new Schema<InfoUser>(
     email: { type: Schema.Types.String, required: true },
     phone: {
       type: Schema.Types.String,
-      required: false,
-      default: null,
+      required: true,
+      validate: {
+        validator: (v: string) => phoneRegExp.test(v),
+        message: (props: any) => `${props.value} is not a valid phone number!`,
+      },
     },
-    address: { type: Schema.Types.String, required: false, default: null },
-    dateOfBirth: { type: Schema.Types.Date, required: false, default: null },
+    address: { type: Schema.Types.String, required: true },
+    dateOfBirth: { type: Schema.Types.Date, required: true },
     gender: {
       type: Schema.Types.String,
       required: false,
-      default: Gender.Other,
       enum: Object.values(Gender),
+      default: Gender.FEMALE,
     },
-    nation: { type: Schema.Types.String, required: false, default: null },
+    nation: { type: Schema.Types.String, required: true },
   },
   { versionKey: false, timestamps: true },
 );
