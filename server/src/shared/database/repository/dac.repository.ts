@@ -39,7 +39,7 @@ export class DACRepository {
       .exec();
   }
 
-  public async update(id: Types.ObjectId, body: dataDACUpdate): Promise<void> {
+  public async update(id: Types.ObjectId, body: any): Promise<void> {
     await DACModel.updateOne({ _id: id }, { $set: { ...body } });
   }
 }

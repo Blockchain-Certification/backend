@@ -40,14 +40,14 @@ const router = Router();
 router.get(
   '/:identity',
   authentication,
-  role(Role.UNIVERSITY,Role.DOET),
+  role(Role.UNIVERSITY, Role.DOET),
   authorization,
   validator(schemaPagi.pagination, ValidationSource.QUERY),
   validator(schema.iUni, ValidationSource.PARAM),
   recipentProfileController.getList,
 );
 
-//CREATE
+//CREATE OF UNIVERSITY
 router.post(
   '/',
   authentication,
@@ -57,15 +57,40 @@ router.post(
   recipentProfileController.create,
 );
 
+
+// DOET UPDATE IDNUMBER  OF UNIVERSITY
+router.patch(
+  '/idNumber/:idDAC',
+  authentication,
+  role(Role.UNIVERSITY),
+  authorization,
+  validator(schema.idDAC, ValidationSource.PARAM),
+  validator(schema.idNumber),
+  recipentProfileController.regisIdNumber,
+);
+
 // DOET UPDATE INFO DAC
 router.patch(
-  '/:iU/:idDAC',
+  '/:idDAC',
   authentication,
   role(Role.DOET),
   authorization,
-  validator(schema.iUniAndIdDAC, ValidationSource.PARAM),
+  validator(schema.idDAC, ValidationSource.PARAM),
   validator(schema.updateDAC),
-  recipentProfileController.updateDAC,
+  recipentProfileController.update,
 );
+
+// DOET UPDATE REGISRATION NUNMBER
+router.patch(
+  '/registrationNumber/:idDAC',
+  authentication,
+  role(Role.DOET),
+  authorization,
+  validator(schema.idDAC, ValidationSource.PARAM),
+  validator(schema.registrationNum),
+  recipentProfileController.update,
+);
+
+
 
 export default router;

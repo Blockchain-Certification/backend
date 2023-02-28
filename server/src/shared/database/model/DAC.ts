@@ -23,6 +23,7 @@ export enum DACGender {
 }
 export default interface DAC {
   _id: Types.ObjectId;
+  id : string;
   idNumber: string | null; // IDENTIFICATION NUMBER
   registrationNum: string | null; // REGISTRATION NUMBER
   iU: string; //idIdentityUniversity
@@ -46,6 +47,7 @@ export default interface DAC {
 
 const schema = new Schema<DAC>(
   {
+    id : { type: Schema.Types.String, required: true },
     idNumber: { type: Schema.Types.String, required: false}, // so vao so
     registrationNum: {
       type: Schema.Types.String,

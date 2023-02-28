@@ -20,11 +20,11 @@ router.use(apiKey);
 /*---------------------------------------------------------*/
 router.use(permission(Permission.GENERAL));
 /*---------------------------------------------------------*/
-router.use('/user', user);
+router.use('/users', user);
 router.use('/auth', auth);
-router.use('/certType', certificateType);
-router.use('/graduationCourse', graduationCourse);
-router.use('/graduationYear', graduationYear);
-router.use('/dac', dac);
-router.use('/recipentProfile', recipentProfile);
+router.use('/certTypes', certificateType);
+router.use('/graduationCourses', graduationCourse);
+router.use('/graduationYears', graduationYear);
+router.use('/dacs', dac);
+router.use('/recipentProfiles', recipentProfile);
 export default router;

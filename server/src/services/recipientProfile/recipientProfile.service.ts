@@ -56,21 +56,36 @@ export default class RecipentProfileService {
     return await this.dacRepository.findByIUniAndPagination(pagination, id);
   }
 
-  public async update(
-    idSAC: Types.ObjectId,
-    body: dataDACUpdate,
-  ): Promise<void> {
-    const dac = await this.detail(idSAC);
-    if (dac?.dispensingStatus)
-      throw new BadRequestError('Data up to blockchain, cannot update');
+  public async update(idDAC: Types.ObjectId, body: any): Promise<void> {
+    const dac = await this.detail(idDAC);
+    
+    switch (true) {
+      case Boolean(dac?.dispensingStatus):
+        throw new BadRequestError('Data up to blockchain, cannot update');
+      case !dac?.registrationNum && body.idNumber:
+        throw new BadRequestError('Not input field registration number');
+      case !dac?.registrationNum:
+        await this.checkExistedCourseAndYear(body.year, body.nameCourse);
+        break;
+      case Boolean(dac?.idNumber):
+        throw new BadRequestError('idNumber existed');
+    }
 
-    await this.checkExistedCourseAndYear(body.year, body.nameCourse);
-
-    await this.dacRepository.update(idSAC, body);
+    await this.dacRepository.update(idDAC, body);
   }
 
   public async detail(id: Types.ObjectId): Promise<DAC | null> {
     return await this.dacRepository.findById(id);
+  }
+
+  public async registrationNum(
+    id: Types.ObjectId,
+    registrationNum: string,
+  ): Promise<void> {
+    const dac = await this.detail(id);
+    if (dac?.registrationNum)
+      throw new BadRequestError('Registration number have existed');
+    await this.dacRepository.update(id, registrationNum);
   }
 
   public async create(listDAC: DAC[]): Promise<void> {

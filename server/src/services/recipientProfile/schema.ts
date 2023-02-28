@@ -9,6 +9,7 @@ import { JoiObjectId } from '../../shared/helpers/validator';
 export default {
   recipentProfile: Joi.array().items(
     Joi.object({
+      id: Joi.string().required().min(5).max(100),
       iU: Joi.string()
         .required()
         .regex(/^[0-9]{12}$/),
@@ -58,6 +59,9 @@ export default {
       .required()
       .regex(/^[0-9]{12}$/),
   }),
+  idDAC: Joi.object().keys({
+    idDAC : JoiObjectId().required()
+  }),
   updateDAC: Joi.object().keys({
     CPGA: Joi.number().min(0).max(10).required(),
     formOfTraining: Joi.string()
@@ -72,4 +76,11 @@ export default {
     nameCourse: Joi.string().required(),
     major: Joi.string().required(),
   }),
+  registrationNum : Joi.object().keys({
+    registrationNum : Joi.string().required()
+  }),
+  idNumber: Joi.object().keys({
+    idNumber : Joi.string().required()
+
+  })
 };

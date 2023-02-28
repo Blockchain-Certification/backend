@@ -20,7 +20,7 @@ export default class RecipentProfileController {
       const { identity } = req.params;
       const { userName, roles } = req.user;
 
-      if (roles.includes(Role.UNIVERSITY) && identity !== userName)
+      if (!roles.includes(Role.UNIVERSITY) || identity !== userName)
         throw new BadRequestError(
           'Not access data because user is not this param id',
         );
@@ -41,18 +41,38 @@ export default class RecipentProfileController {
     },
   );
 
-  public updateDAC = asyncHandler(
+  public regisIdNumber = asyncHandler(
     async (req: ProtectedRequest, res: Response) => {
       const { idDAC } = req.params;
       const id = new Types.ObjectId(idDAC);
+      const { userName, roles } = req.user;
+      let dac = await this.recipentProfileService.detail(id);
+
+      if (!roles.includes(Role.UNIVERSITY) || dac?.iU !== userName)
+        throw new BadRequestError(
+          'Not access data because user is not this DAC',
+        );
+
       await this.recipentProfileService.update(id, req.body);
-      const dac = await this.recipentProfileService.detail(id);
-      return new SuccessResponse('Updated successfully', {
+      dac = await this.recipentProfileService.detail(id);
+      
+      return new SuccessResponse('Update successfully', {
         success: true,
         data: dac,
       }).send(res);
     },
   );
+
+  public update = asyncHandler(async (req: ProtectedRequest, res: Response) => {
+    const { idDAC } = req.params;
+    const id = new Types.ObjectId(idDAC);
+    await this.recipentProfileService.update(id, req.body);
+    const dac = await this.recipentProfileService.detail(id);
+    return new SuccessResponse('Updated successfully', {
+      success: true,
+      data: dac,
+    }).send(res);
+  });
 
   public create = asyncHandler(async (req: ProtectedRequest, res: Response) => {
     await this.recipentProfileService.create(req.body);
