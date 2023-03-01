@@ -55,4 +55,6 @@ export class CertificateTypeRepository {
   public async delete(id: Types.ObjectId): Promise<void> {
     await CertificateTypeModel.remove(id);
   }
+
+
 }

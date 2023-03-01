@@ -30,47 +30,8 @@ export const role = (...role: Role[]) =>
     next();
   });
 
-export const checkUpBlockchain = async (
-  name: string,
-  numberFunction: number,
-): Promise<void> => {
-  const dacRepository = new DACRepository();
-  const existedDAC = await selectFunction();
-  console.log('existed', existedDAC);
-  if (existedDAC && existedDAC.registrationNum !== undefined)
-    throw new BadRequestError(
-      'Data that is on the blockchain cannot be change',
-    );
 
-  function selectFunction() {
-    switch (numberFunction) {
-      case 1:
-        return dacRepository.findByTypeCert(name);
-      case 2:
-        return dacRepository.findByCourse(name);
-      default:
-        throw new InternalError('Error: Invalid number function');
-    }
-  }
-};
 
-export const isValidName = async (
-  name: string,
-  list: any,
-): Promise<boolean> => {
-  name = clearCharacter(name);
-
-  const check = await list.filter((el: any) => {
-    let nameEl = el.name || el.year;
-    nameEl = clearCharacter(nameEl);
-    return nameEl === name;
-  });
-  if (check.length > 0) return true;
-
-  return false;
-
-  function clearCharacter(name: string) {
-    if (typeof +name === 'number') return name;
-    return name.toLowerCase().replace(/\s+/g, '');
-  }
+export const filterNull = async (list: any) => {
+  return await list.filter((el: any) => el.idUser !== null);
 };

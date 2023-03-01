@@ -1,11 +1,11 @@
 import { Response } from 'express';
 import { ProtectedRequest } from 'app-request';
-import asyncHandler from '../../shared/helpers/asyncHandler';
+import asyncHandler from '../../../shared/helpers/asyncHandler';
 import service from './service';
 import {
   SuccessMsgResponse,
   SuccessResponse,
-} from '../../shared/core/apiResponse';
+} from '../../../shared/core/apiResponse';
 import { Types } from 'mongoose';
 service;
 export default class Controller {

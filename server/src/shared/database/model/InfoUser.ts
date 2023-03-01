@@ -16,10 +16,11 @@ export default interface InfoUser {
   email: string;
   phone: string;
   address: string;
-  dateOfBirth?: Date;
+  dateOfBirth?: Date | null;
   gender?: Gender;
-  nation?: string;
+  nation: string | null;
   idUser: Types.ObjectId;
+  createdBy: Types.ObjectId | null;
 }
 
 const schema = new Schema<InfoUser>(
@@ -40,11 +41,12 @@ const schema = new Schema<InfoUser>(
     dateOfBirth: { type: Schema.Types.Date, required: false },
     gender: {
       type: Schema.Types.String,
-      required: false,
+      required: true,
       enum: Object.values(Gender),
       default: Gender.FEMALE,
     },
     nation: { type: Schema.Types.String, required: false },
+    createdBy: { type: Schema.Types.ObjectId, required: false }
   },
   { versionKey: false, timestamps: true },
 );

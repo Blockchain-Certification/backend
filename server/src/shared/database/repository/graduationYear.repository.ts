@@ -29,4 +29,9 @@ export default class GraduationYearRepository {
   public async delete(id: Types.ObjectId): Promise<void> {
     await GraduationYearModel.remove(id);
   }
+
+  public async findByYear(year : string): Promise<GraduationYear | null>
+  {
+    return await GraduationYearModel.findOne({year});
+  }
 }

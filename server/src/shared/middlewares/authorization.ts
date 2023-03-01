@@ -15,8 +15,7 @@ export default router.use(
     );
     const roles = matchingRoles.map(([key, value]) => value);
     if (roles.length === 0) throw new AuthFailureError('Permission denied');
-    console.log(roles);
-    console.log(req.user.roles);
+
     const authorized = roles.filter((role) => req.user.roles.includes(role));
     if (authorized.length === 0)
       throw new AuthFailureError('Permission denied');

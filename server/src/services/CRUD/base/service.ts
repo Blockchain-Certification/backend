@@ -1,9 +1,8 @@
-import { Type } from './../../shared/database/model/CertificateType';
 import { DACRepository } from '../../shared/database/repository';
 import { CertificateType } from '../../shared/database/model';
 import { BadRequestError } from '../../shared/core/apiError';
 import { Types } from 'mongoose';
-import { isValidName } from '../../shared/helpers/utils';
+import { isValidName } from './utils';
 export default class CertificateTypeService {
   private repositoryMain: any;
   private dacRepository: DACRepository;
@@ -45,9 +44,9 @@ export default class CertificateTypeService {
     if (!cert) throw new BadRequestError('Certificate type not exist');
 
     const existedDAC = await this.dacRepository.findByTypeCert(cert.name);
-    if (existedDAC && existedDAC.registrationNum !== undefined)
+    if (existedDAC && existedDAC.length > 0)
       throw new BadRequestError(
-        'Data that is on the blockchain cannot be change',
+        'Data that is on the DAC cannot be change',
       );
   }
 

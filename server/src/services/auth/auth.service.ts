@@ -72,7 +72,7 @@ export default class AuthService {
   }
 
   public async logout(id: Types.ObjectId): Promise<void> {
-     this.keyStoreRepository.remove(id);
+    this.keyStoreRepository.remove(id);
   }
   public async refreshToken({
     accessToken,
@@ -104,7 +104,10 @@ export default class AuthService {
     return tokens;
   }
 
-  public async register(listUser: newUser[]): Promise<void> {
+  public async register(
+    listUser: newUser[],
+    createdBy: Types.ObjectId,
+  ): Promise<void> {
     if (this.hasDuplicate(listUser)) {
       throw new BadRequestError(
         'Duplicate field in list . Check identity, userName, email, phone ',
@@ -119,7 +122,7 @@ export default class AuthService {
     const promises: Promise<void>[] = [];
     await Promise.all(
       listUser.map(async (user: newUser) => {
-        promises.push(this.createUser(user));
+        promises.push(this.createUser(user, createdBy));
       }),
     ).catch((err) => {
       throw new BadRequestError(err);
@@ -134,32 +137,47 @@ export default class AuthService {
     return await createTokens(user, accessTokenKey, refreshTokenKey);
   }
 
-  private async createUser(newUser: newUser): Promise<any> {
-    const [user, infoUser] = await Promise.all([
-      (async () => ({
-        userName: newUser.userName,
-        password: newUser.password,
-        roles: newUser.roles,
-        publicKey: '',
-      }))(),
-      (async () => ({
-        identity: newUser.identity,
-        name: newUser.name,
-        email: newUser.email,
-        phone: newUser.phone,
-        address: newUser.address,
-        dateOfBirth: newUser.dateOfBirth,
-        gender: newUser.gender,
-        nation: newUser.nation,
-        idUser: new Types.ObjectId(),
-      }))(),
-    ]);
+  private async createUser(
+    newUser: newUser,
+    createdBy: Types.ObjectId,
+  ): Promise<any> {
 
+    const user = (({ userName, password, roles }) => ({
+      userName,
+      password,
+      roles,
+      publicKey: '',
+    }))(newUser);
+
+    const checkRegisterUNI = await user.roles.includes(Role.UNIVERSITY);
+
+    const infoUser = (({
+      identity,
+      name,
+      email,
+      phone,
+      address,
+      dateOfBirth,
+      gender,
+      nation,
+    }) => ({
+      identity,
+      name,
+      email,
+      phone,
+      address,
+      dateOfBirth : checkRegisterUNI ? null : dateOfBirth,
+      gender,
+      nation : checkRegisterUNI ? null : nation,
+      createdBy: checkRegisterUNI ? null : createdBy,
+      idUser : new Types.ObjectId()
+    }))(newUser);
+
+    // register blockchain wallet
     const keys = await registerUser(infoUser.identity);
     user.publicKey = keys.publicKey;
 
     // CHECK REGISTER  have UNIVERSITY WILL REGISTER UP BLOCKCHAIN
-    const checkRegisterUNI = await user.roles.includes(Role.UNIVERSITY);
     if (checkRegisterUNI) {
       const argsCallFunction = {
         func: 'registerUniversity',
@@ -169,11 +187,12 @@ export default class AuthService {
       };
       await invokeChaincode(argsCallFunction);
     }
-
+    // create user
     const createdUser = await this.userRepository.create(user as User);
     infoUser.idUser = createdUser._id;
     const createdInfo = await this.infoUserRepository.create(infoUser);
 
+    // send mail
     await this.mailNodeMailerProvider.sendEmail({
       to: {
         name: createdInfo.name,

@@ -1,4 +1,4 @@
-import { JoiObjectId } from './../../shared/helpers/validator';
+import { JoiObjectId } from '../../../shared/helpers/validator';
 import Joi from 'joi';
 export default {
   create: Joi.object().keys({

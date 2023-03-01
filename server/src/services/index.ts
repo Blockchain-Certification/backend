@@ -1,6 +1,18 @@
-import user from './user/user.routes';
+import user from './user/user.router';
 import { auth } from './auth';
-import { certificateType } from './certificateType';
-import { graduationCourse } from './graduationCourse';
-import { graduationYear } from './graduationYear';
-export { user, auth, certificateType, graduationCourse,graduationYear };
+import {
+  graduationYear,
+  certificateType,
+  graduationCourse,
+} from './CRUD/ index';
+import { dac } from './dac';
+import { recipentProfile } from './recipientProfile';
+export {
+  user,
+  auth,
+  certificateType,
+  graduationCourse,
+  graduationYear,
+  dac,
+  recipentProfile,
+};

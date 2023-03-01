@@ -1,14 +1,14 @@
 import { Router } from 'express';
-import { authentication, authorization } from '../../shared/middlewares';
-import { Role } from '../../shared/database/model';
-import { role } from '../../shared/helpers/utils';
-import validator, { ValidationSource } from '../../shared/helpers/validator';
+import { authentication, authorization } from '../../../shared/middlewares';
+import { Role } from '../../../shared/database/model';
+import { role } from '../../../shared/helpers/utils';
+import validator, { ValidationSource } from '../../../shared/helpers/validator';
 import schema from './schema';
 import {
   GraduationYearRepository,
   DACRepository,
-} from '../../shared/database/repository';
-import { Service, Controller } from '../CRUD';
+} from '../../../shared/database/repository';
+import { Service, Controller } from '../base';
 
 const router = Router();
 const graduationYearRepo = new GraduationYearRepository();
@@ -16,7 +16,7 @@ const dacRepository = new DACRepository();
 const graduationYearService = new Service(graduationYearRepo, dacRepository);
 const graduationYearController = new Controller(graduationYearService);
 
-router.use(authentication, role(Role.UNIVERSITY), authorization);
+router.use(authentication, role(Role.DOET), authorization);
 
 router.post('/', validator(schema.create), graduationYearController.create);
 
