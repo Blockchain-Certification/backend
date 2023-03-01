@@ -1,7 +1,7 @@
 import { InfoUser, InfoUserModel, Role } from '../model';
-import { argsGetList } from '../../../services/user/user.service';
 import { filterNull } from '../../helpers/utils';
 import { Types } from 'mongoose';
+import { Pagination } from '../../../services/recipientProfile/recipientProfile.service';
 export class InfoUserRepository {
   public async create(user: InfoUser): Promise<InfoUser> {
     return InfoUserModel.create(user);
@@ -24,35 +24,30 @@ export class InfoUserRepository {
   }
 
   public async findByIdAndAccountUser(id: Types.ObjectId): Promise<any> {
-    return await InfoUserModel.findOne({ id }).populate({
+    return await InfoUserModel.findById(id).populate({
       path: 'idUser',
       select: '-password',
     });
   }
 
-  public async findInfoAndAccount(page: number, limit: number): Promise<any[]> {
-    return await InfoUserModel.find({})
-      .populate({
-        path: 'idUser',
-        match: { roles: { $in: [Role.STUDENT, Role.UNIVERSITY] } },
-        select: '-password',
-      })
-      .skip(limit * (page - 1))
-      .limit(limit)
-      .sort({ updatedAt: -1 })
-      .lean()
-      .exec();
+  public async findByIdAndAccountUserOfStudent(
+    id: Types.ObjectId,
+  ): Promise<any> {
+    return await InfoUserModel.findById(id).populate({
+      path: 'idUser',
+      match: { roles: { $in: [Role.STUDENT] } },
+      select: '-password',
+    });
   }
 
-  public async findByRole({
-    page,
-    limit,
-    filter,
-  }: argsGetList): Promise<any[]> {
-    const data = await InfoUserModel.find()
+  public async findInfoAndAccountOfStudent(
+    { page, limit }: Pagination,
+    idUni: Types.ObjectId,
+  ): Promise<any[]> {
+    const data = await InfoUserModel.find({ createdBy: idUni })
       .populate({
         path: 'idUser',
-        match: { roles: { $in: [`${filter}`] } },
+        match: { roles: { $in: [Role.STUDENT] } },
         select: '-password',
       })
       .skip(limit * (page - 1))
@@ -60,8 +55,10 @@ export class InfoUserRepository {
       .sort({ updatedAt: -1 })
       .lean()
       .exec();
-    return filterNull(data);
+    return await filterNull(data);
   }
+
+
 
   public async edit(id: Types.ObjectId, data: any): Promise<void> {
     await InfoUserModel.updateOne({ _id: id }, { $set: { ...data } });

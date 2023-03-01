@@ -1,8 +1,10 @@
-import { user } from './user';
+import user from './user/user.router';
 import { auth } from './auth';
-import { certificateType } from './certificateType';
-import { graduationCourse } from './graduationCourse';
-import { graduationYear } from './graduationYear';
+import {
+  graduationYear,
+  certificateType,
+  graduationCourse,
+} from './CRUD/ index';
 import { dac } from './dac';
 import { recipentProfile } from './recipientProfile';
 export {

@@ -11,7 +11,6 @@ import { hasDuplicateAndMusDuplicateIU } from './utils';
 import { BadRequestError } from '../../shared/core/apiError';
 import { Types } from 'mongoose';
 import { FormOfTraining, Ranking } from '../../shared/database/model/DAC';
-import { Type } from '../../shared/database/model/CertificateType';
 
 export interface Pagination {
   page: number;
@@ -58,7 +57,7 @@ export default class RecipentProfileService {
 
   public async update(idDAC: Types.ObjectId, body: any): Promise<void> {
     const dac = await this.detail(idDAC);
-    
+
     switch (true) {
       case Boolean(dac?.dispensingStatus):
         throw new BadRequestError('Data up to blockchain, cannot update');
@@ -72,10 +71,6 @@ export default class RecipentProfileService {
     }
 
     await this.dacRepository.update(idDAC, body);
-  }
-
-  public async detail(id: Types.ObjectId): Promise<DAC | null> {
-    return await this.dacRepository.findById(id);
   }
 
   public async registrationNum(
@@ -115,6 +110,21 @@ export default class RecipentProfileService {
     });
   }
 
+  public async detail(id: Types.ObjectId): Promise<DAC | null> {
+    return await this.dacRepository.findById(id);
+  }
+
+  public async delete(id: Types.ObjectId): Promise<void> {
+    const dac = await this.detail(id);
+    if (dac?.dispensingStatus)
+      throw new BadRequestError('Certificate have up to blockchain');
+    if (dac?.idNumber || dac?.registrationNum)
+      throw new BadRequestError(
+        'idNumber or registrationNum have existed cannot delete certificate',
+      );
+    await this.dacRepository.deleteById(id);
+  }
+
   private async isValid(dac: DAC, role: Role = Role.STUDENT): Promise<void> {
     const entityValidate = (({
       studentName,
@@ -137,9 +147,11 @@ export default class RecipentProfileService {
       year,
       nameCourse,
     }))(dac);
+    
     const infoUser = await this.infoUserRepository.findByIdentity(
       entityValidate.identity,
     );
+    console.log(infoUser);
     if (!infoUser)
       throw new BadRequestError(`Invalid identity ${entityValidate.identity}`);
 

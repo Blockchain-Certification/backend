@@ -28,11 +28,21 @@ const authService = new AuthService(
 const authController = new AuthController(authService);
 
 router.post(
-  '/register',
+  '/register/student',
   authentication,
-  role(Role.UNIVERSITY, Role.DOET),
+  role(Role.UNIVERSITY),
   authorization,
-  validator(schema.register),
+  validator(schema.registerStudent),
+  authController.register,
+);
+
+
+router.post(
+  '/register/university',
+  authentication,
+  role(Role.DOET),
+  authorization,
+  validator(schema.registerUniversity),
   authController.register,
 );
 

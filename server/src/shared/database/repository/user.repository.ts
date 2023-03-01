@@ -1,5 +1,4 @@
 import { UserModel, User, Role } from '../model';
-import { argsGetList } from '../../../services/user/user.service';
 import { Types } from 'mongoose';
 export interface NewUser {
   userName: string;
@@ -30,19 +29,7 @@ export class UserRepository {
     return data;
   }
 
-  public async findByRoleAndPagination({
-    page,
-    limit,
-    filter,
-  }: argsGetList): Promise<User[]> {
-    return await UserModel.find({ roles: { $in: [`${filter}`] } })
-      .populate('User')
-      .skip(limit * (page - 1))
-      .limit(limit)
-      .sort({ updatedAt: -1 })
-      .lean()
-      .exec();
-  }
+
 
   public async delete(id : Types.ObjectId) : Promise<void> {
     await UserModel.remove(id);

@@ -1,14 +1,11 @@
 import Joi from 'joi';
-import { JoiObjectId } from '../../shared/helpers/validator';
-import { Gender, Role } from '../../shared/database/model';
-import { dateUpTo6Y, dateMinimum100Y } from '../auth/schema';
+import { JoiObjectId } from '../../../shared/helpers/validator';
+import { Gender, Role } from '../../../shared/database/model';
+import { dateUpTo6Y, dateMinimum100Y } from '../../auth/schema';
 export default {
   query: Joi.object().keys({
     page: Joi.number().required().integer().min(1),
-    limit: Joi.number().required().integer().min(1),
-    filter: Joi.string()
-      .valid(...Object.keys(Role))
-      .optional(),
+    limit: Joi.number().required().integer().min(1)
   }),
   userId: Joi.object().keys({
     id: JoiObjectId().required(),

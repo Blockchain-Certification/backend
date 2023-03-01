@@ -66,8 +66,10 @@ export default class AuthController {
     new SuccessMsgResponse('Logout success').send(res);
   });
 
-  public register = asyncHandler(async (req: Request, res: Response) => {
-    await this.authService.register(req.body);
+  public register = asyncHandler(async (req: ProtectedRequest, res: Response) => {
+    const {_id} = req.user;
+    await this.authService.register(req.body, _id);
     return new SuccessMsgResponse('Created Successfully').send(res);
   });
+
 }

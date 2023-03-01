@@ -47,6 +47,16 @@ router.get(
   recipentProfileController.getList,
 );
 
+// GET DETAIL DAC
+router.get(
+  '/detail/:idDAC',
+  authentication,
+  role(Role.UNIVERSITY, Role.DOET),
+  authorization,
+  validator(schema.idDAC, ValidationSource.PARAM),
+  recipentProfileController.detail,
+);
+
 //CREATE OF UNIVERSITY
 router.post(
   '/',
@@ -56,7 +66,6 @@ router.post(
   validator(schema.recipentProfile),
   recipentProfileController.create,
 );
-
 
 // DOET UPDATE IDNUMBER  OF UNIVERSITY
 router.patch(
@@ -91,6 +100,14 @@ router.patch(
   recipentProfileController.update,
 );
 
-
+// delete DAC of DOET
+router.delete(
+  '/:idDAC',
+  authentication,
+  role(Role.DOET),
+  authorization,
+  validator(schema.idDAC, ValidationSource.PARAM),
+  recipentProfileController.delete,
+);
 
 export default router;

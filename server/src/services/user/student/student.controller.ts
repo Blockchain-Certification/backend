@@ -1,41 +1,44 @@
-import { Request, Response } from 'express';
-import asyncHandler from '../../shared/helpers/asyncHandler';
-import { UserService, argsGetList } from './user.service';
+import { Response } from 'express';
+import asyncHandler from '../../../shared/helpers/asyncHandler';
+import { StudentService } from './student.service';
 import {
   SuccessMsgResponse,
   SuccessResponse,
-} from '../../shared/core/apiResponse';
-import { ProtectedRequest } from '../../shared/types/app-request';
+} from '../../../shared/core/apiResponse';
+import { ProtectedRequest } from '../../../shared/types/app-request';
 import { Types } from 'mongoose';
-export class UserController {
-  private userService: UserService;
-  constructor(userService: UserService) {
-    this.userService = userService;
+import { Pagination } from '../../recipientProfile/recipientProfile.service';
+export class StudentController {
+  private studentService: StudentService;
+  constructor(StudentService: StudentService) {
+    this.studentService = StudentService;
   }
 
   public getList = asyncHandler(
     async (req: ProtectedRequest, res: Response) => {
-      const args: argsGetList = (({ page, limit, filter }) => ({
-        page: parseInt(page as string),
-        limit: parseInt(limit as string),
-        filter: filter as string | undefined,
+      const pagination : Pagination = (({ page , limit }) => ({
+        page : parseInt(page as string),
+        limit : parseInt(limit as string)
       }))(req.query);
-
-      const data = await this.userService.getList(args);
+      const {_id} = req.user; 
+      const data = await this.studentService.getList(
+        pagination,
+       _id
+      );
 
       return new SuccessResponse('Get list successfully', {
         success: true,
         data: data,
         pagination: {
-          page: args.page,
-          limit: args.limit,
+          page: pagination.page,
+          limit: pagination.limit,
         },
       }).send(res);
     },
   );
 
   public edit = asyncHandler(async (req: ProtectedRequest, res: Response) => {
-    const data = await this.userService.edit(
+    const data = await this.studentService.edit(
       new Types.ObjectId(req.params.id),
       req.body,
     );
@@ -46,12 +49,12 @@ export class UserController {
   });
 
   public delete = asyncHandler(async (req: ProtectedRequest, res: Response) => {
-    await this.userService.delete(new Types.ObjectId(req.params.id));
+    await this.studentService.delete(new Types.ObjectId(req.params.id));
     return new SuccessMsgResponse('Delete User successfully').send(res);
   });
 
   public detail = asyncHandler(async (req: ProtectedRequest, res: Response) => {
-    const user = await this.userService.detail(
+    const user = await this.studentService.detail(
       new Types.ObjectId(req.params.id),
     );
     return new SuccessResponse('Get detail successfully', {

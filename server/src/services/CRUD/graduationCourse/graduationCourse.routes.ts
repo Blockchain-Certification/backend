@@ -1,14 +1,14 @@
 import { Router } from 'express';
-import { authentication, authorization } from '../../shared/middlewares';
-import { Role } from '../../shared/database/model';
-import { role } from '../../shared/helpers/utils';
-import validator, { ValidationSource } from '../../shared/helpers/validator';
+import { authentication, authorization } from '../../../shared/middlewares';
+import { Role } from '../../../shared/database/model';
+import { role } from '../../../shared/helpers/utils';
+import validator, { ValidationSource } from '../../../shared/helpers/validator';
 import schema from './schema';
 import {
   GraduationCourseRepository,
   DACRepository,
-} from '../../shared/database/repository';
-import { Service, Controller } from '../CRUD';
+} from '../../../shared/database/repository';
+import { Service, Controller } from '../base';
 
 const router = Router();
 const graduationCourseRepo = new GraduationCourseRepository();

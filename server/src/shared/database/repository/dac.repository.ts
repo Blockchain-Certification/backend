@@ -42,4 +42,8 @@ export class DACRepository {
   public async update(id: Types.ObjectId, body: any): Promise<void> {
     await DACModel.updateOne({ _id: id }, { $set: { ...body } });
   }
+
+  public async deleteById(id : Types.ObjectId): Promise<void> {
+    await DACModel.deleteOne({ _id: id });
+  }
 }
