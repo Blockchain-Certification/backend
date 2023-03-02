@@ -30,7 +30,7 @@ const authController = new AuthController(authService);
 router.post(
   '/register/student',
   authentication,
-  role(Role.UNIVERSITY),
+  role(Role.UNIVERSITY,Role.DOET),
   authorization,
   validator(schema.registerStudent),
   authController.register,

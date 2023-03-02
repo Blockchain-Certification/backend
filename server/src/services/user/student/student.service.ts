@@ -4,14 +4,10 @@ import {
 } from '../../../shared/database/repository';
 import { Role, User } from '../../../shared/database/model';
 import { Types } from 'mongoose';
-import {  BadRequestError } from '../../../shared/core/apiError';
+import { BadRequestError } from '../../../shared/core/apiError';
 import { DACRepository } from '../../../shared/database/repository/dac.repository';
 import { Pagination } from '../../recipientProfile/recipientProfile.service';
-export interface argsGetList {
-  page: number;
-  limit: number;
-  filter?: string;
-}
+import { PaginationSearch } from './interface';
 export class StudentService {
   private infoUserRepository: InfoUserRepository;
   private userRepository: UserRepository;
@@ -26,9 +22,29 @@ export class StudentService {
     this.dacRepository = dacRepository;
   }
 
-  public async getList(pagination : Pagination, idUni : Types.ObjectId ): Promise<User[]> {
-    return await this.infoUserRepository.findInfoAndAccountOfStudent(
-      pagination,idUni
+  public async getList(pagination: Pagination): Promise<User[]> {
+    return await this.infoUserRepository.findInfoAndAccountFromStudent(
+      pagination,
+    );
+  }
+
+  public async getListOfUniversity(
+    pagination: Pagination,
+    idUni: Types.ObjectId,
+  ): Promise<User[]> {
+    return await this.infoUserRepository.findInfoAndAccountFromStudentOfUniversity(
+      pagination,
+      idUni,
+    );
+  }
+
+  public async detail(id: Types.ObjectId): Promise<any> {
+    return this.infoUserRepository.findByIdAndAccountUserFromStudent(id);
+  }
+
+  public async search(paginationSearch: PaginationSearch): Promise<any> {
+    return this.infoUserRepository.findInfoAndAccountFromKeyWord(
+      paginationSearch,
     );
   }
 
@@ -48,10 +64,6 @@ export class StudentService {
     await this.userRepository.delete(user.idUser);
   }
 
-  public async detail(id: Types.ObjectId): Promise<any> {
-    return this.infoUserRepository.findByIdAndAccountUserOfStudent(id);
-  }
-
   private async checkUpBlockchain(
     roles: Role[],
     identity: string,
@@ -61,7 +73,9 @@ export class StudentService {
     const isExistedDACStudent = await this.dacRepository.findByIStudent(
       identity,
     );
-    if ( isExistedDACStudent &&isExistedDACStudent?.length > 0)
-      throw new BadRequestError('User have up blockchain or on CERTIFICATES');
+    if (isExistedDACStudent && isExistedDACStudent?.length > 0)
+      throw new BadRequestError(
+        'User have up blockchain or on Recipient Profile',
+      );
   }
 }

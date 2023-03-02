@@ -1,6 +1,6 @@
-import { DACRepository } from '../../shared/database/repository';
-import { CertificateType } from '../../shared/database/model';
-import { BadRequestError } from '../../shared/core/apiError';
+import { DACRepository } from '../../../shared/database/repository';
+import { CertificateType } from '../../../shared/database/model';
+import { BadRequestError } from '../../../shared/core/apiError';
 import { Types } from 'mongoose';
 import { isValidName } from './utils';
 export default class CertificateTypeService {
