@@ -43,7 +43,7 @@ export class StudentService {
   }
 
   public async search(paginationSearch: PaginationSearch): Promise<any> {
-    return this.infoUserRepository.findInfoAndAccountFromKeyWord(
+    return this.infoUserRepository.findInfoAndAccountFromKeyWordOfRoleStudent(
       paginationSearch,
     );
   }
