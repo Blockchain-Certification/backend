@@ -214,19 +214,19 @@ export default class AuthService {
     phone,
   }: newUser): Promise<void> {
     const userExisted = await this.userRepository.findByUserName(userName);
-    if (userExisted) throw new BadRequestError('User exists already');
+    if (userExisted) throw new BadRequestError(`User exists already : ${userName}`);
 
     const identityExisted = await this.infoUserRepository.findByIdentity(
       identity,
     );
 
-    if (identityExisted) throw new BadRequestError('Identity exists already');
+    if (identityExisted) throw new BadRequestError(`Identity exists already ${identity}`);
 
     const emailExisted = await this.infoUserRepository.findByEmail(email);
-    if (emailExisted) throw new BadRequestError('Email already exists');
+    if (emailExisted) throw new BadRequestError(`Email already exists ${email}`);
 
     const phoneExisted = await this.infoUserRepository.findByPhone(phone);
-    if (phoneExisted) throw new BadRequestError('Phone already exists');
+    if (phoneExisted) throw new BadRequestError(`Phone already exists ${phone}`);
   }
 
   private hasDuplicate(users: newUser[]): boolean {

@@ -8,6 +8,7 @@ import {
 import { ProtectedRequest } from '../../../shared/types/app-request';
 import { Types } from 'mongoose';
 import { Pagination } from '../../recipientProfile/recipientProfile.service';
+import { PaginationSearch } from './interface';
 export class StudentController {
   private studentService: StudentService;
   constructor(StudentService: StudentService) {
@@ -16,16 +17,35 @@ export class StudentController {
 
   public getList = asyncHandler(
     async (req: ProtectedRequest, res: Response) => {
-      const pagination : Pagination = (({ page , limit }) => ({
-        page : parseInt(page as string),
-        limit : parseInt(limit as string)
+      const pagination: Pagination = (({ page, limit }) => ({
+        page: parseInt(page as string),
+        limit: parseInt(limit as string),
       }))(req.query);
-      const {_id} = req.user; 
-      const data = await this.studentService.getList(
-        pagination,
-       _id
-      );
+      const data = await this.studentService.getList(pagination);
 
+      return new SuccessResponse('Get list successfully', {
+        success: true,
+        data: data,
+        pagination: {
+          page: pagination.page,
+          limit: pagination.limit,
+        },
+      }).send(res);
+    },
+  );
+
+  public getListOfUniversity = asyncHandler(
+    async (req: ProtectedRequest, res: Response) => {
+      const { id } = req.params;
+      const pagination: Pagination = (({ page, limit }) => ({
+        page: parseInt(page as string),
+        limit: parseInt(limit as string),
+      }))(req.query);
+
+      const data = await this.studentService.getListOfUniversity(
+        pagination,
+        new Types.ObjectId(id),
+      );
       return new SuccessResponse('Get list successfully', {
         success: true,
         data: data,
@@ -60,6 +80,24 @@ export class StudentController {
     return new SuccessResponse('Get detail successfully', {
       success: true,
       data: user,
+    }).send(res);
+  });
+
+  public search = asyncHandler(async (req: ProtectedRequest, res: Response) => {
+    const paginationSearch: PaginationSearch = (({ page, limit, keyword }) => ({
+      page: parseInt(page as string),
+      limit: parseInt(limit as string),
+      keyword: keyword + '',
+    }))(req.query);
+    const data = await this.studentService.search(paginationSearch);
+
+    return new SuccessResponse('Search successfully', {
+      success: true,
+      data: data,
+      pagination: {
+        page: paginationSearch.page,
+        limit: paginationSearch.limit,
+      },
     }).send(res);
   });
 }

@@ -12,7 +12,7 @@ import { Role } from '../../shared/database/model';
 import { role } from '../../shared/helpers/utils';
 import validator, { ValidationSource } from '../../shared/helpers/validator';
 import schema from './schema';
-import schemaPagi from '../graduationYear/schema';
+import schemaPagi from '../CRUD/graduationYear/schema';
 import RecipentProfileService from './recipientProfile.service';
 import RecipentProfileController from './recipientProfile.controller';
 

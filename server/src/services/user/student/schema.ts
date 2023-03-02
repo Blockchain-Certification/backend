@@ -7,7 +7,7 @@ export default {
     page: Joi.number().required().integer().min(1),
     limit: Joi.number().required().integer().min(1)
   }),
-  userId: Joi.object().keys({
+  id: Joi.object().keys({
     id: JoiObjectId().required(),
   }),
   edit : Joi.object().keys({
@@ -17,4 +17,9 @@ export default {
     gender: Joi.string().valid(...Object.values(Gender)),
     nation: Joi.string(),
   }),
+  search : Joi.object().keys({
+    page: Joi.number().required().integer().min(1),
+    limit: Joi.number().required().integer().min(1),
+    keyword: Joi.string().valid().required()
+  })
 };
