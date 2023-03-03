@@ -7,24 +7,14 @@ import {
   CertificateTypeRepository,
 } from '../../shared/database/repository';
 import { DAC, Role } from '../../shared/database/model';
-import { hasDuplicateAndMusDuplicateIU } from './utils';
+import { hasDuplicateAndMustDuplicateIU } from './utils';
 import { BadRequestError } from '../../shared/core/apiError';
 import { Types } from 'mongoose';
-import { FormOfTraining, Ranking } from '../../shared/database/model/DAC';
-
-export interface Pagination {
-  page: number;
-  limit: number;
-}
-
-export interface dataDACUpdate {
-  year: string;
-  nameCourse: string;
-  major: string;
-  ranking: Ranking;
-  formOfTraining: FormOfTraining;
-  CPGA: string;
-}
+import {
+  PaginationGetList,
+  DTORegistrationNumber,
+  DTORegistrationIdNumber,
+} from './interface';
 export default class RecipentProfileService {
   private dacRepository: DACRepository;
   private infoUserRepository: InfoUserRepository;
@@ -32,6 +22,7 @@ export default class RecipentProfileService {
   private graduationCourseRepository: GraduationCourseRepository;
   private graduationYearRepository: GraduationYearRepository;
   private certificateTypeRepository: CertificateTypeRepository;
+
   constructor(
     dacRepository: DACRepository,
     infoUserRepository: InfoUserRepository,
@@ -49,42 +40,171 @@ export default class RecipentProfileService {
   }
 
   public async getList(
-    pagination: Pagination,
-    id: string,
+    pagination: PaginationGetList,
+    identityUniversity: string,
   ): Promise<DAC[] | null> {
-    return await this.dacRepository.findByIUniAndPagination(pagination, id);
+    return await this.dacRepository.findByIUniAndPagination(
+      pagination,
+      identityUniversity,
+    );
   }
 
-  public async update(idDAC: Types.ObjectId, body: any): Promise<void> {
+  public async updateInfo(idDAC: Types.ObjectId, body: any): Promise<void> {
     const dac = await this.detail(idDAC);
+    await this.checkExistedCourseAndYear(body.year, body.nameCourse);
 
     switch (true) {
       case Boolean(dac?.dispensingStatus):
         throw new BadRequestError('Data up to blockchain, cannot update');
-      case !dac?.registrationNum && body.idNumber:
-        throw new BadRequestError('Not input field registration number');
-      case !dac?.registrationNum:
-        await this.checkExistedCourseAndYear(body.year, body.nameCourse);
-        break;
       case Boolean(dac?.idNumber):
-        throw new BadRequestError('idNumber existed');
+        throw new BadRequestError(
+          'IdNumber existed cannot edit info. Can delete if DAC cannot upto blockchain',
+        );
     }
 
     await this.dacRepository.update(idDAC, body);
   }
 
-  public async registrationNum(
+  public async delete(
     id: Types.ObjectId,
-    registrationNum: string,
+    identityUniversity: string,
   ): Promise<void> {
     const dac = await this.detail(id);
-    if (dac?.registrationNum)
-      throw new BadRequestError('Registration number have existed');
-    await this.dacRepository.update(id, registrationNum);
+    if (dac?.dispensingStatus)
+      throw new BadRequestError('Certificate have up to blockchain');
+    if (identityUniversity !== dac?.iU)
+      throw new BadRequestError('Param identityUniversity not manage this DAC');
+      
+    await this.dacRepository.deleteById(id);
   }
 
-  public async create(listDAC: DAC[]): Promise<void> {
-    if (hasDuplicateAndMusDuplicateIU(listDAC))
+  public async registrationNum(
+    listRegistrationNum: DTORegistrationNumber[],
+    identityUniversity: string,
+  ): Promise<DAC[]> {
+    for (let i = 0; i < listRegistrationNum.length; i++) {
+      const regisNum = listRegistrationNum[i];
+      const dac = await this.dacRepository.findById(regisNum._id);
+
+      switch (true) {
+        case !(await this.dacRepository.isExisted(regisNum._id)):
+          throw new BadRequestError('Invalid DAC at ' + dac?.id);
+
+        case !(await this.dacRepository.isValidRegistrationNumber(
+          regisNum.registrationNumber,
+        )):
+          throw new BadRequestError(
+            'Invalid dac at ' +
+              dac?.id +
+              ' registration number existed in list',
+          );
+
+        case Boolean(dac?.registrationNum):
+          throw new BadRequestError(
+            'Have Registration Number. Cannot Registration number again ',
+          );
+
+        case dac?.iU !== identityUniversity:
+          throw new BadRequestError(
+            'field iU of DAC invalid identityUniversityParam ' +
+              identityUniversity +
+              'at' +
+              dac?.id,
+          );
+
+        case dac?.dispensingStatus:
+          throw new BadRequestError(
+            `Dispensing Status must false at ${dac?.id}`,
+          );
+
+        default:
+        // handle the case where none of the above conditions are true
+      }
+    }
+    const promises: DAC[] = [];
+    await Promise.all(
+      listRegistrationNum.map(
+        async (registrationNumber: DTORegistrationNumber) => {
+          const dac = await this.updateRegistrationNumber(registrationNumber);
+          dac && promises.push(dac);
+        },
+      ),
+    ).catch((err) => {
+      throw new BadRequestError(err);
+    });
+
+    return promises;
+  }
+
+  public async regisIdNumber(
+    listIdNumber: DTORegistrationIdNumber[],
+    identityUniversity: string,
+  ): Promise<DAC[]> {
+    for (let i = 0; i < listIdNumber.length; i++) {
+      const entityIdNumber = listIdNumber[i];
+      const dac = await this.detail(entityIdNumber._id);
+      switch (true) {
+        case !(await this.dacRepository.isExisted(entityIdNumber._id)):
+          throw new BadRequestError('Invalid DAC at ' + dac?.id);
+
+        case !(await this.dacRepository.isValidRegisIdNumber(
+          entityIdNumber.idNumber,
+        )):
+          throw new BadRequestError(
+            'Invalid dac at ' +
+              dac?.id +
+              ' registration number existed in list',
+          );
+
+        case !dac?.registrationNum:
+          throw new BadRequestError(
+            ' Must have a registration number at _id' + dac?.id,
+          );
+
+        case Boolean(dac?.idNumber):
+          throw new BadRequestError(
+            `DAC idNumber have already at ID ${dac?.id}`,
+          );
+
+        case dac?.dispensingStatus:
+          throw new BadRequestError(
+            `Dispensing Status must false at ${dac?.id}`,
+          );
+
+        case identityUniversity !== dac?.iU:
+          throw new BadRequestError(
+            'field iU of DAC invalid identityUniversityParam ' +
+              identityUniversity +
+              'at' +
+              dac?.id,
+          );
+
+        default:
+        // handle the case where none of the above conditions are true
+      }
+    }
+
+    const promises: DAC[] = [];
+    await Promise.all(
+      listIdNumber.map(async (entityIdNumber: DTORegistrationIdNumber) => {
+        const dac = await this.updateRegistrationIdNumber(entityIdNumber);
+        dac && promises.push(dac);
+      }),
+    ).catch((err) => {
+      throw new BadRequestError(err);
+    });
+
+    return promises;
+  }
+  public async detail(id: Types.ObjectId): Promise<DAC | null> {
+    return await this.dacRepository.findById(id);
+  }
+
+  public async create(
+    listDAC: DAC[],
+    identityUniversity: string,
+  ): Promise<void> {
+    if (hasDuplicateAndMustDuplicateIU(listDAC))
       throw new BadRequestError(
         'Have duplicate data in list or must iU duplicate',
       );
@@ -92,6 +212,10 @@ export default class RecipentProfileService {
 
     for (let i = 0; i < listDAC.length; i++) {
       const dac = listDAC[i];
+      if (dac.iU !== identityUniversity)
+        throw new BadRequestError(
+          `Must Identity University ${identityUniversity} at identityStudent ${dac.iSt}`,
+        );
       await this.isValid(dac, Role.UNIVERSITY);
       await this.isValid(dac);
     }
@@ -108,21 +232,6 @@ export default class RecipentProfileService {
     ).catch((err) => {
       throw new BadRequestError(err);
     });
-  }
-
-  public async detail(id: Types.ObjectId): Promise<DAC | null> {
-    return await this.dacRepository.findById(id);
-  }
-
-  public async delete(id: Types.ObjectId): Promise<void> {
-    const dac = await this.detail(id);
-    if (dac?.dispensingStatus)
-      throw new BadRequestError('Certificate have up to blockchain');
-    if (dac?.idNumber || dac?.registrationNum)
-      throw new BadRequestError(
-        'idNumber or registrationNum have existed cannot delete certificate',
-      );
-    await this.dacRepository.deleteById(id);
   }
 
   private async isValid(dac: DAC, role: Role = Role.STUDENT): Promise<void> {
@@ -147,13 +256,14 @@ export default class RecipentProfileService {
       year,
       nameCourse,
     }))(dac);
-    
+
     const infoUser = await this.infoUserRepository.findByIdentity(
       entityValidate.identity,
     );
-    console.log(infoUser);
     if (!infoUser)
-      throw new BadRequestError(`Invalid identity ${entityValidate.identity}`);
+      throw new BadRequestError(
+        `Identity ${entityValidate.identity} not existed , create user student`,
+      );
 
     const dateBirthInfo = new Date(
       infoUser.dateOfBirth || new Date(),
@@ -161,17 +271,31 @@ export default class RecipentProfileService {
     const dateBirthEntity = new Date(
       entityValidate.dateOfBirth || '',
     ).getTime();
-    if (
-      role === Role.STUDENT &&
-      (infoUser.name !== entityValidate.name ||
-        infoUser.identity !== entityValidate.identity ||
-        infoUser.address !== entityValidate.placeOfBirth ||
-        infoUser.gender !== entityValidate.gender ||
-        dateBirthInfo !== dateBirthEntity)
-    ) {
-      throw new BadRequestError(
-        `Invalid infoUser not match at ${entityValidate.identity}`,
-      );
+    if (role === Role.STUDENT) {
+      switch (true) {
+        case infoUser.name !== entityValidate.name:
+          throw new BadRequestError(
+            `Info User not match from ${infoUser.identity} at name ${entityValidate.name}`,
+          );
+        case infoUser.identity !== entityValidate.identity:
+          throw new BadRequestError(
+            `Info User not match from ${infoUser.identity} at identity ${entityValidate.identity}`,
+          );
+        case infoUser.address !== entityValidate.placeOfBirth:
+          throw new BadRequestError(
+            `Info User not match from ${infoUser.identity} at address ${entityValidate.placeOfBirth}`,
+          );
+        case infoUser.gender !== entityValidate.gender:
+          throw new BadRequestError(
+            `Info User not match from ${infoUser.identity} at gender ${entityValidate.gender}`,
+          );
+        case dateBirthInfo !== dateBirthEntity:
+          throw new BadRequestError(
+            `Info User not match from ${infoUser.identity} at placeOfBirth ${dateBirthEntity}`,
+          );
+        default:
+          break;
+      }
     }
 
     const isValidOfRole = await this.userRepository.isValidRole(
@@ -200,8 +324,31 @@ export default class RecipentProfileService {
     const isExistedCourse = await this.graduationCourseRepository.findByCourse(
       nameCourse,
     );
-    console.log(isExistedCourse);
     if (!isExistedCourse)
       throw new BadRequestError(`Not match graduation course ${nameCourse}`);
+  }
+
+  private async updateRegistrationNumber({
+    _id,
+    registrationNumber,
+  }: DTORegistrationNumber): Promise<DAC | null> {
+    const body = {
+      registrationNum: registrationNumber,
+    };
+    await this.dacRepository.update(_id, body);
+    const dac = await this.detail(_id);
+    return dac;
+  }
+
+  private async updateRegistrationIdNumber({
+    _id,
+    idNumber,
+  }: DTORegistrationIdNumber): Promise<DAC | null> {
+    const body = {
+      idNumber,
+    };
+    await this.dacRepository.update(_id, body);
+    const dac = await this.detail(_id);
+    return dac;
   }
 }

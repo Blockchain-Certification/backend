@@ -12,9 +12,9 @@ import { Role } from '../../shared/database/model';
 import { role } from '../../shared/helpers/utils';
 import validator, { ValidationSource } from '../../shared/helpers/validator';
 import schema from './schema';
-import schemaPagi from '../CRUD/graduationYear/schema';
 import RecipentProfileService from './recipientProfile.service';
 import RecipentProfileController from './recipientProfile.controller';
+import {authorizationRecipientProfile} from './utils';
 
 const dacRepository = new DACRepository();
 const infoUserRepository = new InfoUserRepository();
@@ -38,75 +38,79 @@ const router = Router();
 
 // GET DAC OF UNIVERSITY
 router.get(
-  '/:identity',
+  '/:identityUniversity',
   authentication,
   role(Role.UNIVERSITY, Role.DOET),
   authorization,
-  validator(schemaPagi.pagination, ValidationSource.QUERY),
+  validator(schema.query, ValidationSource.QUERY),
   validator(schema.iUni, ValidationSource.PARAM),
   recipentProfileController.getList,
 );
 
 // GET DETAIL DAC
 router.get(
-  '/detail/:idDAC',
+  '/:identityUniversity/detail/:idDAC',
   authentication,
   role(Role.UNIVERSITY, Role.DOET),
   authorization,
-  validator(schema.idDAC, ValidationSource.PARAM),
+  validator(schema.param, ValidationSource.PARAM),
+  authorizationRecipientProfile,
   recipentProfileController.detail,
 );
 
 //CREATE OF UNIVERSITY
 router.post(
-  '/',
+  '/:identityUniversity',
   authentication,
   role(Role.UNIVERSITY),
   authorization,
   validator(schema.recipentProfile),
+  validator(schema.iUni, ValidationSource.PARAM),
+  authorizationRecipientProfile,
   recipentProfileController.create,
 );
 
 // DOET UPDATE IDNUMBER  OF UNIVERSITY
 router.patch(
-  '/idNumber/:idDAC',
+  '/:identityUniversity/regisIdNumber',
   authentication,
   role(Role.UNIVERSITY),
   authorization,
-  validator(schema.idDAC, ValidationSource.PARAM),
-  validator(schema.idNumber),
+  validator(schema.iUni, ValidationSource.PARAM),
+  validator(schema.regisIdNumber),
+  authorizationRecipientProfile,
   recipentProfileController.regisIdNumber,
 );
 
 // DOET UPDATE INFO DAC
 router.patch(
-  '/:idDAC',
+  '/:identityUniversity/updateInfo/:idDAC',
   authentication,
   role(Role.DOET),
   authorization,
-  validator(schema.idDAC, ValidationSource.PARAM),
+  validator(schema.param, ValidationSource.PARAM),
   validator(schema.updateDAC),
-  recipentProfileController.update,
+  recipentProfileController.updateInfoDAC,
 );
 
 // DOET UPDATE REGISRATION NUNMBER
 router.patch(
-  '/registrationNumber/:idDAC',
+  '/:identityUniversity/registrationNumber',
   authentication,
   role(Role.DOET),
   authorization,
-  validator(schema.idDAC, ValidationSource.PARAM),
+  validator(schema.iUni, ValidationSource.PARAM),
   validator(schema.registrationNum),
-  recipentProfileController.update,
+  recipentProfileController.registrationNumber,
 );
 
 // delete DAC of DOET
 router.delete(
-  '/:idDAC',
+  '/:identityUniversity/delete/:idDAC',
   authentication,
   role(Role.DOET),
   authorization,
-  validator(schema.idDAC, ValidationSource.PARAM),
+  validator(schema.param, ValidationSource.PARAM),
   recipentProfileController.delete,
 );
 

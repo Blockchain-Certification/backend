@@ -6,7 +6,7 @@ import {
   graduationCourse,
 } from './CRUD/ index';
 import { dac } from './dac';
-import { recipentProfile } from './recipientProfile';
+import { recipientProfile } from './recipientProfile';
 export {
   user,
   auth,
@@ -14,5 +14,5 @@ export {
   graduationCourse,
   graduationYear,
   dac,
-  recipentProfile,
+  recipientProfile,
 };

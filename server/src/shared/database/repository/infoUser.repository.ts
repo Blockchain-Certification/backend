@@ -1,7 +1,7 @@
 import { InfoUser, InfoUserModel, Role } from '../model';
 import { filterNull } from '../../helpers/utils';
 import { Types } from 'mongoose';
-import { Pagination } from '../../../services/recipientProfile/recipientProfile.service';
+import { Pagination } from '../../../services/recipientProfile/interface';
 import { PaginationSearch } from '../../../services/user/student/interface';
 export class InfoUserRepository {
   public async create(user: InfoUser): Promise<InfoUser> {

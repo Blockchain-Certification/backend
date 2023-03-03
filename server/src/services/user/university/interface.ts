@@ -1,7 +1,7 @@
-export interface pagination {
+export interface Pagination {
   page: number;
   limit: number;
 }
-export interface PaginationSearch extends pagination {
+export interface PaginationSearch extends Pagination {
   keyword: string;
 }

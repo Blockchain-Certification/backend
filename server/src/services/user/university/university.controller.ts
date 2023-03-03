@@ -7,8 +7,7 @@ import {
 } from '../../../shared/core/apiResponse';
 import { ProtectedRequest } from '../../../shared/types/app-request';
 import { Types } from 'mongoose';
-import { Pagination } from '../../recipientProfile/recipientProfile.service';
-import { PaginationSearch } from './interface';
+import { PaginationSearch, Pagination } from './interface';
 export class UniversityController {
   private univeristyService: UniversityService;
   constructor(univeristyService: UniversityService) {
