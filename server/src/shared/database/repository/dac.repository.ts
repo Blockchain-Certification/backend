@@ -1,7 +1,6 @@
 import { DAC, DACModel } from '../model';
 import { Types } from 'mongoose';
-import { Pagination } from '../../../services/recipientProfile/recipientProfile.service';
-import { dataDACUpdate } from '../../../services/recipientProfile/recipientProfile.service';
+import { PaginationGetList } from '../../../services/recipientProfile/interface';
 export class DACRepository {
   public async findById(id: Types.ObjectId): Promise<DAC | null> {
     return DACModel.findById(id);
@@ -27,11 +26,10 @@ export class DACRepository {
   }
 
   public async findByIUniAndPagination(
-    { page, limit }: Pagination,
+    { page, limit, dispensingStatus }: PaginationGetList,
     id: string,
   ): Promise<DAC[] | null> {
-    console.log(limit);
-    return DACModel.find({ iU: id })
+    return DACModel.find({ iU: id, dispensingStatus })
       .skip(limit * (page - 1))
       .limit(limit)
       .sort({ updatedAt: -1 })
@@ -43,7 +41,33 @@ export class DACRepository {
     await DACModel.updateOne({ _id: id }, { $set: { ...body } });
   }
 
-  public async deleteById(id : Types.ObjectId): Promise<void> {
+  public async deleteById(id: Types.ObjectId): Promise<void> {
     await DACModel.deleteOne({ _id: id });
+  }
+
+  public async isExisted(id: Types.ObjectId): Promise<boolean> {
+    const regisNumber = await DACModel.findById({ _id: id });
+    if (!regisNumber) return false;
+    return true;
+  }
+
+  public async findByRegistrationNumber(registrationNum: string): Promise<DAC | null> {
+    return await DACModel.findOne({ registrationNum });
+  }
+
+  public async isValidRegistrationNumber(
+    regisNumber: string,
+  ): Promise<boolean> {
+    const isExisted = await this.findByRegistrationNumber(regisNumber);
+    if(isExisted) return false;
+    return true;
+  }
+
+  public async isValidRegisIdNumber(
+    idNumber: string,
+  ): Promise<boolean> {
+    const isExisted = await this.findByRegistrationNumber(idNumber);
+    if(isExisted) return false;
+    return true;
   }
 }

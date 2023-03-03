@@ -6,7 +6,7 @@ import { Role, User } from '../../../shared/database/model';
 import { Types } from 'mongoose';
 import { BadRequestError } from '../../../shared/core/apiError';
 import { DACRepository } from '../../../shared/database/repository/dac.repository';
-import { Pagination } from '../../recipientProfile/recipientProfile.service';
+import { Pagination } from './interface';
 import { PaginationSearch } from './interface';
 export class StudentService {
   private infoUserRepository: InfoUserRepository;
@@ -43,7 +43,7 @@ export class StudentService {
   }
 
   public async search(paginationSearch: PaginationSearch): Promise<any> {
-    return this.infoUserRepository.findInfoAndAccountFromKeyWord(
+    return this.infoUserRepository.findInfoAndAccountFromKeyWordOfRoleStudent(
       paginationSearch,
     );
   }

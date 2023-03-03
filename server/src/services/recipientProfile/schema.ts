@@ -49,7 +49,7 @@ export default {
     }),
   ),
   iUni: Joi.object().keys({
-    identity: Joi.string()
+    identityUniversity: Joi.string()
       .required()
       .regex(/^[0-9]{12}$/),
   }),
@@ -60,7 +60,7 @@ export default {
       .regex(/^[0-9]{12}$/),
   }),
   idDAC: Joi.object().keys({
-    idDAC : JoiObjectId().required()
+    idDAC: JoiObjectId().required(),
   }),
   updateDAC: Joi.object().keys({
     CPGA: Joi.number().min(0).max(10).required(),
@@ -76,11 +76,30 @@ export default {
     nameCourse: Joi.string().required(),
     major: Joi.string().required(),
   }),
-  registrationNum : Joi.object().keys({
-    registrationNum : Joi.string().required()
-  }),
+  registrationNum: Joi.array().items(
+    Joi.object({
+      _id: JoiObjectId().required(),
+      registrationNumber: Joi.string().required(),
+    }),
+  ),
+  regisIdNumber: Joi.array().items(
+    Joi.object({
+      _id: JoiObjectId().required(),
+      idNumber: Joi.string().required(),
+    }),
+  ),
   idNumber: Joi.object().keys({
-    idNumber : Joi.string().required()
-
-  })
+    idNumber: Joi.string().required(),
+  }),
+  query: Joi.object().keys({
+    page: Joi.number().required().integer().min(1),
+    limit: Joi.number().required().integer().min(1),
+    dispensingStatus: Joi.boolean().valid().required(),
+  }),
+  param: Joi.object().keys({
+    idDAC: JoiObjectId().required(),
+    identityUniversity: Joi.string()
+      .required()
+      .regex(/^[0-9]{12}$/),
+  }),
 };

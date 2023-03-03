@@ -1,7 +1,7 @@
 import { InfoUser, InfoUserModel, Role } from '../model';
 import { filterNull } from '../../helpers/utils';
 import { Types } from 'mongoose';
-import { Pagination } from '../../../services/recipientProfile/recipientProfile.service';
+import { Pagination } from '../../../services/recipientProfile/interface';
 import { PaginationSearch } from '../../../services/user/student/interface';
 export class InfoUserRepository {
   public async create(user: InfoUser): Promise<InfoUser> {
@@ -61,6 +61,36 @@ export class InfoUserRepository {
     return await filterNull(data);
   }
 
+  public async findByIdAndAccountUserFromUniversity(
+    id: Types.ObjectId,
+  ): Promise<any> {
+    const data = await InfoUserModel.findById(id).populate({
+      path: 'idUser',
+      match: { roles: { $in: [Role.UNIVERSITY] } },
+      select: '-password',
+    });
+    if (!data?.idUser) return {};
+    return data;
+  }
+
+  public async findInfoAndAccountFromUniversity({
+    page,
+    limit,
+  }: Pagination): Promise<any[]> {
+    const data = await InfoUserModel.find()
+      .populate({
+        path: 'idUser',
+        match: { roles: { $in: [Role.UNIVERSITY] } },
+        select: '-password',
+      })
+      .skip(limit * (page - 1))
+      .limit(limit)
+      .sort({ updatedAt: -1 })
+      .lean()
+      .exec();
+    return await filterNull(data);
+  }
+
   public async findInfoAndAccountFromStudentOfUniversity(
     { page, limit }: Pagination,
     idUni: Types.ObjectId,
@@ -79,7 +109,7 @@ export class InfoUserRepository {
     return await filterNull(data);
   }
 
-  public async findInfoAndAccountFromKeyWord({
+  public async findInfoAndAccountFromKeyWordOfRoleStudent({
     page,
     limit,
     keyword,
@@ -90,18 +120,43 @@ export class InfoUserRepository {
         { identity: { $regex: keyword, $options: 'i' } },
       ],
     })
-    .populate({
-      path: 'idUser',
-      match: { roles: { $in: [Role.STUDENT] } },
-      select: '-password',
-    })
-    .skip(limit * (page - 1))
-    .limit(limit)
-    .sort({ updatedAt: -1 })
-    .lean()
-    .exec();
+      .populate({
+        path: 'idUser',
+        match: { roles: { $in: [Role.STUDENT] } },
+        select: '-password',
+      })
+      .skip(limit * (page - 1))
+      .limit(limit)
+      .sort({ updatedAt: -1 })
+      .lean()
+      .exec();
     return await filterNull(data);
   }
+
+  public async findInfoAndAccountFromKeyWordOfRoleUniversity({
+    page,
+    limit,
+    keyword,
+  }: PaginationSearch): Promise<any> {
+    const data = await InfoUserModel.find({
+      $or: [
+        { name: { $regex: keyword, $options: 'i' } },
+        { identity: { $regex: keyword, $options: 'i' } },
+      ],
+    })
+      .populate({
+        path: 'idUser',
+        match: { roles: { $in: [Role.UNIVERSITY] } },
+        select: '-password',
+      })
+      .skip(limit * (page - 1))
+      .limit(limit)
+      .sort({ updatedAt: -1 })
+      .lean()
+      .exec();
+    return await filterNull(data);
+  }
+
   public async edit(id: Types.ObjectId, data: any): Promise<void> {
     await InfoUserModel.updateOne({ _id: id }, { $set: { ...data } });
   }

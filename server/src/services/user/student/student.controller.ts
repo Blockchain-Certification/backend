@@ -7,7 +7,7 @@ import {
 } from '../../../shared/core/apiResponse';
 import { ProtectedRequest } from '../../../shared/types/app-request';
 import { Types } from 'mongoose';
-import { Pagination } from '../../recipientProfile/recipientProfile.service';
+import { Pagination } from './interface';
 import { PaginationSearch } from './interface';
 export class StudentController {
   private studentService: StudentService;

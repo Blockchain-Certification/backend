@@ -66,7 +66,8 @@ export default {
         .valid(Gender.Other)
         .required(),
       identity: Joi.string()
-        .required(),
+        .required()
+        .regex(/^[0-9]{12}$/),
     }),
   ),
   login: Joi.object().keys({
