@@ -28,6 +28,11 @@ export default {
         .max(50)
         .pattern(/^[a-zA-Z ]+$/)
         .required(),
+      departmentName: Joi.string()
+        .min(3)
+        .max(50)
+        .pattern(/^[a-zA-Z ]+$/)
+        .required(),
       dateOfBirth: Joi.date().max(dateUpTo6Y).min(dateMinimum100Y).required(),
       year: Joi.string()
         .required()
@@ -42,7 +47,7 @@ export default {
       formOfTraining: Joi.string()
         .valid(...Object.values(FormOfTraining))
         .required(),
-      CPGA: Joi.number().min(0).max(10).required(),
+        CGPA: Joi.number().min(0).max(10).required(),
       gender: Joi.string()
         .valid(...Object.values(DACGender))
         .required(),
@@ -63,7 +68,7 @@ export default {
     idDAC: JoiObjectId().required(),
   }),
   updateDAC: Joi.object().keys({
-    CPGA: Joi.number().min(0).max(10).required(),
+    CGPA: Joi.number().min(0).max(10).required(),
     formOfTraining: Joi.string()
       .valid(...Object.values(FormOfTraining))
       .required(),

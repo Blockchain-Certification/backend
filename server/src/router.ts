@@ -25,6 +25,6 @@ router.use('/auth', auth);
 router.use('/certTypes', certificateType);
 router.use('/graduationCourses', graduationCourse);
 router.use('/graduationYears', graduationYear);
-router.use('/dacs', dac);
+router.use('/dac', dac);
 router.use('/recipientProfiles', recipientProfile);
 export default router;

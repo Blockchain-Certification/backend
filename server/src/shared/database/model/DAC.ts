@@ -27,7 +27,8 @@ export default interface DAC {
   idNumber: string | null; // IDENTIFICATION NUMBER
   registrationNum: string | null; // REGISTRATION NUMBER
   iU: string; //idIdentityUniversity
-  iSt: string; //idIdentityStudent
+  iSt: string; //idIdentityStudent,
+  departmentName : string ;
   studentName?: string;
   universityName?: string;
   placeOfBirth: string;
@@ -36,11 +37,13 @@ export default interface DAC {
   year?: string;
   nameCourse?: string;
   major?: string;
-  typeCertificate: string | null;
+  nameTypeCertificate: string | null;
+  typeCertificate : string | null;
+  levelCertificate : number | null;
   ranking?: Ranking;
   dateOfIssuing: Date | null;
   formOfTraining?: FormOfTraining;
-  CPGA?: string;
+  CGPA?: string;
   gender?: DACGender;
   dispensingStatus: boolean;
 }
@@ -57,11 +60,14 @@ const schema = new Schema<DAC>(
     iSt: { type: Schema.Types.String, required: true },
     studentName: { type: Schema.Types.String, required: true },
     universityName: { type: Schema.Types.String, required: true },
+    departmentName : { type: Schema.Types.String, required: true },
     dateOfBirth: { type: Schema.Types.Date, required: true },
     year: { type: Schema.Types.String, required: true },
     nameCourse: { type: Schema.Types.String, required: true },
     major: { type: Schema.Types.String, required: true },
+    nameTypeCertificate: { type: Schema.Types.String, required: false },
     typeCertificate: { type: Schema.Types.String, required: false },
+    levelCertificate: { type: Schema.Types.Number, required: false },
     placeOfBirth: { type: Schema.Types.String, required: true },
     nation: { type: Schema.Types.String, required: true },
     ranking: {
@@ -75,7 +81,7 @@ const schema = new Schema<DAC>(
       required: true,
       enum: Object.values(FormOfTraining),
     },
-    CPGA: { type: Schema.Types.String, required: true },
+    CGPA: { type: Schema.Types.String, required: true },
     gender: {
       type: Schema.Types.String,
       required: false,

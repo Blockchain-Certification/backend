@@ -22,12 +22,4 @@ export const hasDuplicateAndMustDuplicateIU = (students: DAC[]): boolean => {
   return false;
 };
 
-export const authorizationRecipientProfile = asyncHandler(
-  async (req: ProtectedRequest, res, next) => {
-    const { identityUniversity } = req.params;
-    const { userName, roles } = req.user;
-    if (roles.includes(Role.UNIVERSITY) && userName !== identityUniversity)
-      throw new AuthFailureError('Not allowed access data');
-    return next();
-  },
-);
+
