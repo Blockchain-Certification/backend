@@ -20,7 +20,8 @@ class EducertContract extends Contract {
       "universityName",
       "major",
       "departmentName",
-      "cgpa",
+      "CGPA",
+      ""
     ]);
 
     await ctx.stub.putState(
