@@ -106,6 +106,7 @@ async function invokeChaincode({
           func,
           ...args,
         );
+
         logger.debug('after submit');
 
         logger.debug(response);

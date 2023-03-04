@@ -47,7 +47,7 @@ export default {
       formOfTraining: Joi.string()
         .valid(...Object.values(FormOfTraining))
         .required(),
-        CGPA: Joi.number().min(0).max(10).required(),
+      CGPA: Joi.number().min(0).max(10).required(),
       gender: Joi.string()
         .valid(...Object.values(DACGender))
         .required(),
@@ -80,6 +80,11 @@ export default {
       .regex(/^[1-9][0-9]{3}$/),
     nameCourse: Joi.string().required(),
     major: Joi.string().required(),
+    departmentName: Joi.string()
+      .min(3)
+      .max(50)
+      .pattern(/^[a-zA-Z ]+$/)
+      .required(),
   }),
   registrationNum: Joi.array().items(
     Joi.object({

@@ -35,4 +35,18 @@ router.patch(
   manageDACController.issue,
 );
 
+
+
+router.get(
+  '/:identityUniversity',
+  authentication,
+  role(Role.UNIVERSITY,Role.DOET),
+  authorization,
+  authorizationUniversity,
+  validator(schema.iUni, ValidationSource.PARAM),
+  validator(schema.pagination, ValidationSource.QUERY),
+  manageDACController.getListDACOfUniversity,
+);
+
+
 export default router;

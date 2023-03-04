@@ -1,4 +1,14 @@
 import { createNewWalletEntity, HexKey } from './wallet-utils';
 import { enrollAdmin } from './enrollment';
-
-export { createNewWalletEntity, enrollAdmin, HexKey };
+import { generateMerkleRoot, createDigitalSignature } from './encryption';
+import { invokeChaincode } from './chaincode';
+import config from './callFuncChainCode/config';
+export {
+  createNewWalletEntity,
+  enrollAdmin,
+  HexKey,
+  generateMerkleRoot,
+  createDigitalSignature,
+  invokeChaincode,
+  config
+};
