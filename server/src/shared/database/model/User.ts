@@ -1,22 +1,22 @@
-import { model, Schema, Types } from 'mongoose';
+import { model, Schema, Types, Document } from 'mongoose';
+import bcrypt from 'bcrypt';
 
 export const DOCUMENT_NAME = 'User';
 export const COLLECTION_NAME = 'USERS';
 
-enum Role {
-  DOET = ' DOET', //Department of Education and Training (DOET).
+export enum Role {
+  DOET = 'DOET', //Department of Education and Training (DOET).
   STUDENT = 'STUDENT',
   UNIVERSITY = 'UNIVERSITY',
 }
 
 export default interface User {
   _id: Types.ObjectId;
-  userName?: string;
-  password?: string;
-  roles?: Role[];
-  publicKey?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  userName: string;
+  password: string;
+  roles: Role[];
+  publicKey: string;
+  isValidPassword(password: string): Promise<boolean>;
 }
 
 const schema = new Schema<User>(
@@ -38,9 +38,7 @@ const schema = new Schema<User>(
       ],
       required: true,
     },
-    publicKey: { type: Schema.Types.String, required: true },
-    createdAt: { type: Schema.Types.Date, default: Date.now },
-    updatedAt: { type: Schema.Types.Date, default: Date.now },
+    publicKey: { type: Schema.Types.String, required: false, default: '' },
   },
   { versionKey: false, timestamps: true },
 );
@@ -48,5 +46,21 @@ const schema = new Schema<User>(
 schema.index({ _id: 1, status: 1 });
 schema.index({ status: 1 });
 schema.index({ userName: 1 });
+
+schema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
+  const salt = await bcrypt.genSalt(12);
+  const hashedPassword = await bcrypt.hash(this.password, salt);
+  this.password = hashedPassword;
+  next();
+});
+
+schema.methods.isValidPassword = async function (
+  password: string,
+): Promise<boolean> {
+  return bcrypt.compare(password, this.password);
+};
 
 export const UserModel = model<User>(DOCUMENT_NAME, schema, COLLECTION_NAME);

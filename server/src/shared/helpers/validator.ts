@@ -3,28 +3,30 @@ import { Request, Response, NextFunction } from 'express';
 import Logger from '../core/logger';
 import { BadRequestError } from '../core/apiError';
 import { Types } from 'mongoose';
-
+import asyncHandler from './asyncHandler';
+import { DACModel } from '../database/model';
 export enum ValidationSource {
   BODY = 'body',
   HEADER = 'headers',
   QUERY = 'query',
   PARAM = 'params',
+  COOKIES = 'cookies',
 }
 
 export const JoiObjectId = () =>
-  Joi.string().custom((value: string, helpers : Joi.CustomHelpers<any>) => {
+  Joi.string().custom((value: string, helpers: Joi.CustomHelpers<any>) => {
     if (!Types.ObjectId.isValid(value)) return helpers.error('any.invalid');
     return value;
   }, 'Object Id Validation');
 
 export const JoiUrlEndpoint = () =>
-  Joi.string().custom((value: string, helpers : Joi.CustomHelpers<any>) => {
-    if (value.includes('://')) return helpers .error('any.invalid');
+  Joi.string().custom((value: string, helpers: Joi.CustomHelpers<any>) => {
+    if (value.includes('://')) return helpers.error('any.invalid');
     return value;
   }, 'Url Endpoint Validation');
 
 export const JoiAuthBearer = () =>
-  Joi.string().custom((value: string, helpers : Joi.CustomHelpers<any>) => {
+  Joi.string().custom((value: string, helpers: Joi.CustomHelpers<any>) => {
     if (!value.startsWith('Bearer ')) return helpers.error('any.invalid');
     if (!value.split(' ')[1]) return helpers.error('any.invalid');
     return value;
@@ -51,3 +53,5 @@ export default (
       next(error);
     }
   };
+
+

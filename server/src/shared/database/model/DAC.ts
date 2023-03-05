@@ -1,8 +1,9 @@
 import { model, Schema, Types } from 'mongoose';
+import { Gender } from './InfoUser';
 export const DOCUMENT_NAME = 'DAC';
 export const COLLECTION_NAME = 'DAC';
 
-enum Ranking {
+export enum Ranking {
   EXCELLENT = 'EXCELLENT',
   VERY_GOOD = 'VERY_GOOD',
   GOOD = 'GOOD',
@@ -10,75 +11,88 @@ enum Ranking {
   ORDINAL = 'ORDINAL',
 }
 
-enum FormOfTraining {
+export enum FormOfTraining {
   FULL_TIME = 'FULL_TIME',
   PART_TIME = 'PART_TIME',
   DISTANCE_LEARNING = 'DISTANCE_LEARNING',
   GUIDED_SELF_LEARNING = 'GUIDED_SELF_LEARNING',
 }
-
+export enum DACGender {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+}
 export default interface DAC {
   _id: Types.ObjectId;
-  idNumber: string; // IDENTIFICATION NUMBER
-  registrationNum: string; // REGISTRATION NUMBER
-  idU: Types.ObjectId; //idIdentityUniversity
-  idSt: Types.ObjectId; //idIdentityStudent
-  idYear: Types.ObjectId;
-  idCourse: Types.ObjectId;
-  idDepartment: Types.ObjectId;
-  studentName: string;
-  universityName: string;
-  dateOfBirth: Date;
-  year: Date;
-  nameCourse: string;
-  major: string;
-  nameDepartment: string;
-  ranking: Ranking;
-  dateOfIssuing: Date;
-  formOfTraining: FormOfTraining;
-  CPGA: string;
+  id : string;
+  idNumber: string | null; // IDENTIFICATION NUMBER
+  registrationNum: string | null; // REGISTRATION NUMBER
+  iU: string; //idIdentityUniversity
+  iSt: string; //idIdentityStudent,
+  departmentName : string ;
+  studentName?: string;
+  universityName?: string;
+  placeOfBirth: string;
+  nation: string;
+  dateOfBirth?: Date;
+  year?: string;
+  nameCourse?: string;
+  major?: string;
+  nameTypeCertificate: string | null;
+  typeCertificate : string | null;
+  levelCertificate : number | null;
+  ranking?: Ranking;
+  dateOfIssuing: Date | null;
+  formOfTraining?: FormOfTraining;
+  CGPA?: string;
+  gender?: DACGender;
+  dispensingStatus: boolean;
 }
 
 const schema = new Schema<DAC>(
   {
-    idNumber: { type: Schema.Types.String, required: true },
-    registrationNum: { type: Schema.Types.String, required: true },
-    idU: { type: Schema.Types.ObjectId, required: true, ref: 'InfoUser' },
-    idSt: { type: Schema.Types.ObjectId, required: true, ref: 'InfoUser' },
-    idYear: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'GraduationYear',
-    },
-    idCourse: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'GraduationCourse',
-    },
-    idDepartment: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'TypeDepartment',
-    },
+    id : { type: Schema.Types.String, required: true },
+    idNumber: { type: Schema.Types.String, required: false}, // so vao so
+    registrationNum: {
+      type: Schema.Types.String,
+      required: false,
+    }, // so hieu
+    iU: { type: Schema.Types.String, required: true },
+    iSt: { type: Schema.Types.String, required: true },
     studentName: { type: Schema.Types.String, required: true },
     universityName: { type: Schema.Types.String, required: true },
+    departmentName : { type: Schema.Types.String, required: true },
     dateOfBirth: { type: Schema.Types.Date, required: true },
-    year: { type: Schema.Types.Date, required: true },
+    year: { type: Schema.Types.String, required: true },
     nameCourse: { type: Schema.Types.String, required: true },
     major: { type: Schema.Types.String, required: true },
-    nameDepartment: { type: Schema.Types.String, required: true },
+    nameTypeCertificate: { type: Schema.Types.String, required: false },
+    typeCertificate: { type: Schema.Types.String, required: false },
+    levelCertificate: { type: Schema.Types.Number, required: false },
+    placeOfBirth: { type: Schema.Types.String, required: true },
+    nation: { type: Schema.Types.String, required: true },
     ranking: {
       type: Schema.Types.String,
       required: true,
       enum: Object.values(Ranking),
     },
-    dateOfIssuing: { type: Schema.Types.Date, required: true },
+    dateOfIssuing: { type: Schema.Types.Date, required: false },
     formOfTraining: {
       type: Schema.Types.String,
       required: true,
       enum: Object.values(FormOfTraining),
     },
-    CPGA: { type: Schema.Types.String, required: true },
+    CGPA: { type: Schema.Types.String, required: true },
+    gender: {
+      type: Schema.Types.String,
+      required: false,
+      enum: Object.values(Gender),
+      default: Gender.FEMALE,
+    },
+    dispensingStatus: {
+      type: Schema.Types.Boolean,
+      required: true,
+      default: false,
+    },
   },
   { versionKey: false, timestamps: true },
 );
