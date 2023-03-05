@@ -8,32 +8,21 @@ import schema from './schema';
 import { authentication, authorization } from '../../../shared/middlewares';
 import { role } from '../../../shared/helpers/utils';
 import { Role } from '../../../shared/database/model';
-import DACStudentService from './student.service';
-import DACStudentController from './student.controller';
+import DACGeneralService from './general.service';
+import DACGeneralController from './general.controller';
+import { verify } from 'jsonwebtoken';
 
 const router = Router();
 
 const infoUserRepository = new InfoUserRepository();
 const dacRepository = new DACRepository();
-const dacStudentService = new DACStudentService(
+const dacGeneralService = new DACGeneralService(
   dacRepository,
   infoUserRepository,
 );
-const dacStudentController = new DACStudentController(dacStudentService);
 
-router.use(authentication, role(Role.STUDENT), authorization);
+const dacGeneralController = new DACGeneralController(dacGeneralService);
 
-router.get(
-  '/',
-  validator(schema.pagination, ValidationSource.QUERY),
-  dacStudentController.getListDACOfStudent
-);
-
-router.get('/generateProof/:idDAC',
-validator(schema.idDAC,ValidationSource.PARAM),
-validator(schema.sharedField,ValidationSource.QUERY),
-dacStudentController.generateProof
-)
-
+router.post('/verify', validator(schema.verify), dacGeneralController.verify);
 
 export default router;

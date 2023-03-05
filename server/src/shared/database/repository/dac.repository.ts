@@ -22,10 +22,6 @@ export class DACRepository {
     return DACModel.find({ iU: id });
   }
 
-  public async create(dac: DAC): Promise<DAC> {
-    return DACModel.create(dac);
-  }
-
   public async findByIUniAndPagination(
     { page, limit, dispensingStatus }: PaginationGetList,
     id: string,
@@ -36,6 +32,21 @@ export class DACRepository {
       .sort({ updatedAt: -1 })
       .lean()
       .exec();
+  }
+
+  public async findByIdSelectField(
+    id: Types.ObjectId,
+    sharedFields: string[],
+  ): Promise<DAC | null> {
+    console.log(sharedFields.join(' '));
+    return DACModel.findById(id)
+      .select(`${sharedFields.join(' ')} ` + '_id')
+      .lean()
+      .exec();
+  }
+
+  public async create(dac: DAC): Promise<DAC> {
+    return DACModel.create(dac);
   }
 
   public async update(id: Types.ObjectId, body: any): Promise<void> {

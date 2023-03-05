@@ -1,8 +1,8 @@
 import argsCallFunc from './config';
 import { invokeChaincode } from '../chaincode';
 export const queryUniversityProfileByName = async (
-  nameUni : string,
-  identityUniversity : string,
+  nameUni: string,
+  identityUniversity: string,
 ) => {
   const func = await argsCallFunc.queryUniversityProfileByName(
     nameUni,
@@ -11,19 +11,29 @@ export const queryUniversityProfileByName = async (
   return await invokeChaincode(func);
 };
 
-
-export const getAllCertificateByUniversity = async (publicKey : string, identityUniversity : string) => {
+export const getAllCertificateByUniversity = async (
+  publicKey: string,
+  identityUniversity: string,
+) => {
   const func = await argsCallFunc.getAllCertificateByUniversity(
     publicKey,
     identityUniversity,
   );
   return await invokeChaincode(func);
-}
+};
 
-export const getAllCertificateByStudent = async (publicKey : string, identity : string) => {
+export const getAllCertificateByStudent = async (
+  publicKey: string,
+  identity: string,
+) => {
   const func = await argsCallFunc.getAllCertificateByStudent(
     publicKey,
     identity,
   );
   return await invokeChaincode(func);
-}
+};
+
+export const queryCertificateSchema = async (identity: string) => {
+  const func = await argsCallFunc.queryCertificateSchema(identity);
+  return await invokeChaincode(func);
+};
