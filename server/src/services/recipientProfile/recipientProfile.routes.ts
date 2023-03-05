@@ -14,7 +14,7 @@ import validator, { ValidationSource } from '../../shared/helpers/validator';
 import schema from './schema';
 import RecipentProfileService from './recipientProfile.service';
 import RecipentProfileController from './recipientProfile.controller';
-import {authorizationRecipientProfile} from './utils';
+import { authorizationUniversity } from '../../shared/middlewares';
 
 const dacRepository = new DACRepository();
 const infoUserRepository = new InfoUserRepository();
@@ -54,7 +54,7 @@ router.get(
   role(Role.UNIVERSITY, Role.DOET),
   authorization,
   validator(schema.param, ValidationSource.PARAM),
-  authorizationRecipientProfile,
+  authorizationUniversity,
   recipentProfileController.detail,
 );
 
@@ -66,7 +66,7 @@ router.post(
   authorization,
   validator(schema.recipentProfile),
   validator(schema.iUni, ValidationSource.PARAM),
-  authorizationRecipientProfile,
+  authorizationUniversity,
   recipentProfileController.create,
 );
 
@@ -78,7 +78,7 @@ router.patch(
   authorization,
   validator(schema.iUni, ValidationSource.PARAM),
   validator(schema.regisIdNumber),
-  authorizationRecipientProfile,
+  authorizationUniversity,
   recipentProfileController.regisIdNumber,
 );
 

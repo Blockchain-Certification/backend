@@ -15,7 +15,7 @@ export interface DataDACUpdate {
   major: string;
   ranking: Ranking;
   formOfTraining: FormOfTraining;
-  CPGA: string;
+  CGPA: string;
 }
 
 export interface DTORegistrationNumber{

@@ -5,7 +5,7 @@ import {
   certificateType,
   graduationCourse,
 } from './CRUD/ index';
-import { dac } from './dac';
+import dac from './dac/dac.router';
 import { recipientProfile } from './recipientProfile';
 export {
   user,

@@ -223,9 +223,11 @@ export default class RecipentProfileService {
     await Promise.all(
       listDAC.map(async (dac: DAC) => {
         dac.dateOfIssuing = null;
-        dac.typeCertificate = null;
+        dac.nameTypeCertificate = null;
         dac.idNumber = null;
         dac.registrationNum = null;
+        dac.typeCertificate = null;
+        dac.levelCertificate = null
         dac.dispensingStatus = false;
         promises.push(this.dacRepository.create(dac));
       }),

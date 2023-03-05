@@ -35,3 +35,6 @@ export const role = (...role: Role[]) =>
 export const filterNull = async (list: any) => {
   return await list.filter((el: any) => el.idUser !== null);
 };
+
+
+

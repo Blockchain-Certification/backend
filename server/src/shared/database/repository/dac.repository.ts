@@ -1,6 +1,7 @@
 import { DAC, DACModel } from '../model';
 import { Types } from 'mongoose';
 import { PaginationGetList } from '../../../services/recipientProfile/interface';
+import { Pagination } from '../../../services/dac/manage/interface';
 export class DACRepository {
   public async findById(id: Types.ObjectId): Promise<DAC | null> {
     return DACModel.findById(id);
@@ -21,10 +22,6 @@ export class DACRepository {
     return DACModel.find({ iU: id });
   }
 
-  public async create(dac: DAC): Promise<DAC> {
-    return DACModel.create(dac);
-  }
-
   public async findByIUniAndPagination(
     { page, limit, dispensingStatus }: PaginationGetList,
     id: string,
@@ -35,6 +32,21 @@ export class DACRepository {
       .sort({ updatedAt: -1 })
       .lean()
       .exec();
+  }
+
+  public async findByIdSelectField(
+    id: Types.ObjectId,
+    sharedFields: string[],
+  ): Promise<DAC | null> {
+    console.log(sharedFields.join(' '));
+    return DACModel.findById(id)
+      .select(`${sharedFields.join(' ')} ` + '_id')
+      .lean()
+      .exec();
+  }
+
+  public async create(dac: DAC): Promise<DAC> {
+    return DACModel.create(dac);
   }
 
   public async update(id: Types.ObjectId, body: any): Promise<void> {
@@ -51,23 +63,37 @@ export class DACRepository {
     return true;
   }
 
-  public async findByRegistrationNumber(registrationNum: string): Promise<DAC | null> {
+  public async findByRegistrationNumber(
+    registrationNum: string,
+  ): Promise<DAC | null> {
     return await DACModel.findOne({ registrationNum });
+  }
+
+  public async findByListDACUUID(
+    dacUUIDList: Types.ObjectId[],
+    { page, limit }: Pagination,
+  ): Promise<DAC[] | null> {
+    return await DACModel.find()
+      .where('_id')
+      .in(dacUUIDList)
+      .skip(limit * (page - 1))
+      .limit(limit)
+      .sort({ updatedAt: -1 })
+      .lean()
+      .exec();
   }
 
   public async isValidRegistrationNumber(
     regisNumber: string,
   ): Promise<boolean> {
     const isExisted = await this.findByRegistrationNumber(regisNumber);
-    if(isExisted) return false;
+    if (isExisted) return false;
     return true;
   }
 
-  public async isValidRegisIdNumber(
-    idNumber: string,
-  ): Promise<boolean> {
+  public async isValidRegisIdNumber(idNumber: string): Promise<boolean> {
     const isExisted = await this.findByRegistrationNumber(idNumber);
-    if(isExisted) return false;
+    if (isExisted) return false;
     return true;
   }
 }

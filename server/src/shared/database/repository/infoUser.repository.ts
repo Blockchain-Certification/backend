@@ -43,6 +43,31 @@ export class InfoUserRepository {
     return data;
   }
 
+  public async findByIdentityAndAccountUserFromStudent(
+    identity: string,
+  ): Promise<any> {
+    const data = await InfoUserModel.findOne({ identity }).populate({
+      path: 'idUser',
+      match: { roles: { $in: [Role.STUDENT] } },
+      select: '-password',
+    });
+    if (!data?.idUser) return {};
+    return data;
+  }
+
+
+  public async findByIdentityAndAccountUserFromUniversity(
+    identity: string,
+  ): Promise<any> {
+    const data = await InfoUserModel.findOne({ identity }).populate({
+      path: 'idUser',
+      match: { roles: { $in: [Role.UNIVERSITY] } },
+      select: '-password',
+    });
+    if (!data?.idUser) return {};
+    return data;
+  }
+
   public async findInfoAndAccountFromStudent({
     page,
     limit,
