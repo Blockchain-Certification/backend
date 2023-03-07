@@ -15,17 +15,14 @@ export default class AuthController {
   }
   public login = asyncHandler(async (req: Request, res: Response) => {
     const { userData, tokens } = await this.authService.login(req.body);
-    res
-      .cookie('access_token', tokens.accessToken, {
-        maxAge: tokenInfo.accessTokenValidity + 1000,
-        httpOnly: true,
-        sameSite: 'strict',
-      })
-      .cookie('refresh_token', tokens.refreshToken, {
-        maxAge: tokenInfo.refreshTokenValidity + 1000,
-        httpOnly: true,
-        sameSite: 'strict',
-      });
+    res.cookie('access_token', tokens.accessToken, {
+      maxAge: tokenInfo.accessTokenValidity + 1000,
+      httpOnly: true,
+    });
+    res.cookie('refresh_token', tokens.refreshToken, {
+      maxAge: tokenInfo.refreshTokenValidity + 1000,
+      httpOnly: true,
+    });
 
     return new SuccessResponse('Login successfully', {
       success: true,
@@ -45,12 +42,10 @@ export default class AuthController {
       res.cookie('access_token', tokens.accessToken, {
         maxAge: tokenInfo.accessTokenValidity + 1000,
         httpOnly: true,
-        sameSite: 'strict',
       });
       res.cookie('refresh_token', tokens.refreshToken, {
         maxAge: tokenInfo.refreshTokenValidity + 1000,
         httpOnly: true,
-        sameSite: 'strict',
       });
 
       return new TokenRefreshResponse(
@@ -66,10 +61,11 @@ export default class AuthController {
     new SuccessMsgResponse('Logout success').send(res);
   });
 
-  public register = asyncHandler(async (req: ProtectedRequest, res: Response) => {
-    const {_id} = req.user;
-    await this.authService.register(req.body, _id);
-    return new SuccessMsgResponse('Created Successfully').send(res);
-  });
-
+  public register = asyncHandler(
+    async (req: ProtectedRequest, res: Response) => {
+      const { _id } = req.user;
+      await this.authService.register(req.body, _id);
+      return new SuccessMsgResponse('Created Successfully').send(res);
+    },
+  );
 }

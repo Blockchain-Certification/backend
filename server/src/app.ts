@@ -7,6 +7,7 @@ import cors from 'cors';
 import { corsUrl, environment } from './config';
 import './shared/database/index'; // initialize database
 import { limiter, fabricLoader } from './shared/core/utils';
+import cookieSession from 'cookie-session';
 import {
   NotFoundError,
   ApiError,
@@ -22,6 +23,15 @@ fabricLoader;
 const app = express();
 
 // Apply the rate limiter middleware to all requests
+app.enable('trust proxy');
+app.use(
+  cookieSession({
+    secret: 'yourSecret',
+    sameSite: 'none',
+    secure: true,
+    httpOnly: true,
+  }),
+);
 app.use(cookieParser());
 app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
@@ -33,10 +43,10 @@ app.use(
 app.use(
   express.urlencoded({ limit: '10mb', extended: true, parameterLimit: 50000 }),
 );
-app.use(
-  cors({ origin: 'http://localhost:3000', optionsSuccessStatus: 200, credentials: true }),
-);
-app.use(helmet());
+
+
+app.use(cors({ origin: 'http://localhost:3000', optionsSuccessStatus: 200, credentials: true }));
+app.use(helmet());  
 
 // Routes
 app.use('/api/v1', router);
@@ -63,5 +73,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     ApiError.handle(new InternalError(), res);
   }
 });
+
+
 
 export default app;
