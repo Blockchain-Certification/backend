@@ -1,6 +1,5 @@
 node {
   stage('deploy') {
-      sh 'cd /home/blockchain/backend'
-      sh 'pm2 restart 31'
+      sh 'ssh root@194.163.180.21'
   }
 }
