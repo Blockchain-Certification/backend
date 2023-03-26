@@ -1,6 +1,6 @@
 node {
   stage('deploy') {
-      sh 'ssh root@194.163.180.21'
+      sh 'ssh root@194.163.180.21 & cd /home/blockchain/backend'
       sh 'cd /home/blockchain/backend'
   }
 }
