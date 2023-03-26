@@ -1,6 +1,7 @@
 node {
 
   stage('deploy'){
+    sh 'cd /deploy';
     sh './deploy.sh';  
   }                           
 }                                          
