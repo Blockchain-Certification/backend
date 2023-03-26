@@ -1,8 +1,6 @@
 node {
   stage('deploy') {
-    steps {
-      sh 'cd /home/blockchain/backend && git pull'
+      sh 'cd /home/blockchain/backend'
       sh 'pm2 restart 31'
-    }
   }
 }
