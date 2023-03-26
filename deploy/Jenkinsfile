@@ -1,16 +1,7 @@
-pipeline {
-    agent any
-    stages {
-        stage('Build') {
-            steps {
-                // Perform the build steps here
-                sh 'npm install'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sh './deploy.sh'
-            }
-        }
+node {
+  stage('deploy') {
+    steps {
+      sh './deploy.sh'
     }
+  }
 }
