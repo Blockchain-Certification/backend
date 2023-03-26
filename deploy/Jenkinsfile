@@ -1,0 +1,8 @@
+node {
+
+  stage('deploy'){
+    sh 'cd /home/blockchain/backend/server'  
+    sh 'git pull'
+    sh 'pm2 restart 31'
+  }                           
+}                                          
