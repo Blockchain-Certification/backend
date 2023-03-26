@@ -1,8 +1,12 @@
 node {
+  stage('deploy') {
+    // Set the working directory to the application directory
+    dir('/home/blockchain/backend/server') {
+      // Pull the latest changes from the Git repository
+      sh 'git pull'
 
-  stage('deploy'){
-    sh 'cd /home/blockchain/backend/server'  
-    sh 'git pull'
-    sh 'pm2 restart 31'
-  }                           
-}                                          
+      // Restart the PM2 process with the given name
+      sh 'pm2 restart myapp'
+    }
+  }
+}
