@@ -1,7 +1,8 @@
 node {
 
   stage('deploy'){
-    sh 'cd /deploy';
-    sh './deploy.sh';  
+    sh 'root@194.163.180.21';
+    sh 'echo "hekk"'
+
   }                           
 }                                          
