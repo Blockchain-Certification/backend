@@ -1,7 +1,6 @@
 node {
-  stage('deploy') {
-    steps {
-      sh './deploy.sh'
-    }
-  }
-}
+
+  stage('deploy'){
+    sh './deploy.sh';  
+  }                           
+}                                          
