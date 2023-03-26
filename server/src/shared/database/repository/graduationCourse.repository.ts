@@ -38,4 +38,9 @@ export default class GraduationCourseRepository {
   public async delete(id: Types.ObjectId): Promise<void> {
     await GraduationCourseModel.remove(id);
   }
+
+  public async count(): Promise<number> {
+    return GraduationCourseModel.count();
+  }
+
 }

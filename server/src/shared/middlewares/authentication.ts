@@ -13,7 +13,10 @@ const keyStoreRepository = new KeyStoreRepository();
 
 router.use(
   asyncHandler(async (req: ProtectedRequest, res, next) => {
-    const accessToken = req.cookies.access_token;
+    const headers = req.headers.authorization;
+    if(!headers)
+      throw new  AuthFailureError('Invalid authorization header')
+    const accessToken = headers.split(' ')[1];
 
     try {
       const accessTokenPayload = await JWT.validate(accessToken);

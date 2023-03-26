@@ -7,10 +7,10 @@ import {
   graduationYear,
   dac,
   recipientProfile,
-} from './services/index';
-import permission from './shared/middlewares/permission';
-import { Permission } from './shared/database/model/ApiKey';
-import apiKey from './shared/middlewares/apiKey';
+} from '../services/index';
+import permission from '../shared/middlewares/permission';
+import { Permission } from '../shared/database/model/ApiKey';
+import apiKey from '../shared/middlewares/apiKey';
 
 const router = Router();
 

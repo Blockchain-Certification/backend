@@ -22,13 +22,13 @@ export default class Controller {
         parseInt(page as string),
         parseInt(limit as string),
       );
-
       return new SuccessResponse('Get list successfully', {
         success: true,
         data: data,
         pagination: {
           page,
           limit,
+          totalPage : Math.ceil(await this.service.count()/parseInt(limit as string) )
         },
       }).send(res);
     },

@@ -96,4 +96,10 @@ export class DACRepository {
     if (isExisted) return false;
     return true;
   }
+
+  public async countOfUniversity(idUniversity: string): Promise<number> {
+    return await DACModel.find({
+      iU: idUniversity,
+    }).count();
+  }
 }

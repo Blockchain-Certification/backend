@@ -34,4 +34,8 @@ export default class GraduationYearRepository {
   {
     return await GraduationYearModel.findOne({year});
   }
+
+  public async count(): Promise<number> {
+    return GraduationYearModel.count();
+  }
 }

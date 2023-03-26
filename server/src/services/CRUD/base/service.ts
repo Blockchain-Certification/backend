@@ -11,11 +11,11 @@ export default class CertificateTypeService {
     this.dacRepository = dacRepository;
   }
 
-  async getList(pageNumber: number, limit: number): Promise<CertificateType[]> {
+  public async getList(pageNumber: number, limit: number): Promise<CertificateType[]> {
     return this.repositoryMain.find(pageNumber, limit);
   }
 
-  async create(newData: any): Promise<any> {
+  public async create(newData: any): Promise<any> {
     const name = newData.name || newData.year;
     await this.isValidName(name);
     newData.id = ' ';
@@ -37,6 +37,10 @@ export default class CertificateTypeService {
   public async delete(id: Types.ObjectId): Promise<void> {
     await this.checkUpBlockchain(id);
     await this.repositoryMain.delete(id);
+  }
+
+  public async count(): Promise<number>{
+    return this.repositoryMain.count();
   }
 
   private async checkUpBlockchain(id: Types.ObjectId): Promise<void> {

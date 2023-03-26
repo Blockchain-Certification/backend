@@ -10,6 +10,7 @@ import { BadRequestError } from '../../shared/core/apiError';
 import { Types } from 'mongoose';
 import { Role } from '../../shared/database/model';
 import { Pagination, PaginationGetList } from './interface';
+
 export default class RecipentProfileController {
   private recipentProfileService: RecipentProfileService;
 
@@ -40,6 +41,14 @@ export default class RecipentProfileController {
       return new SuccessResponse('Get list successfully', {
         success: true,
         data: listDAC,
+        pagination: {
+          limit: pagination.limit,
+          page: pagination.page,
+          totalPage: Math.ceil(
+            (await this.recipentProfileService.count(identityUniversity)) /
+              pagination.limit,
+          ),
+        },
       }).send(res);
     },
   );
@@ -91,8 +100,11 @@ export default class RecipentProfileController {
   );
 
   public delete = asyncHandler(async (req: ProtectedRequest, res: Response) => {
-    const { idDAC,identityUniversity } = req.params;
-    await this.recipentProfileService.delete(new Types.ObjectId(idDAC),identityUniversity);
+    const { idDAC, identityUniversity } = req.params;
+    await this.recipentProfileService.delete(
+      new Types.ObjectId(idDAC),
+      identityUniversity,
+    );
     return new SuccessMsgResponse('Deleted successfully').send(res);
   });
 

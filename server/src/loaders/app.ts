@@ -2,18 +2,17 @@ import express, { Request, Response, NextFunction } from 'express';
 import morgan = require('morgan');
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-import Logger from './shared/core/logger';
+import Logger from '../shared/core/logger';
 import cors from 'cors';
-import { corsUrl, environment } from './config';
-import './shared/database/index'; // initialize database
-import { limiter, fabricLoader } from './shared/core/utils';
-import cookieSession from 'cookie-session';
+import { corsUrl, environment } from '../config';
+import '../shared/database/index'; // initialize database
+import { limiter, fabricLoader } from '../shared/core/utils';
 import {
   NotFoundError,
   ApiError,
   InternalError,
   ErrorType,
-} from './shared/core/apiError';
+} from '../shared/core/apiError';
 import router from './router';
 
 process.on('uncaughtException', (e) => {
@@ -22,16 +21,7 @@ process.on('uncaughtException', (e) => {
 fabricLoader;
 const app = express();
 
-// Apply the rate limiter middleware to all requests
 app.enable('trust proxy');
-app.use(
-  cookieSession({
-    secret: 'yourSecret',
-    sameSite: 'none',
-    secure: true,
-    httpOnly: true,
-  }),
-);
 app.use(cookieParser());
 app.use(limiter);
 app.use(express.json({ limit: '10mb' }));

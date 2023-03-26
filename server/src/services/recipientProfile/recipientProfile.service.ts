@@ -200,6 +200,10 @@ export default class RecipentProfileService {
     return await this.dacRepository.findById(id);
   }
 
+  public async count(idUniversity: string): Promise<number> {
+    return await this.dacRepository.countOfUniversity(idUniversity);
+  }
+
   public async create(
     listDAC: DAC[],
     identityUniversity: string,

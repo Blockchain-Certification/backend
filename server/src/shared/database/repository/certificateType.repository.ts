@@ -56,5 +56,9 @@ export class CertificateTypeRepository {
     await CertificateTypeModel.remove(id);
   }
 
+ 
+  public async count(): Promise<number> {
+    return CertificateTypeModel.count();
+  }
 
 }
