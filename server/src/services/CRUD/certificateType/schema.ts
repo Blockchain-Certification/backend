@@ -44,5 +44,6 @@ export default {
   certTypeId : Joi.object().keys({
     id : JoiObjectId().required()
   })
+  
 
 };

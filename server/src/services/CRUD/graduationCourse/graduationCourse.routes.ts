@@ -18,13 +18,21 @@ const graduationCourseController = new Controller(graduationService);
 
 router.use(authentication, role(Role.UNIVERSITY), authorization);
 
-router.post('/', validator(schema.create), graduationCourseController.create);
-
 router.get(
   '/',
   validator(schema.pagination, ValidationSource.QUERY),
   graduationCourseController.getList,
 );
+
+
+router.get(
+  '/:id',
+  validator(schema.courseTypeId, ValidationSource.PARAM),
+  graduationCourseController.detail,
+);
+
+router.post('/', validator(schema.create), graduationCourseController.create);
+
 
 router.put(
   '/:id',

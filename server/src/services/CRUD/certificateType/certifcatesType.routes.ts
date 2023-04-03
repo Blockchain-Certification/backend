@@ -25,6 +25,12 @@ router.get(
   certTypeController.getList,
 );
 
+router.get(
+  '/:id',
+  validator(schema.certTypeId, ValidationSource.PARAM),
+  certTypeController.detail,
+);
+
 router.post('/', validator(schema.create), certTypeController.create);
 
 router.put(
@@ -39,5 +45,6 @@ router.delete(
   validator(schema.certTypeId, ValidationSource.PARAM),
   certTypeController.delete,
 );
+
 
 export default router;

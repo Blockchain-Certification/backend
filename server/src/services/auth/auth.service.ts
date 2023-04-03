@@ -18,7 +18,6 @@ import {
 } from '../../shared/helpers/jwt.utils';
 import { Tokens } from '../../shared/types/app-request';
 import JWT from '../../shared/core/JWT';
-import { Token } from 'nodemailer/lib/xoauth2';
 export interface newUser {
   userName: string;
   password: string;
@@ -107,26 +106,21 @@ export default class AuthService {
   public async register(
     listUser: newUser[],
     createdBy: Types.ObjectId,
-  ): Promise<void> {
+  ): Promise<any> {
     if (this.hasDuplicate(listUser)) {
       throw new BadRequestError(
         'Duplicate field in list . Check identity, userName, email, phone ',
       );
     }
 
-    for (let i = 0; i < listUser.length; i++) {
-      const user: newUser = listUser[i];
+    for (const element of listUser) {
+      const user: newUser = element;
       await this.checkRegister(user);
     }
-
-    const promises: Promise<void>[] = [];
-    await Promise.all(
-      listUser.map(async (user: newUser) => {
-        promises.push(this.createUser(user, createdBy));
-      }),
-    ).catch((err) => {
-      throw new BadRequestError(err);
+    listUser.forEach(async (user: newUser) => {
+      return this.createUser(user, createdBy);
     });
+    return listUser;
   }
 
   private async createTokens(user: User): Promise<Tokens> {
@@ -141,7 +135,6 @@ export default class AuthService {
     newUser: newUser,
     createdBy: Types.ObjectId,
   ): Promise<any> {
-
     const user = (({ userName, password, roles }) => ({
       userName,
       password,
@@ -166,11 +159,11 @@ export default class AuthService {
       email,
       phone,
       address,
-      dateOfBirth : checkRegisterUNI ? null : dateOfBirth,
+      dateOfBirth: checkRegisterUNI ? null : dateOfBirth,
       gender,
-      nation : checkRegisterUNI ? null : nation,
+      nation: checkRegisterUNI ? null : nation,
       createdBy: checkRegisterUNI ? null : createdBy,
-      idUser : new Types.ObjectId()
+      idUser: new Types.ObjectId(),
     }))(newUser);
 
     // register blockchain wallet
@@ -187,6 +180,7 @@ export default class AuthService {
       };
       await invokeChaincode(argsCallFunction);
     }
+
     // create user
     const createdUser = await this.userRepository.create(user as User);
     infoUser.idUser = createdUser._id;
@@ -205,6 +199,10 @@ export default class AuthService {
         name: createdInfo.name,
       }),
     });
+
+    return this.infoUserRepository.findByIdAndAccountUser(
+      createdInfo._id as Types.ObjectId,
+    );
   }
 
   private async checkRegister({
@@ -214,19 +212,23 @@ export default class AuthService {
     phone,
   }: newUser): Promise<void> {
     const userExisted = await this.userRepository.findByUserName(userName);
-    if (userExisted) throw new BadRequestError(`User exists already : ${userName}`);
+    if (userExisted)
+      throw new BadRequestError(`User exists already : ${userName}`);
 
     const identityExisted = await this.infoUserRepository.findByIdentity(
       identity,
     );
 
-    if (identityExisted) throw new BadRequestError(`Identity exists already ${identity}`);
+    if (identityExisted)
+      throw new BadRequestError(`Identity exists already ${identity}`);
 
     const emailExisted = await this.infoUserRepository.findByEmail(email);
-    if (emailExisted) throw new BadRequestError(`Email already exists ${email}`);
+    if (emailExisted)
+      throw new BadRequestError(`Email already exists ${email}`);
 
     const phoneExisted = await this.infoUserRepository.findByPhone(phone);
-    if (phoneExisted) throw new BadRequestError(`Phone already exists ${phone}`);
+    if (phoneExisted)
+      throw new BadRequestError(`Phone already exists ${phone}`);
   }
 
   private hasDuplicate(users: newUser[]): boolean {

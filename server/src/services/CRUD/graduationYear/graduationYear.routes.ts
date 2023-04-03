@@ -18,13 +18,19 @@ const graduationYearController = new Controller(graduationYearService);
 
 router.use(authentication, role(Role.DOET), authorization);
 
-router.post('/', validator(schema.create), graduationYearController.create);
-
 router.get(
   '/',
   validator(schema.pagination, ValidationSource.QUERY),
   graduationYearController.getList,
 );
+
+router.get(
+  '/:id',
+  validator(schema.yearId, ValidationSource.PARAM),
+  graduationYearController.detail,
+);
+
+router.post('/', validator(schema.create), graduationYearController.create);
 
 router.put(
   '/:id',

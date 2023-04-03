@@ -99,7 +99,7 @@ async function registerUser(identity: string) {
     return userKeys;
   } catch (error) {
     logger.error(`Failed to register user ${identity}": ${error}`);
-    throw error;
+    throw new Error(`Failed to register user ${identity}": ${error}`);
   }
 }
 

@@ -39,6 +39,9 @@ export default class CertificateTypeService {
     await this.repositoryMain.delete(id);
   }
 
+  public async detail(id : Types.ObjectId) : Promise<any>{
+    return await this.repositoryMain.findById(id);
+  }
   public async count(): Promise<number>{
     return this.repositoryMain.count();
   }

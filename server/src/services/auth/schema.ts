@@ -50,7 +50,7 @@ export default {
         .valid(Joi.ref('identity')),
       password: Joi.string().required().min(6),
       roles: Joi.array()
-        .items(Joi.string().valid(Role.UNIVERSITY))
+        .items(Joi.string().valid(Role.UNIVERSITY, Role.DOET))
         .required(),
       name: Joi.string()
         .min(3)

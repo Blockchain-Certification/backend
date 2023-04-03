@@ -59,4 +59,14 @@ export default class Controller {
       res,
     );
   });
+
+  public detail = asyncHandler(async (req: ProtectedRequest, res: Response) => {
+    const objectDetail = await this.service.detail(new Types.ObjectId(req.params.id));
+    return new SuccessResponse('Get Detail Successfully', {
+      success : true,
+      detail: objectDetail
+    }).send(
+      res,
+    );
+  });
 }
