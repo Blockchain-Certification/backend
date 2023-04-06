@@ -20,18 +20,15 @@ export default {
         .required()
         .min(3)
         .max(50)
-        .pattern(/^[a-zA-Z ]+$/)
         .required(),
       universityName: Joi.string()
         .required()
         .min(3)
         .max(50)
-        .pattern(/^[a-zA-Z ]+$/)
         .required(),
       departmentName: Joi.string()
         .min(3)
         .max(50)
-        .pattern(/^[a-zA-Z ]+$/)
         .required(),
       dateOfBirth: Joi.date().max(dateUpTo6Y).min(dateMinimum100Y).required(),
       year: Joi.string()
@@ -83,7 +80,6 @@ export default {
     departmentName: Joi.string()
       .min(3)
       .max(50)
-      .pattern(/^[a-zA-Z ]+$/)
       .required(),
   }),
   registrationNum: Joi.array().items(

@@ -12,7 +12,7 @@ export default class DACGeneralController {
 
   public verify = asyncHandler(
     async (req: ProtectedRequest, res) => {
-      // const data = await this.dacGeneralService.verify(req.body);
+      const data = await this.dacGeneralService.verify(req.body);
       return new SuccessResponse('Get List DAC successfully', {
         success: true,
       }).send(res);

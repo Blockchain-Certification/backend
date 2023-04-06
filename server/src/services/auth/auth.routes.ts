@@ -56,7 +56,6 @@ router.post(
 
 router.delete(
   '/logout',
-  validator(schema.auth, ValidationSource.COOKIES),
   authentication,
   authController.logout,
 );

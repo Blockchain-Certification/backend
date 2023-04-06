@@ -64,7 +64,7 @@ export default class Controller {
     const objectDetail = await this.service.detail(new Types.ObjectId(req.params.id));
     return new SuccessResponse('Get Detail Successfully', {
       success : true,
-      detail: objectDetail
+      data: objectDetail
     }).send(
       res,
     );

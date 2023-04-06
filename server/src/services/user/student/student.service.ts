@@ -30,11 +30,13 @@ export class StudentService {
 
   public async getListOfUniversity(
     pagination: Pagination,
-    idUni: Types.ObjectId,
+    idAccountUniversity: Types.ObjectId,
   ): Promise<User[]> {
+    const university  = await this.infoUserRepository.findByIdUser(idAccountUniversity);
+    if(!university) throw new BadRequestError('University not found');
     return await this.infoUserRepository.findInfoAndAccountFromStudentOfUniversity(
       pagination,
-      idUni,
+      university._id as Types.ObjectId,
     );
   }
 

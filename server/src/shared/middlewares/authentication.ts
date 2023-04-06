@@ -6,7 +6,6 @@ import JWT from '../core/JWT';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { AccessTokenError, AuthFailureError } from '../core/apiError';
 import { validateTokenData } from '../helpers/jwt.utils';
-validateTokenData;
 const router = Router();
 const userRepository = new UserRepository();
 const keyStoreRepository = new KeyStoreRepository();
@@ -17,7 +16,6 @@ router.use(
     if(!headers)
       throw new  AuthFailureError('Invalid authorization header')
     const accessToken = headers.split(' ')[1];
-
     try {
       const accessTokenPayload = await JWT.validate(accessToken);
       await validateTokenData(accessTokenPayload);
@@ -32,7 +30,6 @@ router.use(
       );
       if (!keyStore) throw new AuthFailureError('Invalid access token');
       req.keyStore = keyStore;
-
       return next();
     } catch (e) {
       if (e instanceof TokenExpiredError) throw new AccessTokenError(e.message);

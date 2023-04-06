@@ -24,6 +24,9 @@ export class InfoUserRepository {
     return InfoUserModel.findById(id);
   }
 
+  public async findByIdUser(idUser: Types.ObjectId): Promise<InfoUser | null> {
+    return InfoUserModel.findOne({ idUser});
+  }
   public async findByIdAndAccountUser(id: Types.ObjectId): Promise<any> {
     return await InfoUserModel.findById(id).populate({
       path: 'idUser',
