@@ -71,7 +71,7 @@ router.post(
 );
 
 // DOET UPDATE IDNUMBER  OF UNIVERSITY
-router.patch(
+router.post(
   '/:identityUniversity/regisIdNumber',
   authentication,
   role(Role.UNIVERSITY),
@@ -94,7 +94,7 @@ router.patch(
 );
 
 // DOET UPDATE REGISRATION NUNMBER
-router.patch(
+router.post(
   '/:identityUniversity/registrationNumber',
   authentication,
   role(Role.DOET),
