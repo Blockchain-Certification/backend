@@ -118,8 +118,9 @@ export default class AuthService {
       await this.checkRegister(user);
     }
     listUser.forEach(async (user: newUser) => {
-      return this.createUser(user, createdBy);
+      return await this.createUser(user, createdBy);
     });
+
     return listUser;
   }
 
@@ -199,8 +200,7 @@ export default class AuthService {
         name: createdInfo.name,
       }),
     });
-
-    return this.infoUserRepository.findByIdAndAccountUser(
+    return await this.infoUserRepository.findByIdAndAccountUser(
       createdInfo._id as Types.ObjectId,
     );
   }

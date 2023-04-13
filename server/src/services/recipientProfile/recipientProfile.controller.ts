@@ -9,7 +9,7 @@ import { ProtectedRequest } from 'app-request';
 import { BadRequestError } from '../../shared/core/apiError';
 import { Types } from 'mongoose';
 import { Role } from '../../shared/database/model';
-import { Pagination, PaginationGetList } from './interface';
+import { PaginationGetList } from './interface';
 
 export default class RecipentProfileController {
   private recipentProfileService: RecipentProfileService;
@@ -56,6 +56,7 @@ export default class RecipentProfileController {
   public regisIdNumber = asyncHandler(
     async (req: ProtectedRequest, res: Response) => {
       const { identityUniversity } = req.params;
+
       const data = await this.recipentProfileService.regisIdNumber(
         req.body,
         identityUniversity,
@@ -121,7 +122,13 @@ export default class RecipentProfileController {
 
   public create = asyncHandler(async (req: ProtectedRequest, res: Response) => {
     const { identityUniversity } = req.params;
-    await this.recipentProfileService.create(req.body, identityUniversity);
-    return new SuccessMsgResponse('Created successfully').send(res);
+    const listRecipentProfileNew = await this.recipentProfileService.create(
+      req.body,
+      identityUniversity,
+    );
+    return new SuccessResponse('Created successfully', {
+      success: true,
+      data: listRecipentProfileNew,
+    }).send(res);
   });
 }

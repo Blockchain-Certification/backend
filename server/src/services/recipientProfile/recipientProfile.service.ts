@@ -74,7 +74,7 @@ export default class RecipentProfileService {
       throw new BadRequestError('Certificate have up to blockchain');
     if (identityUniversity !== dac?.iU)
       throw new BadRequestError('Param identityUniversity not manage this DAC');
-      
+
     await this.dacRepository.deleteById(id);
   }
 
@@ -82,8 +82,8 @@ export default class RecipentProfileService {
     listRegistrationNum: DTORegistrationNumber[],
     identityUniversity: string,
   ): Promise<DAC[]> {
-    for (let i = 0; i < listRegistrationNum.length; i++) {
-      const regisNum = listRegistrationNum[i];
+    for (const element of listRegistrationNum) {
+      const regisNum = element;
       const dac = await this.dacRepository.findById(regisNum._id);
 
       switch (true) {
@@ -140,8 +140,8 @@ export default class RecipentProfileService {
     listIdNumber: DTORegistrationIdNumber[],
     identityUniversity: string,
   ): Promise<DAC[]> {
-    for (let i = 0; i < listIdNumber.length; i++) {
-      const entityIdNumber = listIdNumber[i];
+    for (const element of listIdNumber) {
+      const entityIdNumber = element;
       const dac = await this.detail(entityIdNumber._id);
       switch (true) {
         case !(await this.dacRepository.isExisted(entityIdNumber._id)):
@@ -188,6 +188,7 @@ export default class RecipentProfileService {
     await Promise.all(
       listIdNumber.map(async (entityIdNumber: DTORegistrationIdNumber) => {
         const dac = await this.updateRegistrationIdNumber(entityIdNumber);
+
         dac && promises.push(dac);
       }),
     ).catch((err) => {
@@ -207,15 +208,15 @@ export default class RecipentProfileService {
   public async create(
     listDAC: DAC[],
     identityUniversity: string,
-  ): Promise<void> {
+  ): Promise<DAC[]> {
     if (hasDuplicateAndMustDuplicateIU(listDAC))
       throw new BadRequestError(
         'Have duplicate data in list or must iU duplicate',
       );
     if (!listDAC.length) throw new BadRequestError('Not data in list');
 
-    for (let i = 0; i < listDAC.length; i++) {
-      const dac = listDAC[i];
+    for (const element of listDAC) {
+      const dac = element;
       if (dac.iU !== identityUniversity)
         throw new BadRequestError(
           `Must Identity University ${identityUniversity} at identityStudent ${dac.iSt}`,
@@ -223,21 +224,20 @@ export default class RecipentProfileService {
       await this.isValid(dac, Role.UNIVERSITY);
       await this.isValid(dac);
     }
-    const promises = [];
-    await Promise.all(
-      listDAC.map(async (dac: DAC) => {
+
+    const listNewRecipentProfileCreated: Promise<DAC[]> = Promise.all(
+      listDAC.map(async (dac: DAC): Promise<DAC> => {
         dac.dateOfIssuing = null;
         dac.nameTypeCertificate = null;
         dac.idNumber = null;
         dac.registrationNum = null;
         dac.typeCertificate = null;
-        dac.levelCertificate = null
+        dac.levelCertificate = null;
         dac.dispensingStatus = false;
-        promises.push(this.dacRepository.create(dac));
+        return this.dacRepository.create(dac);
       }),
-    ).catch((err) => {
-      throw new BadRequestError(err);
-    });
+    );
+    return listNewRecipentProfileCreated;
   }
 
   private async isValid(dac: DAC, role: Role = Role.STUDENT): Promise<void> {
