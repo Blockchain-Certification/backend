@@ -1,16 +1,16 @@
 import { Response } from 'express';
 import { ProtectedRequest } from 'app-request';
 import asyncHandler from '../../../shared/helpers/asyncHandler';
-import service from './service';
+import Service from './service';
 import {
   SuccessMsgResponse,
   SuccessResponse,
 } from '../../../shared/core/apiResponse';
 import { Types } from 'mongoose';
-service;
+
 export default class Controller {
-  private service : any;
-  constructor(featureService: any) {
+  private service : Service;
+  constructor(featureService: Service) {
     this.service = featureService;
   }
 
