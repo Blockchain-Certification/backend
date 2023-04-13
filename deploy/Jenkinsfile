@@ -3,23 +3,8 @@ pipeline {
     
     stages {
         stage('Deploy') {
-            steps {
-                script {
-                    def remote = [:]
-                    remote.name = '194.163.180.21'
-                    remote.host = '194.163.180.21'
-                    remote.user = 'root'
-                    remote.password = credentials('remote-password')
-                    remote.allowAnyHosts = true
-                    
-                    sshCommand remote: remote, command: '''
-                        cd ~/home/blockchain/backend/server
-                        git pull
-                        npm install
-                        pm2 restart app.js
-                    '''
-                }
-            }
+           
+            
         }
     }
 }

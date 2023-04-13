@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import Logger from '../shared/core/logger';
 import cors from 'cors';
-import { corsUrl, environment } from '../config';
+import {  environment } from '../config';
 import '../shared/database/index'; // initialize database
 import { limiter, fabricLoader } from '../shared/core/utils';
 import {
