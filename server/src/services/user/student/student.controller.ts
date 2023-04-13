@@ -7,8 +7,9 @@ import {
 } from '../../../shared/core/apiResponse';
 import { ProtectedRequest } from '../../../shared/types/app-request';
 import { Types } from 'mongoose';
-import { Pagination } from './interface';
-import { PaginationSearch } from './interface';
+import { Pagination, PaginationSearch } from './interface';
+import { caculateTotalPage } from '../../../shared/helpers/utils';
+
 export class StudentController {
   private studentService: StudentService;
   constructor(StudentService: StudentService) {
@@ -29,6 +30,10 @@ export class StudentController {
         pagination: {
           page: pagination.page,
           limit: pagination.limit,
+          total: caculateTotalPage(
+            await this.studentService.count(),
+            pagination.limit,
+          ),
         },
       }).send(res);
     },

@@ -4,6 +4,7 @@ import { ProtectedRequest } from '../../../shared/types/app-request';
 import { Pagination } from '../manage/interface';
 import { SuccessResponse } from '../../../shared/core/apiResponse';
 import { Types } from 'mongoose';
+import { caculateTotalPage } from '../../../shared/helpers/utils';
 export default class DACStudentController {
   private dacStudentService: DACStudentService;
   constructor(dacStudentService: DACStudentService) {
@@ -30,6 +31,10 @@ export default class DACStudentController {
         pagination: {
           page: pagination.page,
           limit: pagination.limit,
+          total: caculateTotalPage(
+            await this.dacStudentService.count(),
+            pagination.limit,
+          ),
         },
       }).send(res);
     },
@@ -40,7 +45,7 @@ export default class DACStudentController {
     const { idDAC } = req.params;
     const { userName } = req.user;
     sharedField = typeof sharedField === 'string' ? sharedField : '';
-    
+
     const sharedFields = sharedField.split(',');
 
     const data = await this.dacStudentService.generateProof(
@@ -53,7 +58,7 @@ export default class DACStudentController {
 
     return new SuccessResponse('Create proof', {
       success: true,
-      data
+      data,
     }).send(res);
   });
 }

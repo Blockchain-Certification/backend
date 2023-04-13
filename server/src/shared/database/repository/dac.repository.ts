@@ -102,4 +102,8 @@ export class DACRepository {
       iU: idUniversity,
     }).count();
   }
+
+  public async count(): Promise<number> {
+    return await DACModel.find({ dispensingStatus: true }).count();
+  }
 }

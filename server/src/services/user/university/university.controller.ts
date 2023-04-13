@@ -1,13 +1,12 @@
 import { Response } from 'express';
 import asyncHandler from '../../../shared/helpers/asyncHandler';
 import { UniversityService } from './university.service';
-import {
-  SuccessMsgResponse,
-  SuccessResponse,
-} from '../../../shared/core/apiResponse';
+import { SuccessResponse } from '../../../shared/core/apiResponse';
 import { ProtectedRequest } from '../../../shared/types/app-request';
 import { Types } from 'mongoose';
 import { PaginationSearch, Pagination } from './interface';
+import { caculateTotalPage } from '../../../shared/helpers/utils';
+
 export class UniversityController {
   private univeristyService: UniversityService;
   constructor(univeristyService: UniversityService) {
@@ -57,6 +56,10 @@ export class UniversityController {
       pagination: {
         page: paginationSearch.page,
         limit: paginationSearch.limit,
+        total: caculateTotalPage(
+          await this.univeristyService.count(),
+          paginationSearch.limit,
+        ),
       },
     }).send(res);
   });

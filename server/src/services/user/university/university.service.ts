@@ -35,4 +35,8 @@ export class UniversityService {
       paginationSearch,
     );
   }
+
+  public async count(): Promise<number> {
+    return await this.dacRepository.count();
+  }
 }

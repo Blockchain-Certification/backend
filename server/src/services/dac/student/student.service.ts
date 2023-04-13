@@ -77,4 +77,8 @@ export default class DACStudentService {
       dacID: dac._id,
     };
   }
+
+  public async count(): Promise<number> {
+    return this.dacRepository.count();
+  }
 }
