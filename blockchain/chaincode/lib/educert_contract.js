@@ -18,9 +18,22 @@ class EducertContract extends Contract {
     );
 
     let schemaCertificate = new Schema("university degree", "v1", [
-      "universityName",
-      "major",
-      "departmentName",
+      "id", // x
+      "idNumber", // x
+      "registrationNum", // x
+      "studentName",// x
+      "placeOfBirth",// x
+      "year",
+      "nameCourse",
+      "nameTypeCertificate",//x
+      "typeCertificate",//x
+      "levelCertificate",//x
+      "gender", // x 
+      "dateOfBirth",// x
+      "nation", // x 
+      "universityName",// x 
+      "major", 
+      "departmentName", // x 
       "CGPA",
       "formOfTraining",
       "ranking",
@@ -71,7 +84,7 @@ class EducertContract extends Contract {
       "CERT" + certUUID,
       Buffer.from(JSON.stringify(certificate))
     );
-
+ 
     console.log("============= END : Issue Certificate ===========");
     return certificate;
   }
