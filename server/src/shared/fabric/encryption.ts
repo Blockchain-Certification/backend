@@ -8,6 +8,7 @@ import { InfoProof } from '../../services/dac/student/interface';
 import { DAC } from '../database/model';
 import { VerifyProof } from '../../services/dac/general/interface';
 import { fabric } from '../../config';
+import { paramsToShareAddFieldNeedShareDefault } from './utils';
 interface InfoProofEncryption extends InfoProof {
   dac: DAC;
 }
@@ -32,7 +33,6 @@ async function generateMerkleTree(certData: any): Promise<MerkleTree> {
   };
 
   const certSchema = await invokeChaincode(args);
-
   console.log('======certSchema====', certSchema);
 
   const certDataArray = [];
@@ -93,7 +93,7 @@ async function generateDACProof(
   const mTree = await generateMerkleTree(dac);
 
   const paramsToShareIndex = getParamsIndexArray(
-    sharedFields,
+    await paramsToShareAddFieldNeedShareDefault(sharedFields),
     dacSchema.ordering,
   );
 
@@ -120,7 +120,6 @@ async function verifyCertificateProof({
     disclosedDataParamNames.push(field);
     disclosedDataValues.push(disclosedData[field]);
   }
-  console.log(dacSchema.ordering);
   const paramsToShareIndex = getParamsIndexArray(
     disclosedDataParamNames,
     dacSchema.ordering,
@@ -128,80 +127,36 @@ async function verifyCertificateProof({
 
   const mTreeRoot = mTree.getRoot();
 
-  // const disclosedDataHash = [
-  //   {
-  //     words: [
-  //       938582623,
-  //       -2137401705,
-  //       -565579844,
-  //       -1300692533,
-  //       -835452354,
-  //       -911008349,
-  //       -1210292256,
-  //       1354134520
-  //     ],
-  //     sigBytes: 32
-  //   },
-  //   {
-  //     words: [
-  //       686488867,
-  //       -1406304593,
-  //       2003321499,
-  //       2042343990,
-  //       1388796902,
-  //       -1582299986,
-  //       -1036326857,
-  //       -1441661810
-  //     ],
-  //     sigBytes: 32
-  //   },
-  //   {
-  //     words: [
-  //       414126960,
-  //       -1261423497,
-  //       -817546915,
-  //       1823215734,
-  //       -1486217026,
-  //       681533300,
-  //       -1984068472,
-  //       -1998818935
-  //     ],
-  //     sigBytes: 32
-  //   }
-  // ]
+  const disclosedDataHash: any = disclosedDataValues.map((x) => SHA256(x));
 
-  const disclosedDataHash : any = disclosedDataValues.map(x => SHA256(x));
-  console.log(disclosedDataHash);
-  
-  try {
-    const verificationSuccess = mTree.verifyMultiProof(
-      mTreeRoot,
-      paramsToShareIndex,
-      proof,
-      mTree.getDepth(),
-      proof,
-    );
+  const leafHashes = disclosedDataHash.map((hash : any) =>
+    Buffer.from(hash.toString(), 'hex'),
+  );
+  const proofElements = proof.map((el) => Buffer.from(el.toString(), 'hex'));
 
-    console.log(verificationSuccess);
-  } catch (err) {
-    console.log(err);
-  }
+  const leavesCount = mTree.getLeafCount();
 
-  // console.log('Verification status: ' + verificationSuccess);
-  // return verificationSuccess;
+  const multiProofVerified = mTree.verifyMultiProof(
+    mTreeRoot,
+    paramsToShareIndex,
+    leafHashes,
+    leavesCount,
+    proofElements,
+  );
+
+  return multiProofVerified;
 }
 
 function getParamsIndexArray(paramsToShare: string[], ordering: string[]) {
   const paramsToShareIndex = [];
-  for(const el of paramsToShare)
-  {
+  for (const el of paramsToShare) {
     const index = ordering.findIndex((orderingElement: string) => {
       return orderingElement === el;
-    }) ;
-    if(index === -1) continue;
+    });
+
+    if (index === -1) continue;
     paramsToShareIndex.push(index);
   }
-
   return paramsToShareIndex;
 }
 
