@@ -23,6 +23,6 @@ const dacGeneralService = new DACGeneralService(
 
 const dacGeneralController = new DACGeneralController(dacGeneralService);
 
-router.post('/verify', validator(schema.verify), dacGeneralController.verify);
+router.post('/verify', dacGeneralController.verify);
 
 export default router;

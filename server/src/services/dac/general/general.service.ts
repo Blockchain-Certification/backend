@@ -5,10 +5,7 @@ import {
 import { Pagination } from '../manage/interface';
 import { Types } from 'mongoose';
 import { BadRequestError } from '../../../shared/core/apiError';
-import {
-  getAllCertificateByStudent,
-  queryCertificateSchema,
-} from '../../../shared/fabric/callFuncChainCode/index';
+
 import { mergeCertificateData } from '../utils';
 import { InfoProof, Proof, VerifyProof } from './interface';
 import { verifyCertificateProof } from '../../../shared/fabric';

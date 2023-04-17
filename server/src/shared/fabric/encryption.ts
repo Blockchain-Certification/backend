@@ -91,12 +91,10 @@ async function generateDACProof(
   const dacSchema = await queryCertificateSchema(identityStudent);
 
   const mTree = await generateMerkleTree(dac);
-
   const paramsToShareIndex = getParamsIndexArray(
     sharedFields,
     dacSchema.ordering,
   );
-
   const multiProof = mTree.getMultiProof(
     mTree.getHexLayersFlat(),
     paramsToShareIndex,
@@ -187,14 +185,14 @@ async function verifyCertificateProof({
     console.log(err);
   }
 
-  // console.log('Verification status: ' + verificationSuccess);
-  // return verificationSuccess;
+  // console.log(multiProofVerified);
+  // return multiProofVerified;
 }
 
 function getParamsIndexArray(paramsToShare: string[], ordering: string[]) {
   const paramsToShareIndex = [];
-  for(const el of paramsToShare)
-  {
+  console.log(paramsToShare);
+  for (const el of paramsToShare) {
     const index = ordering.findIndex((orderingElement: string) => {
       return orderingElement === el;
     }) ;

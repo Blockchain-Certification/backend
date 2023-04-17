@@ -38,9 +38,8 @@ export class DACRepository {
     id: Types.ObjectId,
     sharedFields: string[],
   ): Promise<DAC | null> {
-    console.log(sharedFields.join(' '));
     return DACModel.findById(id)
-      .select(`${sharedFields.join(' ')} ` + '_id')
+      .select(`${sharedFields.join(' ')}`)
       .lean()
       .exec();
   }

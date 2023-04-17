@@ -70,7 +70,7 @@ export default class DACStudentService {
       idDAC,
       sharedFields,
     );
-
+    
     return {
       proof: mTreeProof,
       disclosedData,

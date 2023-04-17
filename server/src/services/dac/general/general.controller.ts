@@ -3,7 +3,6 @@ import asyncHandler from '../../../shared/helpers/asyncHandler';
 import { ProtectedRequest } from '../../../shared/types/app-request';
 import { Pagination } from '../manage/interface';
 import { SuccessResponse } from '../../../shared/core/apiResponse';
-import { Types } from 'mongoose';
 export default class DACGeneralController {
   private dacGeneralService: DACGeneralService;
   constructor(dacGeneralService: DACGeneralService) {

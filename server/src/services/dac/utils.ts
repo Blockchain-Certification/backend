@@ -1,5 +1,5 @@
+import { fieldDefault } from '../../common/constant';
 import { DAC } from '../../shared/database/model';
-
 /**
  * Merge certificate data from Database and Blockchain Ledger
  * Runtime is O(N^2) which is kind of inefficient.
@@ -27,4 +27,11 @@ export const mergeCertificateData = async (
     });
   }
   return certMergedDataArray;
+};
+
+
+export const paramsToShareAddFieldNeedShareDefault = (
+  paramsToShare: string[],
+): string[] => {
+  return paramsToShare.concat(fieldDefault);
 };

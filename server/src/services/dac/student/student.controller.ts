@@ -4,6 +4,11 @@ import { ProtectedRequest } from '../../../shared/types/app-request';
 import { Pagination } from '../manage/interface';
 import { SuccessResponse } from '../../../shared/core/apiResponse';
 import { Types } from 'mongoose';
+<<<<<<< Updated upstream
+=======
+import { caculateTotalPage } from '../../../shared/helpers/utils';
+import { paramsToShareAddFieldNeedShareDefault } from '../utils';
+>>>>>>> Stashed changes
 export default class DACStudentController {
   private dacStudentService: DACStudentService;
   constructor(dacStudentService: DACStudentService) {
@@ -40,9 +45,15 @@ export default class DACStudentController {
     const { idDAC } = req.params;
     const { userName } = req.user;
     sharedField = typeof sharedField === 'string' ? sharedField : '';
+<<<<<<< Updated upstream
     
     const sharedFields = sharedField.split(',');
 
+=======
+
+    let sharedFields = sharedField.split(',');
+    sharedFields =  paramsToShareAddFieldNeedShareDefault(sharedFields);
+>>>>>>> Stashed changes
     const data = await this.dacStudentService.generateProof(
       {
         sharedFields,

@@ -28,7 +28,7 @@ coverage
 #keys
 keys/*
 !keys/*.md
-!keys/*.example
+!keys/*.sh
 
 #temp
 temp

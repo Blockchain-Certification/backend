@@ -5,7 +5,6 @@ import Logger from '../core/logger';
 import asyncHandler from './asyncHandler';
 import { ProtectedRequest } from 'app-request';
 import { Role } from '../database/model';
-import { DACRepository } from '../database/repository';
 export function findIpAddress(req: Request) {
   try {
     if (req.headers['x-forwarded-for']) {
@@ -36,5 +35,10 @@ export const filterNull = async (list: any) => {
   return await list.filter((el: any) => el.idUser !== null);
 };
 
-
+export const caculateTotalPage = async (
+  total: number,
+  limit: number,
+): Promise<number> => {
+  return Math.ceil(total / limit);
+};
 

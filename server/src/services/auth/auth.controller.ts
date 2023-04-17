@@ -67,7 +67,7 @@ export default class AuthController {
       const listNewUser = await this.authService.register(req.body, _id);
       return new SuccessResponse('Created Successfully', {
         success: true,
-        listNewUser,
+        data: listNewUser,
       }).send(res);
     },
   );
