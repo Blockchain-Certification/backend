@@ -18,6 +18,7 @@ class EducertContract extends Contract {
     );
 
     let schemaCertificate = new Schema("university degree", "v1", [
+      ,
       'id',
       'idNumber',
       'registrationNum',

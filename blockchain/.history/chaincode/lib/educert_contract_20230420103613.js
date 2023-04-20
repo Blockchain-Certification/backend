@@ -41,7 +41,7 @@ class EducertContract extends Contract {
       'CGPA',
       'gender',
       'dispensingStatus',
-    ]);
+    ];);
 
     await ctx.stub.putState(
       "schema_" + schemaCertificate.id,

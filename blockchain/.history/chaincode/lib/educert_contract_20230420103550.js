@@ -17,31 +17,7 @@ class EducertContract extends Contract {
       "-------------------------initLedger Called---------------------------------------"
     );
 
-    let schemaCertificate = new Schema("university degree", "v1", [
-      'id',
-      'idNumber',
-      'registrationNum',
-      'iU',
-      'iSt',
-      'studentName',
-      'universityName',
-      'departmentName',
-      'dateOfBirth',
-      'year',
-      'nameCourse',
-      'major',
-      'nameTypeCertificate',
-      'typeCertificate',
-      'levelCertificate',
-      'placeOfBirth',
-      'nation',
-      'ranking',
-      'dateOfIssuing',
-      'formOfTraining',
-      'CGPA',
-      'gender',
-      'dispensingStatus',
-    ]);
+    let schemaCertificate = new Schema("university degree", "v1", ["id", "idNumber", "registrationNum", "iU", "iSt", "studentName", "universityName", "departmentName", "dateOfBirth", "year", "nameCourse", "major", "nameTypeCertificate", "typeCertificate", "levelCertificate", "placeOfBirth", "nation", "ranking", "dateOfIssuing", "formOfTraining", "CGPA", "gender", "dispensingStatus"] );
 
     await ctx.stub.putState(
       "schema_" + schemaCertificate.id,
