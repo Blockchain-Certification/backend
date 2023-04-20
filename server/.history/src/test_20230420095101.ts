@@ -1,2 +1,0 @@
-import { MerkleTree } from 'merkletreejs';
-

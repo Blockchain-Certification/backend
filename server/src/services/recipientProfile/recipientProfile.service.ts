@@ -266,6 +266,12 @@ export default class RecipentProfileService {
     const infoUser = await this.infoUserRepository.findByIdentity(
       entityValidate.identity,
     );
+
+    const isExistedIdOfDAC = await this.dacRepository.findByIdDAC(dac.id);
+
+    if (isExistedIdOfDAC && isExistedIdOfDAC.length > 0)
+      throw new BadRequestError(`Id diploma and certificate have`);
+
     if (!infoUser)
       throw new BadRequestError(
         `Identity ${entityValidate.identity} not existed , create user student`,
@@ -277,6 +283,7 @@ export default class RecipentProfileService {
     const dateBirthEntity = new Date(
       entityValidate.dateOfBirth || '',
     ).getTime();
+
     if (role === Role.STUDENT) {
       switch (true) {
         case infoUser.name !== entityValidate.name:

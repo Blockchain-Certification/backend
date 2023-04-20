@@ -15,7 +15,7 @@ export interface ProofData {
   data: number[];
 }
 export interface VerifyProof{
-  proof : Buffer[],
+  proof : any,
   disclosedData : any,
   dacID : Types.ObjectId
 }

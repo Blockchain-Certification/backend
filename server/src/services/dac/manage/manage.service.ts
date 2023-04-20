@@ -47,8 +47,9 @@ export default class ManageDACService {
     const listDACIssue: DAC[] = [];
     for (const dac of listDAC) {
       const { _id } = dac;
-      await this.createDACBlockChain(_id);
       await this.updateStateDAC(_id, certificateTypes);
+      
+      await this.createDACBlockChain(_id);
       const DACIssue = await this.dacRepository.findById(_id);
       DACIssue && listDACIssue.push(DACIssue);
     }
