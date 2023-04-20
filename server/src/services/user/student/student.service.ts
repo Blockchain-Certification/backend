@@ -32,8 +32,10 @@ export class StudentService {
     pagination: Pagination,
     idAccountUniversity: Types.ObjectId,
   ): Promise<User[]> {
-    const university  = await this.infoUserRepository.findByIdUser(idAccountUniversity);
-    if(!university) throw new BadRequestError('University not found');
+    const university = await this.infoUserRepository.findByIdUser(
+      idAccountUniversity,
+    );
+    if (!university) throw new BadRequestError('University not found');
     return await this.infoUserRepository.findInfoAndAccountFromStudentOfUniversity(
       pagination,
       university._id as Types.ObjectId,
@@ -66,6 +68,9 @@ export class StudentService {
     await this.userRepository.delete(user.idUser);
   }
 
+  public async count(): Promise<number> {
+    return await this.dacRepository.count();
+  }
   private async checkUpBlockchain(
     roles: Role[],
     identity: string,

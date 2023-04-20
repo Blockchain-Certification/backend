@@ -35,20 +35,24 @@ export default class ManageDACService {
   public async issue(
     listIssue: DTOIssue,
     identityUniversity: string,
-  ): Promise<void> {
+  ): Promise<DAC[]> {
     const { listDAC, idCertificate } = listIssue;
-    for (let i = 0; i < listDAC.length; i++) {
-      await this.validateDAC(listDAC[i]._id, identityUniversity);
+    for (const dac of listDAC) {
+      await this.validateDAC(dac._id, identityUniversity);
     }
 
     const certificateTypes = await this.certRepository.findById(idCertificate);
     if (!certificateTypes) throw new BadRequestError('Certificate not exited');
 
+    const listDACIssue: DAC[] = [];
     for (const dac of listDAC) {
       const { _id } = dac;
       await this.createDACBlockChain(_id);
       await this.updateStateDAC(_id, certificateTypes);
+      const DACIssue = await this.dacRepository.findById(_id);
+      DACIssue && listDACIssue.push(DACIssue);
     }
+    return listDACIssue;
   }
 
   public async getListDACOfUniversity(
@@ -86,6 +90,10 @@ export default class ManageDACService {
     return await this.dacRepository.findById(id);
   }
 
+  public async count(): Promise<number> {
+    return this.dacRepository.count();
+  }
+  
   private async validateDAC(
     id: Types.ObjectId,
     identityUniversity: string,

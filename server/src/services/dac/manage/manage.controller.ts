@@ -6,6 +6,7 @@ import asyncHandler from '../../../shared/helpers/asyncHandler';
 import DACManageService from './manage.service';
 import { ProtectedRequest } from 'app-request';
 import { Pagination } from './interface';
+import { caculateTotalPage } from '../../../shared/helpers/utils';
 export default class ManageDACController {
   private dacManageService: DACManageService;
   constructor(dacManageService: DACManageService) {
@@ -14,8 +15,14 @@ export default class ManageDACController {
 
   public issue = asyncHandler(async (req: ProtectedRequest, res, next) => {
     const { identityUniversity } = req.params;
-    await this.dacManageService.issue(req.body, identityUniversity);
-    return new SuccessMsgResponse('Issue successfully').send(res);
+    const listDACIssue = await this.dacManageService.issue(
+      req.body,
+      identityUniversity,
+    );
+    return new SuccessResponse('Issue successfully', {
+      success: true,
+      data: listDACIssue,
+    }).send(res);
   });
 
   public getListDACOfUniversity = asyncHandler(
@@ -38,6 +45,10 @@ export default class ManageDACController {
         pagination: {
           page: pagination.page,
           limit: pagination.limit,
+          total: await caculateTotalPage(
+            await this.dacManageService.count(),
+            pagination.limit,
+          ),
         },
       }).send(res);
     },

@@ -25,7 +25,7 @@ export class InfoUserRepository {
   }
 
   public async findByIdUser(idUser: Types.ObjectId): Promise<InfoUser | null> {
-    return InfoUserModel.findOne({ idUser});
+    return InfoUserModel.findOne({ idUser });
   }
   public async findByIdAndAccountUser(id: Types.ObjectId): Promise<any> {
     return await InfoUserModel.findById(id).populate({
@@ -57,7 +57,6 @@ export class InfoUserRepository {
     if (!data?.idUser) return {};
     return data;
   }
-
 
   public async findByIdentityAndAccountUserFromUniversity(
     identity: string,

@@ -1,15 +1,14 @@
 import { DACRepository } from '../../../shared/database/repository';
 import { Pagination } from '../manage/interface';
-import { Types } from 'mongoose';
 import { InfoUserRepository } from '../../../shared/database/repository/infoUser.repository';
 import { BadRequestError } from '../../../shared/core/apiError';
 import {
   getAllCertificateByStudent,
-  queryCertificateSchema,
 } from '../../../shared/fabric/callFuncChainCode/index';
 import { mergeCertificateData } from '../utils';
 import { InfoProof, Proof } from './interface';
 import { generateDACProof } from '../../../shared/fabric';
+
 export default class DACStudentService {
   private dacRepository: DACRepository;
   private infoUserRepository: InfoUserRepository;
@@ -76,5 +75,9 @@ export default class DACStudentService {
       disclosedData,
       dacID: dac._id,
     };
+  }
+
+  public async count(): Promise<number> {
+    return this.dacRepository.count();
   }
 }
