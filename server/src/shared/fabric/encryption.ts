@@ -88,7 +88,6 @@ async function generateDACProof(
   { sharedFields, idDAC, dac }: InfoProofEncryption,
   identityStudent: string,
 ) {
-  dac.levelCertificate = 0;
   const dacSchema = await queryCertificateSchema(identityStudent);
   const mTree = await generateMerkleTree(dac);
   const paramsToShareIndex = getParamsIndexArray(

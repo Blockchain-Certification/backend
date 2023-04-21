@@ -9,8 +9,8 @@ export default {
       .required(),
     level: Joi.when('type', {
       is: 'DIPLOMA',
-      then: Joi.string().allow(null),
-      otherwise: Joi.number().integer().min(1).required(),
+      then: Joi.string(),
+      otherwise: Joi.number().integer().min(0).required(),
     }).custom((value, helpers) => {
       const dataReq = helpers.state.ancestors[0];
       if (dataReq.type === 'DIPLOMA' && value !== null) {
