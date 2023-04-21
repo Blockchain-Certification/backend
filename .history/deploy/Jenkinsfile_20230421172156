@@ -1,0 +1,12 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Deploy') {
+           
+            sshagent(['vinhphan-root-keys']) {
+    // some block
+}
+        }
+    }
+}

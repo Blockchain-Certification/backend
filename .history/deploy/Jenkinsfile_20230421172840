@@ -4,7 +4,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sshagent(credentials: ['vinhphan-root-keys']) {
-                    sh 'ssh -o HostKeyChecking=no -l root@194.163.180.21 "echo test > hello'
+                    sh 'ssh -o HostKeyChecking=no -l root 194 "command"'
                 }
             }
         }
