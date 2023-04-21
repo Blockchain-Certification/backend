@@ -8,7 +8,7 @@ import { BadRequestError } from '../core/apiError';
 import { HexKey } from './index';
 
 const ccp = JSON.parse(fs.readFileSync(fabric.ccpPath, 'utf8'));
-
+async function  createNewCA
 async function enrollAdmin(): Promise<HexKey | undefined> {
   try {
     // Create a new CA client for interacting with the CA.
@@ -106,14 +106,7 @@ async function registerUser(identity: string) {
   }
 }
 
-async function checkRegisterIdentityOfWalletKey(
-  identity: string,
-): Promise<boolean> {
-  // Create a new file system based wallet for managing identities.
-  const wallet = await Wallets.newFileSystemWallet(fabric.walletPath);
-  // Check to see if we've already enrolled the user.
-  const userKeyWallet = await wallet.get(identity);
-  if (userKeyWallet) return true;
-  return false;
+async function checkRegisterIdentity(identity: string): Promise<boolean> {
+  
 }
-export { enrollAdmin, registerUser, checkRegisterIdentityOfWalletKey };
+export { enrollAdmin, registerUser };

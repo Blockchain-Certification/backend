@@ -24,6 +24,7 @@ async function enrollAdmin(): Promise<HexKey | undefined> {
     const wallet = await Wallets.newFileSystemWallet(fabric.walletPath);
 
     const identity = await wallet.get(fabric.enrollAdminName);
+    a
     if (identity) {
       logger.info(
         'An identity for the admin user "admin" already exists in the wallet.',
@@ -106,9 +107,7 @@ async function registerUser(identity: string) {
   }
 }
 
-async function checkRegisterIdentityOfWalletKey(
-  identity: string,
-): Promise<boolean> {
+async function checkRegisterIdentityOfWalletKey(identity: string): Promise<boolean> {
   // Create a new file system based wallet for managing identities.
   const wallet = await Wallets.newFileSystemWallet(fabric.walletPath);
   // Check to see if we've already enrolled the user.
@@ -116,4 +115,4 @@ async function checkRegisterIdentityOfWalletKey(
   if (userKeyWallet) return true;
   return false;
 }
-export { enrollAdmin, registerUser, checkRegisterIdentityOfWalletKey };
+export { enrollAdmin, registerUser,checkRegisterIdentityOfWalletKey };

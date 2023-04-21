@@ -74,10 +74,7 @@ async function registerUser(identity: string) {
     const provider = wallet
       .getProviderRegistry()
       .getProvider(adminIdentity.type);
-    const adminUser = await provider.getUserContext(
-      adminIdentity,
-      fabric.enrollAdminName,
-    );
+    const adminUser = await provider.getUserContext(adminIdentity, fabric.enrollAdminName);
 
     // Register the user, enroll the user, and import the new identity into the wallet.
     const secret = await ca.register(
@@ -106,14 +103,7 @@ async function registerUser(identity: string) {
   }
 }
 
-async function checkRegisterIdentityOfWalletKey(
-  identity: string,
-): Promise<boolean> {
-  // Create a new file system based wallet for managing identities.
-  const wallet = await Wallets.newFileSystemWallet(fabric.walletPath);
-  // Check to see if we've already enrolled the user.
-  const userKeyWallet = await wallet.get(identity);
-  if (userKeyWallet) return true;
-  return false;
+async function checkRegisterIdentity(identity : string) {
+  
 }
-export { enrollAdmin, registerUser, checkRegisterIdentityOfWalletKey };
+export { enrollAdmin, registerUser };

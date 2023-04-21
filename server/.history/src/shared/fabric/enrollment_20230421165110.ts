@@ -106,9 +106,7 @@ async function registerUser(identity: string) {
   }
 }
 
-async function checkRegisterIdentityOfWalletKey(
-  identity: string,
-): Promise<boolean> {
+async function checkRegisterIdentityOfWalletKey(identity: string): Promise<T> {
   // Create a new file system based wallet for managing identities.
   const wallet = await Wallets.newFileSystemWallet(fabric.walletPath);
   // Check to see if we've already enrolled the user.
@@ -116,4 +114,4 @@ async function checkRegisterIdentityOfWalletKey(
   if (userKeyWallet) return true;
   return false;
 }
-export { enrollAdmin, registerUser, checkRegisterIdentityOfWalletKey };
+export { enrollAdmin, registerUser,checkRegisterIdentityOfWalletKey };

@@ -6,10 +6,7 @@ import {
 import { User, Role, Gender } from '../../shared/database/model';
 import { BadRequestError, AuthFailureError } from '../../shared/core/apiError';
 import crypto from 'crypto';
-import {
-  checkRegisterIdentityOfWalletKey,
-  registerUser,
-} from '../../shared/fabric/enrollment';
+import { registerUser } from '../../shared/fabric/enrollment';
 import { Types } from 'mongoose';
 import { invokeChaincode } from '../../shared/fabric/chaincode';
 import { getUserData } from './utils';
@@ -120,10 +117,10 @@ export default class AuthService {
       const user: newUser = element;
       await this.checkRegister(user);
     }
-    listUser.forEach(async (user: newUser) => {
+    await listUser.forEach(async (user: newUser) => {
       return await this.createUser(user, createdBy);
     });
-    console.log(listUser);
+
     return listUser;
   }
 
@@ -214,13 +211,6 @@ export default class AuthService {
     identity,
     phone,
   }: newUser): Promise<void> {
-    const identityKeyExisted = await checkRegisterIdentityOfWalletKey(identity);
-    if (identityKeyExisted) {
-      throw new BadRequestError(
-        'This identity is already registered in the wallet',
-      );
-    }
-
     const userExisted = await this.userRepository.findByUserName(userName);
     if (userExisted)
       throw new BadRequestError(`User exists already : ${userName}`);
