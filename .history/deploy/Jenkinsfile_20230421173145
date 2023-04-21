@@ -4,7 +4,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sshagent(['vinhphan-root-keys']) {
-                    sh 'ssh root@194.163.180.21 "echo test > hello'
+                    sh 'ssh  root@194.163.180.21 "echo test > hello'
                 }
             }
         }
