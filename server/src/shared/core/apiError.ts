@@ -74,7 +74,7 @@ export class BadRequestError extends ApiError {
 }
 
 export class NotFoundError extends ApiError {
-  constructor(message = 'Not Found') {
+  constructor(message = 'Not Found @@ Missing') {
     super(ErrorType.NOT_FOUND, message);
   }
 }
