@@ -191,18 +191,18 @@ export default class AuthService {
     const createdInfo = await this.infoUserRepository.create(infoUser);
 
     // send mail
-    await this.mailNodeMailerProvider.sendEmail({
-      to: {
-        name: createdInfo.name,
-        email: createdInfo.email,
-      },
-      subject: 'Đăng ký Tài Khoản HUFLIT-VBCC',
-      body: register({
-        userName: createdUser.userName,
-        password: user.password,
-        name: createdInfo.name,
-      }),
-    });
+    // await this.mailNodeMailerProvider.sendEmail({
+    //  to: {
+    //    name: createdInfo.name,
+    //    email: createdInfo.email,
+     // },
+     // subject: 'Đăng ký Tài Khoản HUFLIT-VBCC',
+     // body: register({
+      //  userName: createdUser.userName,
+       // password: user.password,
+        //name: createdInfo.name,
+      //}),
+   // });
     return await this.infoUserRepository.findByIdAndAccountUser(
       createdInfo._id as Types.ObjectId,
     );
