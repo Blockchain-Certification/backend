@@ -116,13 +116,17 @@ export default class AuthService {
       );
     }
 
-    for (const element of listUser) {
-      const user: newUser = element;
+    const promises = listUser.map(async (user: newUser) => {
       await this.checkRegister(user);
-    }
-    const createdUsers = await listUser.map(async (user: newUser) => {
-      return await this.createUser(user, createdBy);
+      return this.createUser(user, createdBy);
     });
+
+    const results = await Promise.allSettled(promises);
+
+    const createdUsers = results
+      .filter(result => result.status === 'fulfilled')
+      .map(result => result.value);
+
     console.log(createdUsers);
     return createdUsers;
   }
@@ -191,18 +195,19 @@ export default class AuthService {
     const createdInfo = await this.infoUserRepository.create(infoUser);
 
     // send mail
-    // await this.mailNodeMailerProvider.sendEmail({
-    //  to: {
-    //    name: createdInfo.name,
-    //    email: createdInfo.email,
-     // },
-     // subject: 'Đăng ký Tài Khoản HUFLIT-VBCC',
-     // body: register({
-      //  userName: createdUser.userName,
-       // password: user.password,
-        //name: createdInfo.name,
-      //}),
-   // });
+    await this.mailNodeMailerProvider.sendEmail({
+     to: {
+       name: createdInfo.name,
+       email: createdInfo.email,
+     },
+     subject: 'Đăng ký Tài Khoản HUFLIT-VBCC',
+     body: register({
+       userName: createdUser.userName,
+       password: user.password,
+        name: createdInfo.name,
+      }),
+    });
+
     return await this.infoUserRepository.findByIdAndAccountUser(
       createdInfo._id as Types.ObjectId,
     );
