@@ -110,22 +110,16 @@ export default class AuthService {
     listUser: newUser[],
     createdBy: Types.ObjectId,
   ): Promise<any> {
-    if (this.hasDuplicate(listUser)) {
+   if (this.hasDuplicate(listUser)) {
       throw new BadRequestError(
         'Duplicate field in list . Check identity, userName, email, phone ',
       );
     }
 
-    const promises = listUser.map(async (user: newUser) => {
+    const createdUsers = await Promise.all(listUser.map(async (user: newUser) => {
       await this.checkRegister(user);
-      return this.createUser(user, createdBy);
-    });
-
-    const results = await Promise.allSettled(promises);
-
-    const createdUsers = results
-      .filter(result => result.status === 'fulfilled')
-      .map(result => result.value);
+      return await this.createUser(user, createdBy);
+    }));
 
     console.log(createdUsers);
     return createdUsers;
