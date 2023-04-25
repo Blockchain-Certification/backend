@@ -37,6 +37,6 @@ export class UniversityService {
   }
 
   public async count(): Promise<number> {
-    return await this.dacRepository.count();
+    return await this.infoUserRepository.count();
   }
 }

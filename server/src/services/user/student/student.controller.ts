@@ -30,7 +30,7 @@ export class StudentController {
         pagination: {
           page: pagination.page,
           limit: pagination.limit,
-          total: caculateTotalPage(
+          totalPage: await caculateTotalPage(
             await this.studentService.count(),
             pagination.limit,
           ),

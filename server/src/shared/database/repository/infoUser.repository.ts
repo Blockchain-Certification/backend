@@ -191,4 +191,8 @@ export class InfoUserRepository {
   public async delete(id: Types.ObjectId): Promise<void> {
     await InfoUserModel.deleteOne({ _id: id });
   }
+
+  public async count(): Promise<number> {
+    return InfoUserModel.count();
+  }
 }

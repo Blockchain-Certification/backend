@@ -27,6 +27,7 @@ export class UniversityController {
         pagination: {
           page: pagination.page,
           limit: pagination.limit,
+          totalPage : Math.ceil(await this.univeristyService.count()/pagination.limit )
         },
       }).send(res);
     },
@@ -56,7 +57,7 @@ export class UniversityController {
       pagination: {
         page: paginationSearch.page,
         limit: paginationSearch.limit,
-        total: caculateTotalPage(
+        totalPage: caculateTotalPage(
           await this.univeristyService.count(),
           paginationSearch.limit,
         ),
