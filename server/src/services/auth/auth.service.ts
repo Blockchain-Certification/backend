@@ -120,11 +120,11 @@ export default class AuthService {
       const user: newUser = element;
       await this.checkRegister(user);
     }
-    listUser.forEach(async (user: newUser) => {
+    const createdUsers = await listUser.map(async (user: newUser) => {
       return await this.createUser(user, createdBy);
     });
-    console.log(listUser);
-    return listUser;
+    console.log(createdUsers);
+    return createdUsers;
   }
 
   private async createTokens(user: User): Promise<Tokens> {
