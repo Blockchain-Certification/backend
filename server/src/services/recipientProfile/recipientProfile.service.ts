@@ -295,6 +295,7 @@ export default class RecipentProfileService {
             `Info User not match from ${infoUser.identity} at identity ${entityValidate.identity}`,
           );
         case infoUser.address !== entityValidate.placeOfBirth:
+          console.log("nameeeeeeee");
           console.log(infoUser.address);
           console.log(entityValidate.placeOfBirth);
           throw new BadRequestError(
