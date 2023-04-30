@@ -6,6 +6,8 @@ export interface Pagination{
 }
 
 export interface PaginationGetList extends Pagination{
+  registrationNumber: boolean,
+  idNumber: boolean,
   dispensingStatus: boolean;
 }
 

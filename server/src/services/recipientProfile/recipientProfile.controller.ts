@@ -9,7 +9,7 @@ import { ProtectedRequest } from 'app-request';
 import { BadRequestError } from '../../shared/core/apiError';
 import { Types } from 'mongoose';
 import { Role } from '../../shared/database/model';
-import { PaginationGetList } from './interface';
+import { QueryParamaterGetListRecipientProfile } from './interface';
 
 export default class RecipentProfileController {
   private recipentProfileService: RecipentProfileService;
@@ -28,14 +28,16 @@ export default class RecipentProfileController {
           'Not access data because user not belong to param identityUniversity ',
         );
 
-      const pagination = (({ page, limit, dispensingStatus }) => ({
+      const queryParamaterGetListRecipientProfile = (({ page, limit, registrationNumber, idNumber }) => ({
         page: parseInt(page + ''),
         limit: parseInt(limit + ''),
-        dispensingStatus: dispensingStatus ? dispensingStatus : false,
+        dispensingStatus: false,
+        registrationNumber: registrationNumber ? registrationNumber : false,
+        idNumber: idNumber ? idNumber: false
       }))(req.query);
 
       const listDAC = await this.recipentProfileService.getList(
-        pagination as PaginationGetList,
+        queryParamaterGetListRecipientProfile as QueryParamaterGetListRecipientProfile,
         identityUniversity,
       );
       return new SuccessResponse('Get list successfully', {

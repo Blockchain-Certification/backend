@@ -11,7 +11,7 @@ import { hasDuplicateAndMustDuplicateIU } from './utils';
 import { BadRequestError } from '../../shared/core/apiError';
 import { Types } from 'mongoose';
 import {
-  PaginationGetList,
+  QueryParamaterGetListRecipientProfile,
   DTORegistrationNumber,
   DTORegistrationIdNumber,
 } from './interface';
@@ -40,11 +40,11 @@ export default class RecipentProfileService {
   }
 
   public async getList(
-    pagination: PaginationGetList,
+    queryParamaterGetListRecipientProfile: QueryParamaterGetListRecipientProfile,
     identityUniversity: string,
   ): Promise<DAC[] | null> {
     return await this.dacRepository.findByIUniAndPagination(
-      pagination,
+      queryParamaterGetListRecipientProfile,
       identityUniversity,
     );
   }
