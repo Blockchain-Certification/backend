@@ -276,7 +276,8 @@ export default class RecipentProfileService {
       throw new BadRequestError(
         `Identity ${entityValidate.identity} not existed , create user student`,
       );
-
+   
+    
     const dateBirthInfo = new Date(
       infoUser.dateOfBirth || new Date(),
     ).getTime();
@@ -304,7 +305,7 @@ export default class RecipentProfileService {
           );
         case dateBirthInfo !== dateBirthEntity:
           throw new BadRequestError(
-            `Info User not match from ${infoUser.identity} at dateBirthEntity ${dateBirthEntity}`,
+            `Info User not match from ${infoUser.identity} at dateBirthEntity ${entityValidate.dateOfBirth}, ${infoUser.dateOfBirth} ${entityValidate.dateOfBirth}`,
           );
         default:
           break;
