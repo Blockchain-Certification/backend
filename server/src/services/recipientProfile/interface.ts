@@ -5,7 +5,11 @@ export interface Pagination{
   limit: number;
 }
 
+<<<<<<< HEAD
 export interface QueryParamaterGetListRecipientProfile extends Pagination{
+=======
+export interface PaginationGetList extends Pagination{
+>>>>>>> 7b19cf4034d3a4cff2e1253a5deacbc951130f4f
   registrationNumber: boolean,
   idNumber: boolean,
   dispensingStatus: boolean;
