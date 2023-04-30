@@ -33,7 +33,7 @@ export class DACRepository {
     console.log(registrationNumber);
     console.log(idNumber);
     return await DACModel.find({ iU: id, dispensingStatus,
-                          registrationNum : { $eq: null },
+                          registrationNum : { $exists: false },
                            })
       .skip(limit * (page - 1))
       .limit(limit)
