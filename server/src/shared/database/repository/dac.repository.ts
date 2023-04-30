@@ -1,6 +1,6 @@
 import { DAC, DACModel } from '../model';
 import { Types } from 'mongoose';
-import { PaginationGetList } from '../../../services/recipientProfile/interface';
+import { QueryParamaterGetListRecipientProfile } from '../../../services/recipientProfile/interface';
 import { Pagination } from '../../../services/dac/manage/interface';
 export class DACRepository {
   public async findById(id: Types.ObjectId): Promise<DAC | null> {
@@ -25,14 +25,17 @@ export class DACRepository {
   public async findByIdDAC(id: string): Promise<DAC[] | null> {
     return DACModel.find({ id: id });
   }
+  
   public async findByIUniAndPagination(
-    { page, limit, dispensingStatus }: PaginationGetList,
+    { page, limit, dispensingStatus,registrationNumber,idNumber }: QueryParamaterGetListRecipientProfile,
     id: string,
   ): Promise<DAC[] | null> {
-    return DACModel.find({ iU: id, dispensingStatus })
+    return DACModel.find({ iU: id, dispensingStatus,
+                          registrationNum : { $exists: registrationNumber },
+                          idNumber :  { $exists: idNumber } })
       .skip(limit * (page - 1))
       .limit(limit)
-      .sort({ updatedAt: -1 })
+      .sort({ createdAt: -1 })
       .lean()
       .exec();
   }
