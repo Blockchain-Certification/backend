@@ -100,7 +100,8 @@ export default {
   query: Joi.object().keys({
     page: Joi.number().required().integer().min(1),
     limit: Joi.number().required().integer().min(1),
-    dispensingStatus: Joi.boolean().valid().required(),
+    registrationNumber: Joi.boolean(),
+    idNumber: Joi.boolean()
   }),
   param: Joi.object().keys({
     idDAC: JoiObjectId().required(),

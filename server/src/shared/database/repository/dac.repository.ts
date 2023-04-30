@@ -30,7 +30,7 @@ export class DACRepository {
     { page, limit, dispensingStatus,registrationNumber,idNumber }: QueryParamaterGetListRecipientProfile,
     id: string,
   ): Promise<DAC[] | null> {
-    return DACModel.find({ iU: id, dispensingStatus,
+    return await DACModel.find({ iU: id, dispensingStatus,
                           registrationNum : { $exists: registrationNumber },
                           idNumber :  { $exists: idNumber } })
       .skip(limit * (page - 1))
