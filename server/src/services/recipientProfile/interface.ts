@@ -5,7 +5,9 @@ export interface Pagination{
   limit: number;
 }
 
-export interface PaginationGetList extends Pagination{
+export interface QueryParamaterGetListRecipientProfile extends Pagination{
+  registrationNumber: boolean,
+  idNumber: boolean,
   dispensingStatus: boolean;
 }
 
