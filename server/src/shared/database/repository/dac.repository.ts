@@ -31,8 +31,8 @@ export class DACRepository {
     id: string,
   ): Promise<DAC[] | null> {
     return await DACModel.find({ iU: id, dispensingStatus,
-                          registrationNum : { $exists: registrationNumber },
-                          idNumber :  { $exists: idNumber } })
+                       $and: [   {registrationNum : { $exists: registrationNumber }},
+                       { idNumber :  { $exists: idNumber }}] })
       .skip(limit * (page - 1))
       .limit(limit)
       .sort({ createdAt: -1 })
