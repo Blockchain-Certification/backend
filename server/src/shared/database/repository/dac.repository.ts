@@ -25,12 +25,13 @@ export class DACRepository {
   public async findByIdDAC(id: string): Promise<DAC[] | null> {
     return DACModel.find({ id: id });
   }
+  
   public async findByIUniAndPagination(
     { page, limit, dispensingStatus,registrationNumber,idNumber }: QueryParamaterGetListRecipientProfile,
     id: string,
   ): Promise<DAC[] | null> {
     return DACModel.find({ iU: id, dispensingStatus,
-                           registrationNumber : { $exists: registrationNumber },
+                          registrationNum : { $exists: registrationNumber },
                           idNumber :  { $exists: idNumber } })
       .skip(limit * (page - 1))
       .limit(limit)
