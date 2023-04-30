@@ -48,6 +48,7 @@ export class DACRepository {
       };
       Object.assign(query, idNumberQuery);
     }
+    console.log(query);
     return await DACModel.find(query)
       .skip(limit * (page - 1))
       .limit(limit)
