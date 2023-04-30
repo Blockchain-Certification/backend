@@ -30,6 +30,8 @@ export class DACRepository {
     { page, limit, dispensingStatus,registrationNumber,idNumber }: QueryParamaterGetListRecipientProfile,
     id: string,
   ): Promise<DAC[] | null> {
+    console.log(registrationNumber);
+    console.log(idNumber);
     return await DACModel.find({ iU: id, dispensingStatus,
                           registrationNum : { $exists: registrationNumber },
                           idNumber :  { $exists: idNumber } })
