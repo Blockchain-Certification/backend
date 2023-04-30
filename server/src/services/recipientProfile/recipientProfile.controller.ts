@@ -45,11 +45,11 @@ export default class RecipentProfileController {
         success: true,
         data: listDAC,
         pagination: {
-          limit: pagination.limit,
-          page: pagination.page,
+          limit: queryParamaterGetListRecipientProfile.limit,
+          page: queryParamaterGetListRecipientProfile.page,
           totalPage: Math.ceil(
             (await this.recipentProfileService.count(identityUniversity)) /
-              pagination.limit,
+              queryParamaterGetListRecipientProfile.limit,
           ),
         },
       }).send(res);
