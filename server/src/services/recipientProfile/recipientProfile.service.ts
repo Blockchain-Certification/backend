@@ -295,11 +295,8 @@ export default class RecipentProfileService {
             `Info User not match from ${infoUser.identity} at identity ${entityValidate.identity}`,
           );
         case infoUser.address !== entityValidate.placeOfBirth:
-          console.log("nameeeeeeee");
-          console.log(infoUser.address);
-          console.log(entityValidate.placeOfBirth);
           throw new BadRequestError(
-            `Info User not match from ${infoUser.identity} at address ${entityValidate.placeOfBirth}`,
+            `Info User not match from ${infoUser.identity} at placeOfBirth ${entityValidate.placeOfBirth}`,
           );
         case infoUser.gender !== entityValidate.gender:
           throw new BadRequestError(
@@ -307,7 +304,7 @@ export default class RecipentProfileService {
           );
         case dateBirthInfo !== dateBirthEntity:
           throw new BadRequestError(
-            `Info User not match from ${infoUser.identity} at placeOfBirth ${dateBirthEntity}`,
+            `Info User not match from ${infoUser.identity} at dateBirthEntity ${dateBirthEntity}`,
           );
         default:
           break;
