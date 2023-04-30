@@ -31,7 +31,7 @@ export default class RecipentProfileController {
       const pagination = (({ page, limit, dispensingStatus }) => ({
         page: parseInt(page + ''),
         limit: parseInt(limit + ''),
-        dispensingStatus: dispensingStatus ? dispensingStatus : false,
+        dispensingStatus:  false,
       }))(req.query);
 
       const listDAC = await this.recipentProfileService.getList(
