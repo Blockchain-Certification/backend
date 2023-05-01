@@ -49,4 +49,15 @@ router.get(
 );
 
 
+router.get(
+  '/:identityUniversity/detail/:idDAC',
+  authentication,
+  role(Role.UNIVERSITY,Role.DOET),
+  authorization,
+  authorizationUniversity,
+  validator(schema.iUni, ValidationSource.PARAM),
+  manageDACController.detail,
+);
+
+
 export default router;

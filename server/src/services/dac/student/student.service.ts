@@ -8,6 +8,8 @@ import {
 import { mergeCertificateData } from '../utils';
 import { InfoProof, Proof } from './interface';
 import { generateDACProof } from '../../../shared/fabric';
+import { Types } from 'mongoose';
+import { DAC } from '../../../shared/database/model';
 
 export default class DACStudentService {
   private dacRepository: DACRepository;
@@ -79,5 +81,10 @@ export default class DACStudentService {
 
   public async count(): Promise<number> {
     return this.dacRepository.count();
+  }
+
+
+  public async detail(id: Types.ObjectId): Promise<DAC | null> {
+    return await this.dacRepository.findById(id);
   }
 }

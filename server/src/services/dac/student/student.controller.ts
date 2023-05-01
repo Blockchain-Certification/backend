@@ -70,4 +70,16 @@ export default class DACStudentController {
       data,
     }).send(res);
   });
+
+
+  public detail = asyncHandler(
+    async (req: ProtectedRequest, res) => {
+      const {idDAC} = req.params;
+      const dac = await this.dacStudentService.detail(idDAC);
+      return new SuccessResponse('Detail successfully', {
+        success: true,
+        data: dac,
+      }).send(res);
+    },
+  );
 }
