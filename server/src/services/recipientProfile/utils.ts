@@ -25,6 +25,8 @@ export const hasDuplicateAndMustDuplicateIU = (students: DAC[]): boolean => {
 
 
 export const filterConditionRecipientProfileAndIdNumber = async (flag: FlagFilter, listRecipientProfile: DAC[]) => {
+  console.log(flag.idNumber);
+  console.log(flag.registrationNumber);
   const filteredList = listRecipientProfile.filter(el =>
     (flag.registrationNumber ? el.registrationNum !== null : el.registrationNum === null) &&
     (flag.idNumber ? el.idNumber !== null : el.idNumber === null)
