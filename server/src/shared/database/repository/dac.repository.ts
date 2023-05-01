@@ -36,7 +36,9 @@ export class DACRepository {
       registrationNum : { $eq: null },
       idNumber: {$eq: null}
     }
-    if(registrationNumber == true){
+    console.log(registrationNumber);
+    console.log(idNumber);
+    if(registrationNumber === true){
       const registrationNumQuery = {
         registrationNum: { $ne: null }
       };
