@@ -30,12 +30,14 @@ export class DACRepository {
     { page, limit, dispensingStatus,registrationNumber,idNumber }: QueryParamaterGetListRecipientProfile,
     id: string,
   ): Promise<DAC[] | null> {
-    return DACModel.find({ iU: id, dispensingStatus})
-                  .skip(limit * (page - 1))
-                  .limit(limit)
-                  .sort({ createdAt: -1 })
-                  .lean()
-                  .exec();
+      return DACModel.find({ iU: id, dispensingStatus,
+                           registrationNumber : { $exists: registrationNumber },
+                          idNumber :  { $exists: idNumber } })
+      .skip(limit * (page - 1))
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .lean()
+      .exec();
   }
 
   public async findByIdSelectField(
