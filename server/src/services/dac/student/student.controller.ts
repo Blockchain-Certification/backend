@@ -75,7 +75,7 @@ export default class DACStudentController {
   public detail = asyncHandler(
     async (req: ProtectedRequest, res) => {
       const {idDAC} = req.params;
-      const dac = await this.dacStudentService.detail(idDAC);
+      const dac = await this.dacStudentService.detail(new Types.ObjectId(idDAC));
       return new SuccessResponse('Detail successfully', {
         success: true,
         data: dac,

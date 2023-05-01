@@ -7,6 +7,8 @@ import DACManageService from './manage.service';
 import { ProtectedRequest } from 'app-request';
 import { Pagination } from './interface';
 import { caculateTotalPage } from '../../../shared/helpers/utils';
+import { Types } from 'mongoose';
+
 export default class ManageDACController {
   private dacManageService: DACManageService;
   constructor(dacManageService: DACManageService) {
@@ -57,7 +59,7 @@ export default class ManageDACController {
   public detail = asyncHandler(
     async (req: ProtectedRequest, res) => {
       const {idDAC} = req.params;
-      const dac = await this.dacManageService.detail(idDAC);
+      const dac = await this.dacManageService.detail(new Types.ObjectId(idDAC));
       return new SuccessResponse('Detail successfully', {
         success: true,
         data: dac,
