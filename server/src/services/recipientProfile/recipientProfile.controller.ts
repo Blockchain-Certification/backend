@@ -33,8 +33,8 @@ export default class RecipentProfileController {
         page: parseInt(page + ''),
         limit: parseInt(limit + ''),
         dispensingStatus: false,
-        registrationNumber: registrationNumber ? registrationNumber : false,
-        idNumber: idNumber ? idNumber : false
+        registrationNumber: registrationNumber ? Boolean(registrationNumber) : false,
+        idNumber: idNumber ? Boolean(idNumber) : false
       }))(req.query);
 
       const listDAC = await this.recipentProfileService.getList(
