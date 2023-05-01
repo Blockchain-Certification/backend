@@ -17,17 +17,18 @@ const dacRepository = new DACRepository();
 const certTypeService = new Service(certTypeRepository, dacRepository);
 const certTypeController = new Controller(certTypeService);
 
-router.use(authentication, role(Role.DOET), authorization);
 
 router.get(
   '/',
   validator(schema.pagination, ValidationSource.QUERY),
+  authentication, role(Role.DOET,Role.UNIVERSITY), authorization,
   certTypeController.getList,
 );
 
 router.get(
   '/:id',
   validator(schema.certTypeId, ValidationSource.PARAM),
+  authentication, role(Role.DOET), authorization,
   certTypeController.detail,
 );
 
@@ -37,12 +38,14 @@ router.put(
   '/:id',
   validator(schema.certTypeId, ValidationSource.PARAM),
   validator(schema.edit),
+  authentication, role(Role.DOET), authorization,
   certTypeController.edit,
 );
 
 router.delete(
   '/:id',
   validator(schema.certTypeId, ValidationSource.PARAM),
+  authentication, role(Role.DOET), authorization,
   certTypeController.delete,
 );
 
