@@ -10,7 +10,7 @@ export const authorizationAccessDAC = asyncHandler(
     const { idDAC } = req.params;
     const { userName } = req.user;
 
-    const dac = await dacRepository.findById(Types.ObjectId(idDAC));
+    const dac = await dacRepository.findById(new Types.ObjectId(idDAC));
     if(!dac) throw new BadRequestError('DAC not exist');
 
     if(dac.iSt === userName)
