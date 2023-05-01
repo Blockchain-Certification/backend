@@ -48,7 +48,15 @@ export default class RecipentProfileService {
       queryParamaterGetListRecipientProfile,
       identityUniversity,
     );
-    return listRecipientProfiles;
+    
+    if(!listRecipientProfiles) return [];
+
+    const flagFilter: FlagFilter = {
+      registrationNumber: queryParamaterGetListRecipientProfile.registrationNumber,
+      idNumber: queryParamaterGetListRecipientProfile.idNumber
+    }
+
+    return await filterConditionRecipientProfileAndIdNumber(flagFilter, listRecipientProfiles);
   }
 
   public async updateInfo(idDAC: Types.ObjectId, body: any): Promise<void> {
