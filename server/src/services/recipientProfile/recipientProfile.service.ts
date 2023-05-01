@@ -7,9 +7,10 @@ import {
   CertificateTypeRepository,
 } from '../../shared/database/repository';
 import { DAC, Role } from '../../shared/database/model';
-import { hasDuplicateAndMustDuplicateIU } from './utils';
+import { filterConditionRecipientProfileAndIdNumber, hasDuplicateAndMustDuplicateIU } from './utils';
 import { BadRequestError } from '../../shared/core/apiError';
 import { Types } from 'mongoose';
+import { FlagFilter } from './interface';
 import {
   QueryParamaterGetListRecipientProfile,
   DTORegistrationNumber,
@@ -43,10 +44,18 @@ export default class RecipentProfileService {
     queryParamaterGetListRecipientProfile: QueryParamaterGetListRecipientProfile,
     identityUniversity: string,
   ): Promise<DAC[] | null> {
-    return await this.dacRepository.findByIUniAndPagination(
+    const listRecipientProfiles =  await this.dacRepository.findByIUniAndPagination(
       queryParamaterGetListRecipientProfile,
       identityUniversity,
     );
+    if(!listRecipientProfiles) return [];
+
+    const flagFilter: FlagFilter = {
+      registrationNumber: queryParamaterGetListRecipientProfile.registrationNumber,
+      idNumber: queryParamaterGetListRecipientProfile.idNumber
+    }
+
+    return await filterConditionRecipientProfileAndIdNumber(flagFilter, listRecipientProfiles);
   }
 
   public async updateInfo(idDAC: Types.ObjectId, body: any): Promise<void> {

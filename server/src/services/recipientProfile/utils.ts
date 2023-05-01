@@ -2,6 +2,7 @@ import { DAC, Role } from '../../shared/database/model';
 import asyncHandler from '../../shared/helpers/asyncHandler';
 import { ProtectedRequest } from 'app-request';
 import { AuthFailureError } from '../../shared/core/apiError';
+import { FlagFilter } from './interface';
 
 export const hasDuplicateAndMustDuplicateIU = (students: DAC[]): boolean => {
   const iUs = new Set<string>();
@@ -23,3 +24,11 @@ export const hasDuplicateAndMustDuplicateIU = (students: DAC[]): boolean => {
 };
 
 
+export const filterConditionRecipientProfileAndIdNumber = async (flag: FlagFilter, listRecipientProfile: DAC[]) => {
+  const filteredList = listRecipientProfile.filter(el =>
+    (flag.registrationNumber ? el.registrationNum !== null : el.registrationNum === null) &&
+    (flag.idNumber ? el.idNumber !== null : el.idNumber === null)
+  );
+  
+  return filteredList;
+}

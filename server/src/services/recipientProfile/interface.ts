@@ -29,3 +29,8 @@ export interface DTORegistrationIdNumber{
   _id : Types.ObjectId;
   idNumber : string;
 }
+
+export interface FlagFilter{
+  registrationNumber:  boolean,
+  idNumber: boolean
+}
