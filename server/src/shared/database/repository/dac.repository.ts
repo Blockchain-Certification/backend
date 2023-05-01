@@ -36,8 +36,6 @@ export class DACRepository {
       registrationNum : { $eq: null },
       idNumber: {$eq: null}
     }
-    console.log(typeof registrationNumber);
-    console.log(typeof idNumber);
     if(registrationNumber === true){
       const registrationNumQuery = {
         registrationNum: { $ne: null }
@@ -50,7 +48,6 @@ export class DACRepository {
       };
       Object.assign(query, idNumberQuery);
     }
-    console.log(query);
     return await DACModel.find(query)
       .skip(limit * (page - 1))
       .limit(limit)
