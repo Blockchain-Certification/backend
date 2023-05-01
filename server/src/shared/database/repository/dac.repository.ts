@@ -36,13 +36,12 @@ export class DACRepository {
       registrationNum : { $eq: null },
       idNumber: {$eq: null}
     }
-    console.log(registrationNumber);
-    console.log(idNumber);
+    console.log(typeof registrationNumber);
+    console.log(typeof idNumber);
     if(registrationNumber === true){
       const registrationNumQuery = {
         registrationNum: { $ne: null }
       };
-      console.log('vao');
       Object.assign(query, registrationNumQuery);
     }
     if(idNumber == true){
