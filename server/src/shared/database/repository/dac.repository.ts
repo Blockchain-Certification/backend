@@ -42,6 +42,7 @@ export class DACRepository {
       const registrationNumQuery = {
         registrationNum: { $ne: null }
       };
+      console.log('vao');
       Object.assign(query, registrationNumQuery);
     }
     if(idNumber == true){
