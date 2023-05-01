@@ -13,7 +13,7 @@ export const authorizationAccessDAC = asyncHandler(
     const dac = await dacRepository.findById(new Types.ObjectId(idDAC));
     if(!dac) throw new BadRequestError('DAC not exist');
 
-    if(dac.iSt === userName)
+    if(dac.iSt !== userName)
     {
       throw new AuthFailureError('Authorization not access this dac');
     }
