@@ -30,30 +30,14 @@ export class DACRepository {
     { page, limit, dispensingStatus,registrationNumber,idNumber }: QueryParamaterGetListRecipientProfile,
     id: string,
   ): Promise<DAC[] | null> {
-    const query =  {
-      iU: id,
-      dispensingStatus,
-      registrationNum : { $eq: null },
-      idNumber: {$eq: null}
-    }
-    if(registrationNumber === true){
-      const registrationNumQuery = {
-        registrationNum: { $ne: null }
-      };
-      Object.assign(query, registrationNumQuery);
-    }
-    if(idNumber == true){
-      const idNumberQuery = {
-        idNumber: { $ne: null }
-      };
-      Object.assign(query, idNumberQuery);
-    }
-    return await DACModel.find(query)
-      .skip(limit * (page - 1))
-      .limit(limit)
-      .sort({ createdAt: -1 })
-      .lean()
-      .exec();
+    return DACModel.find({ iU: id, dispensingStatus,
+      registrationNumber : { $exists: registrationNumber },
+     idNumber :  { $exists: idNumber } })
+                  .skip(limit * (page - 1))
+                  .limit(limit)
+                  .sort({ createdAt: -1 })
+                  .lean()
+                  .exec();
   }
 
   public async findByIdSelectField(
