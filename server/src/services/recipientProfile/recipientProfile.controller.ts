@@ -24,7 +24,7 @@ export default class RecipentProfileController {
       const { identityUniversity } = req.params;
       const { userName, roles } = req.user;
 
-      if (!roles.includes(Role.UNIVERSITY) || identityUniversity !== userName)
+      if (roles.includes(Role.UNIVERSITY) && identityUniversity !== userName)
         throw new BadRequestError(
           'Not access data because user not belong to param identityUniversity ',
         );
