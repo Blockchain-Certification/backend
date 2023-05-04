@@ -35,7 +35,7 @@ app.use(
 );
 
 
-app.use(cors({ origin: 'http://localhost:3000', optionsSuccessStatus: 200, credentials: true }));
+app.use(cors({ origin: 'http://194.163.180.21', optionsSuccessStatus: 200, credentials: true }));
 app.use(helmet());  
 
 // Routes
