@@ -1,15 +1,15 @@
 import { Router } from 'express';
-import { authentication, authorization } from '../../../shared/middlewares';
-import { Role } from '../../../shared/database/model';
-import { role } from '../../../shared/helpers/utils';
+import { authentication, authorization } from '../../shared/middlewares';
+import { Role } from '../../shared/database/model';
+import { role } from '../../shared/helpers/utils';
 import {
   CertificateTypeRepository,
   DACRepository,
-} from '../../../shared/database/repository';
+} from '../../shared/database/repository';
 
-import validator, { ValidationSource } from '../../../shared/helpers/validator';
+import validator, { ValidationSource } from '../../shared/helpers/validator';
 import schema from './schema';
-import { Controller, Service } from '../base';
+import { Controller, Service } from '../../common/abtractService';
 
 const router = Router();
 const certTypeRepository = new CertificateTypeRepository();

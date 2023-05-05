@@ -1,6 +1,6 @@
 import Joi from 'joi';
-import { Type } from '../../../shared/database/model/CertificateType';
-import { JoiObjectId } from '../../../shared/helpers/validator';
+import { Type } from '../../shared/database/model/CertificateType';
+import { JoiObjectId } from '../../shared/helpers/validator';
 export default {
   create: Joi.object().keys({
     name: Joi.string().required(),

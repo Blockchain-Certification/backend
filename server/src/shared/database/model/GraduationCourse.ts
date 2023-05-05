@@ -28,7 +28,6 @@ schema.pre('save', async function (next) {
     const count = await GraduationCourseModel.countDocuments();
     const nextIdNumber = count + 1;
     const nextId = `KTN${nextIdNumber.toString().padStart(4, '0')}`;
-    console.log(nextId);
     this.id = nextId;
   }
   return next();
