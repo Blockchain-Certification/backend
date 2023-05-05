@@ -121,7 +121,6 @@ export default class AuthService {
       return await this.createUser(user, createdBy);
     }));
 
-    console.log(createdUsers);
     return createdUsers;
   }
 
@@ -171,7 +170,7 @@ export default class AuthService {
     // register blockchain wallet
     const keys = await registerUser(infoUser.identity);
     user.publicKey = keys.publicKey;
-
+    
     // CHECK REGISTER  have UNIVERSITY WILL REGISTER UP BLOCKCHAIN
     if (checkRegisterUNI) {
       const argsCallFunction = {

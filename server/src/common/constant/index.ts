@@ -12,11 +12,9 @@ export const fieldDefault = [
   'typeCertificate',
   'levelCertificate',
   'departmentName',
+  'major'
 ];
 export const fieldShareExtend = [
-  'universityName',
-  'major',
-  'departmentName',
   'CGPA',
   'formOfTraining',
   'ranking',

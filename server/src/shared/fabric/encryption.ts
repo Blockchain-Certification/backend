@@ -118,12 +118,10 @@ async function verifyCertificateProof({
     }
     disclosedDataValues.push(dataOfDisclosedData);
   }
-
   const paramsToShareIndex = getParamsIndexArray(
     disclosedDataParamNames,
     dacSchema.ordering,
   );
-
   const mTreeRoot = mTree.getRoot().toString('hex');
 
   const disclosedDataHash: any = disclosedDataValues.map((x) => {

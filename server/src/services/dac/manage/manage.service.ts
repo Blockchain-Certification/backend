@@ -185,7 +185,6 @@ export default class ManageDACService {
       const chaincodeResult = await invokeChaincode(args);
       logger.debug(chaincodeResult);
     } catch (err) {
-      console.log(err);
       throw new InternalError(err + '');
     }
   }
