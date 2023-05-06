@@ -18,5 +18,6 @@ const dacGeneralService = new DACGeneralService(
 const dacGeneralController = new DACGeneralController(dacGeneralService);
 
 router.post('/verify', dacGeneralController.verify);
+router.get('/generateProof/:idDAC/:identityStudent, dacGeneralController.generateProof);
 
 export default router;
