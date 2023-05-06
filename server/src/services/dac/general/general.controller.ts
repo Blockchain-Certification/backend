@@ -6,6 +6,7 @@ import { ProtectedRequest } from '../../../shared/types/app-request';
 import { Pagination } from '../manage/interface';
 import { SuccessMsgResponse, SuccessResponse } from '../../../shared/core/apiResponse';
 import DACStudentService from '../student/student.service';
+import { paramsToShareAddFieldNeedShareDefault } from '../utils';
 export default class DACGeneralController {
   private dacGeneralService: DACGeneralService;
   private dacStudentService: DACStudentService;
@@ -21,7 +22,15 @@ export default class DACGeneralController {
 
   public generateProof = asyncHandler(async (req: ProtectedRequest, res) => {
     const {idDAC, identityStudent} = req.params;
-    const {sharedFields} = req.query;
+    let {sharedField} = req.query;
+    sharedField = typeof sharedField === 'string' ? sharedField : '';
+
+    let sharedFields = sharedField.split(',');
+    if (sharedFields[0] === '') {
+      sharedFields = [];
+    }
+    sharedFields = await paramsToShareAddFieldNeedShareDefault(sharedFields);
+    
     const data = await this.dacStudentService.generateProof( {
       sharedFields,
       idDAC: new Types.ObjectId(idDAC),
