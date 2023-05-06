@@ -11,13 +11,13 @@ export const fieldDefault = [
   'nameTypeCertificate',
   'typeCertificate',
   'levelCertificate',
-  'departmentName',
-  'major'
+  'departmentName'
 ];
 export const fieldShareExtend = [
   'CGPA',
   'formOfTraining',
-  'ranking'
+  'ranking',
+  'major'
 ];
 
 export const DATE_OF_BIRTH = "dateOfBirth";
