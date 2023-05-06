@@ -15,14 +15,14 @@ export default class AuthController {
   }
   public login = asyncHandler(async (req: Request, res: Response) => {
     const { userData, tokens } = await this.authService.login(req.body);
-    res.cookie('access_token', tokens.accessToken, {
-      maxAge: tokenInfo.accessTokenValidity + 1000,
-      httpOnly: true,
-    });
-    res.cookie('refresh_token', tokens.refreshToken, {
-      maxAge: tokenInfo.refreshTokenValidity + 1000,
-      httpOnly: true,
-    });
+    // res.cookie('access_token', tokens.accessToken, {
+    //   maxAge: tokenInfo.accessTokenValidity + 1000,
+    //   httpOnly: true,
+    // });
+    // res.cookie('refresh_token', tokens.refreshToken, {
+    //   maxAge: tokenInfo.refreshTokenValidity + 1000,
+    //   httpOnly: true,
+    // });
 
     return new SuccessResponse('Login successfully', {
       success: true,
@@ -39,14 +39,14 @@ export default class AuthController {
       };
       const tokens = await this.authService.refreshToken(token);
 
-      res.cookie('access_token', tokens.accessToken, {
-        maxAge: tokenInfo.accessTokenValidity + 1000,
-        httpOnly: true,
-      });
-      res.cookie('refresh_token', tokens.refreshToken, {
-        maxAge: tokenInfo.refreshTokenValidity + 1000,
-        httpOnly: true,
-      });
+      // res.cookie('access_token', tokens.accessToken, {
+      //   maxAge: tokenInfo.accessTokenValidity + 1000,
+      //   httpOnly: true,
+      // });
+      // res.cookie('refresh_token', tokens.refreshToken, {
+      //   maxAge: tokenInfo.refreshTokenValidity + 1000,
+      //   httpOnly: true,
+      // });
 
       return new TokenRefreshResponse(
         'Token Issued',
