@@ -16,12 +16,12 @@ const router = Router();
 
 const infoUserRepository = new InfoUserRepository();
 const dacRepository = new DACRepository();
-const dacStudentService = new DACStudentService(
+export const dacStudentService = new DACStudentService(
   dacRepository,
   infoUserRepository,
 );
 const dacStudentController = new DACStudentController(dacStudentService);
-// bug
+
 router.use(authentication, role(Role.STUDENT), authorization);
 
 router.get(
