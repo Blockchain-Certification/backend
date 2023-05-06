@@ -21,8 +21,8 @@ const dacStudentService = new DACStudentService(
   infoUserRepository,
 );
 const dacStudentController = new DACStudentController(dacStudentService);
-
-router.use(authentication, role(Role.STUDENT), authorization);
+// bug
+// router.use(authentication, role(Role.STUDENT), authorization);
 
 router.get(
   '/',
