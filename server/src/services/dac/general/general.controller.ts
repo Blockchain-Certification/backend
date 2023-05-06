@@ -12,7 +12,7 @@ export default class DACGeneralController {
   private dacStudentService: DACStudentService;
   constructor(dacGeneralService: DACGeneralService, dacStudentService: DACStudentService) {
     this.dacGeneralService = dacGeneralService;
-    this.dacStudentService =  DACStudentService;
+    this.dacStudentService =  dacStudentService;
   }
 
   public verify = asyncHandler(async (req: ProtectedRequest, res) => {
