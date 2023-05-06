@@ -22,7 +22,7 @@ const dacStudentService = new DACStudentService(
 );
 const dacStudentController = new DACStudentController(dacStudentService);
 // bug
-// router.use(authentication, role(Role.STUDENT), authorization);
+router.use(authentication, role(Role.STUDENT), authorization);
 
 router.get(
   '/',
