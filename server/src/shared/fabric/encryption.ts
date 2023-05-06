@@ -156,9 +156,6 @@ async function verifyCertificateProof({
 function getParamsIndexArray(paramsToShare: string[], ordering: string[]) {
   const paramsToShareIndex = paramsToShare.map((element) => {
     return ordering.findIndex((orderingElement) => {
-      console.log(orderingElement);
-      console.log(orderingElement === element);
-      console.log('=====================');
       return orderingElement === element;
     });
   });
