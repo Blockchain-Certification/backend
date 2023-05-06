@@ -57,8 +57,7 @@ export default class DACStudentController {
       sharedFields = [];
     }
     sharedFields = await paramsToShareAddFieldNeedShareDefault(sharedFields);
-    console.log('sharedFields');
-    console.log(sharedFields);
+
     const data = await this.dacStudentService.generateProof(
       {
         sharedFields,
