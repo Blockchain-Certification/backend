@@ -94,6 +94,7 @@ async function generateDACProof(
     sharedFields,
     dacSchema.ordering,
   );
+  
   const layers = mTree.getLayersFlat().map((x: any) => x.toString('hex'));
   const multiProofs = mTree.getMultiProof(layers, paramsToShareIndex);
   return multiProofs;
@@ -155,6 +156,9 @@ async function verifyCertificateProof({
 function getParamsIndexArray(paramsToShare: string[], ordering: string[]) {
   const paramsToShareIndex = paramsToShare.map((element) => {
     return ordering.findIndex((orderingElement) => {
+      console.log(orderingElement);
+      console.log(orderingElement === element);
+      console.log('=====================');
       return orderingElement === element;
     });
   });
