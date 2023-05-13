@@ -1,3 +1,9 @@
+
+checkk list user 
+check list dac
+check verify 
+
+=====
 Sure, here's an example of how to use the getHexLayersFlat() method to obtain the flattened layers of a simple Merkle tree in hexadecimal format:
 
 Suppose we have a Merkle tree with 4 leaf nodes, where each leaf node represents a hash of a data element. The leaf nodes are as follows:
