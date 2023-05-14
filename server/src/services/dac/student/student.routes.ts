@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   InfoUserRepository,
   DACRepository,
+  CryptoVerifyRepository
 } from '../../../shared/database/repository';
 import validator, { ValidationSource } from '../../../shared/helpers/validator';
 import schema from './schema';
@@ -16,9 +17,11 @@ const router = Router();
 
 const infoUserRepository = new InfoUserRepository();
 const dacRepository = new DACRepository();
+const cryptoVerifyRepository = new CryptoVerifyRepository();
 export const dacStudentService = new DACStudentService(
   dacRepository,
   infoUserRepository,
+  cryptoVerifyRepository,
 );
 const dacStudentController = new DACStudentController(dacStudentService);
 

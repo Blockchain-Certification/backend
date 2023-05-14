@@ -6,6 +6,7 @@ import { CertificateTypeRepository } from './certificateType.repository';
 import { DACRepository } from './dac.repository';
 import GraduationCourseRepository from './graduationCourse.repository';
 import GraduationYearRepository from './graduationYear.repository';
+import CryptoVerifyRepository from './cryptoVerify.repository';
 export {
   UserRepository,
   InfoUserRepository,
@@ -14,5 +15,6 @@ export {
   CertificateTypeRepository,
   DACRepository,
   GraduationCourseRepository,
-  GraduationYearRepository
+  GraduationYearRepository,
+  CryptoVerifyRepository
 };

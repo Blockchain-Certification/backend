@@ -1,0 +1,4 @@
+const CHARACTERS = '0123456789';
+export{
+  CHARACTERS
+}
