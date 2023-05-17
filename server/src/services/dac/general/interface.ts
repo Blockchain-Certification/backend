@@ -8,7 +8,8 @@ export interface InfoProof{
 export interface Proof{ 
   proof : any,
   disclosedData : any,
-  dacID : Types.ObjectId
+  dacID : Types.ObjectId,
+  key ?: string
 }
 export interface ProofData {
   type: string;
@@ -18,4 +19,10 @@ export interface VerifyProof{
   proof : any,
   disclosedData : any,
   dacID : Types.ObjectId
+}
+
+export interface VerifyCrypto{
+  key : string,
+  name : string,
+  identity : string
 }

@@ -75,7 +75,6 @@ export default class DACStudentService {
       idDAC,
       sharedFields,
     );
-
     const key = await randomKey();
     const proofResponse  =  {
       proof: mTreeProof,

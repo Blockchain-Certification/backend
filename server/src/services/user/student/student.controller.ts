@@ -23,7 +23,6 @@ export class StudentController {
         limit: parseInt(limit as string),
       }))(req.query);
       const data = await this.studentService.getList(pagination);
-
       return new SuccessResponse('Get list successfully', {
         success: true,
         data: data,
@@ -31,7 +30,7 @@ export class StudentController {
           page: pagination.page,
           limit: pagination.limit,
           totalPage: await caculateTotalPage(
-            await this.studentService.count(),
+            await this.studentService.countFromStudent(),
             pagination.limit,
           ),
         },

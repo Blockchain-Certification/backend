@@ -1,6 +1,5 @@
 import Joi from 'joi';
 import { JoiObjectId } from '../../../shared/helpers/validator';
-import { ProofData } from './interface';
 
 const allowedFields = [
   'universityName',
@@ -34,8 +33,18 @@ export default {
       .unknown(false)
       .or(...allowedFields),
     dacID: JoiObjectId().required(),
+    key :Joi.string(),
   }),
   idDAC: Joi.object().keys({
     idDAC: JoiObjectId().required(),
   }),
+  verifyCrypto: Joi.object().keys({
+    identity: Joi.string()
+    .required()
+    .regex(/^[0-9]{12}$/),
+    name: Joi.string().required(),
+    key: Joi.string()
+    .regex(/^[0-9]{10}$/)
+    .required(),
+  })
 };
