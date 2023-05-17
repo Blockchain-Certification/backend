@@ -38,4 +38,12 @@ export class UserRepository {
   public async isValidRole(identity : string, role : Role) : Promise<User | null> {
     return await UserModel.findOne({ userName: identity, roles: { $in: [`${role}`] } })
   }
+
+  public async countFromStudent() : Promise<number>{
+    return await UserModel.count({ roles: { $in: ['STUDENT'] } });
+  }
+
+  public async countFromUniversity() : Promise<number>{
+    return await UserModel.count({ roles: { $in: ['UNIVERSITY'] } });
+  }
 }

@@ -195,4 +195,5 @@ export class InfoUserRepository {
   public async count(): Promise<number> {
     return InfoUserModel.count();
   }
+
 }

@@ -4,9 +4,12 @@ import GraduationCourse, { GraduationCourseModel } from './GraduationCourse';
 import GraduationYear, { GraduationYearModel } from './GraduationYear';
 import CertificateType, { CertificateTypeModel } from './CertificateType';
 import DAC, { DACModel } from './DAC';
+import CryptoVerify, {CryptoVerifyModel} from './CryptoVerify';
 export {
+  CryptoVerify,
+  CryptoVerifyModel,
   User,
-  UserModel,
+  UserModel, 
   InfoUser,
   InfoUserModel,
   GraduationCourse,

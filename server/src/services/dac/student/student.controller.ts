@@ -51,7 +51,6 @@ export default class DACStudentController {
     const { userName } = req.user;
     sharedField = typeof sharedField === 'string' ? sharedField : '';
 
-
     let sharedFields = sharedField.split(',');
     if (sharedFields[0] === '') {
       sharedFields = [];

@@ -1,4 +1,4 @@
-import { DACRepository } from '../../../shared/database/repository';
+import { CryptoVerifyRepository, DACRepository } from '../../../shared/database/repository';
 import { Pagination } from '../manage/interface';
 import { InfoUserRepository } from '../../../shared/database/repository/infoUser.repository';
 import { BadRequestError } from '../../../shared/core/apiError';
@@ -9,17 +9,21 @@ import { mergeCertificateData } from '../utils';
 import { InfoProof, Proof } from './interface';
 import { generateDACProof } from '../../../shared/fabric';
 import { Types } from 'mongoose';
-import { DAC } from '../../../shared/database/model';
+import { CryptoVerify, DAC } from '../../../shared/database/model';
+import { randomKey } from './utils';
 
 export default class DACStudentService {
   private dacRepository: DACRepository;
   private infoUserRepository: InfoUserRepository;
+  private cryptoVerifyRepository : CryptoVerifyRepository;
   constructor(
     dacRepository: DACRepository,
     infoUserRepository: InfoUserRepository,
-  ) {
+    cryptoVerifyRepository : CryptoVerifyRepository,
+    ) {
     this.dacRepository = dacRepository;
     this.infoUserRepository = infoUserRepository;
+    this.cryptoVerifyRepository = cryptoVerifyRepository;
   }
 
   public async getListDACOfStudent(
@@ -71,12 +75,20 @@ export default class DACStudentService {
       idDAC,
       sharedFields,
     );
-    
-    return {
+    const key = await randomKey();
+    const proofResponse  =  {
       proof: mTreeProof,
       disclosedData,
       dacID: dac._id,
+      key,
     };
+    const modelCryptoVerify : CryptoVerify = {
+      key,
+      properties : JSON.stringify(proofResponse)
+    }
+    await this.cryptoVerifyRepository.create(modelCryptoVerify);
+    
+    return proofResponse;
   }
 
   public async count(): Promise<number> {

@@ -68,8 +68,8 @@ export class StudentService {
     await this.userRepository.delete(user.idUser);
   }
 
-  public async count(): Promise<number> {
-    return await this.dacRepository.count();
+  public async countFromStudent(): Promise<number> {
+    return await this.userRepository.countFromStudent();
   }
   private async checkUpBlockchain(
     roles: Role[],

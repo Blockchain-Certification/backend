@@ -41,4 +41,8 @@ export default class DACGeneralController {
       data,
     }).send(res);  });
 
+  public verifyCrypto = asyncHandler( async (req: ProtectedRequest, res) => {
+       await this.dacGeneralService.verifyCrypto(req.body);
+       return new SuccessMsgResponse("Verified successfully").send(res);
+  });
 }
