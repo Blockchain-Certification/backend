@@ -22,11 +22,14 @@ export default class DACGeneralService {
     this.cryptoVerifyRepository = cryptoVerifyRepository;
   }
 
-  public async verify(infoVerify: VerifyProof): Promise<void> {
+  public async verify(infoVerify: VerifyProof): Promise<any> {
+    
     const dac = await this.dacRepository.findById(infoVerify.dacID);
     if (!dac) throw new BadRequestError('DAC not exist');
+
     const proofIsCorrect = await verifyCertificateProof({ ...infoVerify, dac });
     if (!proofIsCorrect) throw new BadRequestError('Proof is not correct');
+    return infoVerify.disclosedData;
   }
 
   public async verifyCrypto({key, identity, name} : VerifyCrypto): Promise<void> {
