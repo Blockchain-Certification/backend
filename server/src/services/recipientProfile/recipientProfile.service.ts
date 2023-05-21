@@ -44,7 +44,7 @@ export default class RecipentProfileService {
     queryParamaterGetListRecipientProfile: QueryParamaterGetListRecipientProfile,
     identityUniversity: string,
   ): Promise<DAC[] | null> {
-    const listRecipientProfiles =  await this.dacRepository.findByIUniAndPagination(
+    const listRecipientProfiles =  await this.dacRepository.findByIUniAndPaginationOfRecipientProfile(
       queryParamaterGetListRecipientProfile,
       identityUniversity,
     );

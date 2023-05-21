@@ -17,6 +17,7 @@ import {
 } from '../../../shared/fabric/callFuncChainCode';
 import { ArgsFunctionCallChainCode } from '../../../shared/fabric/chaincode';
 import { mergeCertificateData } from '../utils';
+import { dac } from '../..';
 export default class ManageDACService {
   private dacRepository: DACRepository;
   private certRepository: CertificateTypeRepository;
@@ -59,32 +60,13 @@ export default class ManageDACService {
   public async getListDACOfUniversity(
     identityUniversity: string,
     pagination: Pagination,
-  ): Promise<any> {
-    const university =
-      await this.infoUserRepository.findByIdentityAndAccountUserFromUniversity(
-        identityUniversity,
-      );
-
-    if (!university) throw new BadRequestError('University not existed');
-
-    const universityProfileBlockChain = await queryUniversityProfileByName(
-      university.name,
-      identityUniversity,
+  ): Promise<DAC[]> {
+    const dacOfUniversity = await this.dacRepository.findByIUniAndPaginationOfDAC(
+     pagination
+      ,identityUniversity
     );
-    const dacLedgerDataList = await getAllCertificateByUniversity(
-      universityProfileBlockChain.publicKey,
-      identityUniversity,
-    );
-
-    const dacUUIDList = await dacLedgerDataList.map((el: any) => {
-      return el.certUUID;
-    });
-    const dacDBRecords = await this.dacRepository.findByListDACUUID(
-      dacUUIDList,
-      pagination,
-    );
-    if (!dacDBRecords) return [];
-    return await mergeCertificateData(dacDBRecords, dacLedgerDataList);
+    
+    return dacOfUniversity;
   }
 
   public async detail(id: Types.ObjectId): Promise<DAC | null> {
