@@ -104,18 +104,26 @@ export class InfoUserRepository {
     page,
     limit,
   }: Pagination): Promise<any[]> {
+    // const data = await InfoUserModel.find()
+    //   .populate({
+    //     path: 'idUser',
+    //     match: { roles: { $in: [Role.UNIVERSITY] } },
+    //     select: '-password',
+    //   })
+    //   .sort({ updatedAt: -1 })
+    //   .skip(limit * (page - 1))
+    //   .limit(limit)
+    //   .lean()
+    //   .exec();
+
     const data = await InfoUserModel.find()
-      .populate({
-        path: 'idUser',
-        match: { roles: { $in: [Role.UNIVERSITY] } },
-        select: '-password',
-      })
-      .skip(limit * (page - 1))
-      .limit(limit)
-      .sort({ updatedAt: -1 })
+      .sort({ updatedAt: -1 }) // Sort by updatedAt field in descending order (recently updated first)
+      .skip((page - 1) * limit) // Skip the specified number of records based on the page number
+      .limit(limit) // Limit the number of records per page
+      .populate('idUser', '-password')
       .lean()
       .exec();
-    return await filterNull(data);
+    return  data;
   }
 
   public async findInfoAndAccountFromStudentOfUniversity(
@@ -195,5 +203,4 @@ export class InfoUserRepository {
   public async count(): Promise<number> {
     return InfoUserModel.count();
   }
-
 }
