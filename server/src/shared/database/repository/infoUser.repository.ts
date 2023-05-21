@@ -79,6 +79,10 @@ export class InfoUserRepository {
         match: { roles: { $in: [Role.STUDENT] } },
         select: '-password',
       })
+      .populate({
+        path: 'createdBy',
+        select: '-password',
+      })
       .sort({ updatedAt: -1 })
       .lean()
       .exec();
