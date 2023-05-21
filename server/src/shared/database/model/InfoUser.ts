@@ -46,7 +46,11 @@ const schema = new Schema<InfoUser>(
       default: Gender.FEMALE,
     },
     nation: { type: Schema.Types.String, required: false },
-    createdBy: { type: Schema.Types.ObjectId, required: false }
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'InfoUser',
+      required: false,
+    },
   },
   { versionKey: false, timestamps: true },
 );
