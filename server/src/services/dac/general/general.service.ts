@@ -49,6 +49,6 @@ export default class DACGeneralService {
     if (!proofIsCorrect) throw new BadRequestError('Proof is not correct');
   
     cryptoVerify._id && await this.cryptoVerifyRepository.remove(cryptoVerify?._id);
-    return proof;
+    return proof.disclosedData;
   }
 }
