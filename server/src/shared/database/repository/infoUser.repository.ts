@@ -1,8 +1,8 @@
 import { InfoUser, InfoUserModel, Role } from '../model';
-import { filterNull } from '../../helpers/utils';
+import { filterNonNullWithPagination } from '../../helpers/utils';
 import { Types } from 'mongoose';
 import { Pagination } from '../../../services/recipientProfile/interface';
-import { PaginationSearch } from '../../../services/user/student/interface';
+import { PaginationSearch} from '../../../services/user/student/interface';
 export class InfoUserRepository {
   public async create(user: InfoUser): Promise<InfoUser> {
     return InfoUserModel.create(user);
@@ -70,22 +70,19 @@ export class InfoUserRepository {
     return data;
   }
 
-  public async findInfoAndAccountFromStudent({
-    page,
-    limit,
-  }: Pagination): Promise<any[]> {
+  public async findInfoAndAccountFromStudent(
+    pagination: Pagination,
+  ): Promise<any[]> {
     const data = await InfoUserModel.find()
       .populate({
         path: 'idUser',
         match: { roles: { $in: [Role.STUDENT] } },
         select: '-password',
       })
-      .skip(limit * (page - 1))
-      .limit(limit)
       .sort({ updatedAt: -1 })
       .lean()
       .exec();
-    return await filterNull(data);
+    return await filterNonNullWithPagination(data, pagination);
   }
 
   public async findByIdAndAccountUserFromUniversity(
@@ -100,34 +97,23 @@ export class InfoUserRepository {
     return data;
   }
 
-  public async findInfoAndAccountFromUniversity({
-    page,
-    limit,
-  }: Pagination): Promise<any[]> {
-    // const data = await InfoUserModel.find()
-    //   .populate({
-    //     path: 'idUser',
-    //     match: { roles: { $in: [Role.UNIVERSITY] } },
-    //     select: '-password',
-    //   })
-    //   .sort({ updatedAt: -1 })
-    //   .skip(limit * (page - 1))
-    //   .limit(limit)
-    //   .lean()
-    //   .exec();
-
+  public async findInfoAndAccountFromUniversity(
+    pagination: Pagination,
+  ): Promise<any[]> {
     const data = await InfoUserModel.find()
-      .sort({ updatedAt: -1 }) // Sort by updatedAt field in descending order (recently updated first)
-      .skip((page - 1) * limit) // Skip the specified number of records based on the page number
-      .limit(limit) // Limit the number of records per page
-      .populate('idUser', '-password')
+      .sort({ updatedAt: -1 })
+      .populate({
+        path: 'idUser',
+        match: { roles: { $in: [Role.UNIVERSITY] } },
+        select: '-password',
+      })
       .lean()
       .exec();
-    return  data;
+    return await filterNonNullWithPagination(data, pagination);
   }
 
   public async findInfoAndAccountFromStudentOfUniversity(
-    { page, limit }: Pagination,
+    pagination: Pagination,
     idUni: Types.ObjectId,
   ): Promise<any[]> {
     const data = await InfoUserModel.find({ createdBy: idUni })
@@ -136,12 +122,10 @@ export class InfoUserRepository {
         match: { roles: { $in: [Role.STUDENT] } },
         select: '-password',
       })
-      .skip(limit * (page - 1))
-      .limit(limit)
       .sort({ updatedAt: -1 })
       .lean()
       .exec();
-    return await filterNull(data);
+    return await filterNonNullWithPagination(data, pagination);
   }
 
   public async findInfoAndAccountFromKeyWordOfRoleStudent({
@@ -160,12 +144,15 @@ export class InfoUserRepository {
         match: { roles: { $in: [Role.STUDENT] } },
         select: '-password',
       })
-      .skip(limit * (page - 1))
-      .limit(limit)
+
       .sort({ updatedAt: -1 })
       .lean()
       .exec();
-    return await filterNull(data);
+    const pagination:  Pagination = {
+      page,
+      limit,
+    }
+    return await filterNonNullWithPagination(data, pagination);
   }
 
   public async findInfoAndAccountFromKeyWordOfRoleUniversity({
@@ -189,7 +176,11 @@ export class InfoUserRepository {
       .sort({ updatedAt: -1 })
       .lean()
       .exec();
-    return await filterNull(data);
+      const pagination:  Pagination = {
+        page,
+        limit,
+      }
+    return await filterNonNullWithPagination(data,pagination);
   }
 
   public async edit(id: Types.ObjectId, data: any): Promise<void> {

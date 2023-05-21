@@ -6,6 +6,7 @@ import asyncHandler from './asyncHandler';
 import { ProtectedRequest } from 'app-request';
 import { Role } from '../database/model';
 import { fieldDefault } from '../../common/constant';
+import { Pagination } from '../../services/recipientProfile/interface';
 
 export function findIpAddress(req: Request) {
   try {
@@ -31,8 +32,21 @@ export const role = (...role: Role[]) =>
     next();
   });
 
-export const filterNull = async (list: any) => {
-  return await list.filter((el: any) => el.idUser !== null);
+export const filterNonNullWithPagination = async (list: any[], pagination: Pagination) => {
+    const filteredList = await list.filter((el: any) => el.idUser !== null);
+    
+    const { page, limit } = pagination;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const paginatedList = filteredList.slice(startIndex, endIndex);
+    
+    return paginatedList;
+};
+  
+export const filterNull = async (list: any[]) => {
+  
+  
+  return list;
 };
 
 export const caculateTotalPage = async (
