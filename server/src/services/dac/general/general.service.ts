@@ -32,7 +32,7 @@ export default class DACGeneralService {
     return infoVerify.disclosedData;
   }
 
-  public async verifyCrypto({key, identity, name} : VerifyCrypto): Promise<void> {
+  public async verifyCrypto({key, identity, name} : VerifyCrypto): Promise<any> {
     const cryptoVerify = await this.cryptoVerifyRepository.findByKey(key);
     if(!cryptoVerify) throw new BadRequestError('Key is not valid');
     
@@ -49,5 +49,6 @@ export default class DACGeneralService {
     if (!proofIsCorrect) throw new BadRequestError('Proof is not correct');
   
     cryptoVerify._id && await this.cryptoVerifyRepository.remove(cryptoVerify?._id);
+    return proof;
   }
 }
