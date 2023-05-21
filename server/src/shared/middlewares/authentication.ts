@@ -6,6 +6,7 @@ import JWT from '../core/JWT';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { AccessTokenError, AuthFailureError } from '../core/apiError';
 import { validateTokenData } from '../helpers/jwt.utils';
+import { Types } from 'mongoose';
 const router = Router();
 const userRepository = new UserRepository();
 const keyStoreRepository = new KeyStoreRepository();
@@ -20,7 +21,7 @@ router.use(
       const accessTokenPayload = await JWT.validate(accessToken);
       await validateTokenData(accessTokenPayload);
 
-      const user = await userRepository.findById(accessTokenPayload.sub);
+      const user = await userRepository.findById(new Types.ObjectId(accessTokenPayload.sub));
       if (!user) throw new AuthFailureError(' User not registered');
       req.user = user;
 

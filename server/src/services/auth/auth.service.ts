@@ -83,7 +83,7 @@ export default class AuthService {
     const accessTokenPayload = await JWT.decode(accessToken);
     validateTokenData(accessTokenPayload);
 
-    const user = await this.userRepository.findById(accessTokenPayload.sub);
+    const user = await this.userRepository.findById(new Types.ObjectId(accessTokenPayload.sub));
     if (!user) throw new AuthFailureError('User not registered');
 
     const refreshTokenPayload = await JWT.decode(refreshToken);

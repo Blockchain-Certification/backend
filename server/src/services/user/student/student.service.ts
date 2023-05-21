@@ -32,7 +32,7 @@ export class StudentService {
     pagination: Pagination,
     idAccountUniversity: Types.ObjectId,
   ): Promise<User[]> {
-    const university = await this.infoUserRepository.findByIdUser(
+    const university = await this.userRepository.findById(
       idAccountUniversity,
     );
     if (!university) throw new BadRequestError('University not found');

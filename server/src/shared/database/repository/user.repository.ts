@@ -14,7 +14,7 @@ export class UserRepository {
     return UserModel.findOne({ userName: userName });
   }
 
-  public async findById(id: string): Promise<User | null> {
+  public async findById(id: Types.ObjectId): Promise<User | null> {
     return UserModel.findById(id);
   }
   public async find(page: number, limit: number): Promise<User[]> {

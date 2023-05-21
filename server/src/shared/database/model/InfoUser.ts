@@ -48,7 +48,7 @@ const schema = new Schema<InfoUser>(
     nation: { type: Schema.Types.String, required: false },
     createdBy: {
       type: Schema.Types.ObjectId,
-      ref: 'InfoUser',
+      ref: 'User',
       required: false,
     },
   },

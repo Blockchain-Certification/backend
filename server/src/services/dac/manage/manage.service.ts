@@ -63,7 +63,7 @@ export default class ManageDACService {
   ): Promise<DAC[]> {
     const dacOfUniversity = await this.dacRepository.findByIUniAndPaginationOfDAC(
      pagination
-      ,identityUniversity
+    , identityUniversity
     );
     
     return dacOfUniversity;
