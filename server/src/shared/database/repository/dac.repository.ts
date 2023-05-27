@@ -22,8 +22,12 @@ export class DACRepository {
     return DACModel.find({ iU: id });
   }
 
-  public async findByIdDAC(id: string): Promise<DAC[] | null> {
+  public async findIdDAC(id: string): Promise<DAC[] | null> {
     return DACModel.find({ id: id });
+  }
+
+  public async findByIdDAC(id: string): Promise<DAC | null> {
+    return DACModel.findOne({ id: id });
   }
 
   public async findByIUniAndPaginationOfRecipientProfile(
@@ -78,7 +82,7 @@ export class DACRepository {
     await DACModel.deleteOne({ _id: id });
   }
 
-  public async isExisted(id: Types.ObjectId): Promise<boolean> {
+  public async isExistedRegistrationNumber(id: Types.ObjectId): Promise<boolean> {
     const regisNumber = await DACModel.findById({ _id: id });
     if (!regisNumber) return false;
     return true;

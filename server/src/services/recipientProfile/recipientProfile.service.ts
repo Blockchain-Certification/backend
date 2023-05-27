@@ -7,7 +7,10 @@ import {
   CertificateTypeRepository,
 } from '../../shared/database/repository';
 import { DAC, Role } from '../../shared/database/model';
-import { filterConditionRecipientProfileAndIdNumber, hasDuplicateAndMustDuplicateIU } from './utils';
+import {
+  filterConditionRecipientProfileAndIdNumber,
+  hasDuplicateAndMustDuplicateIU,
+} from './utils';
 import { BadRequestError } from '../../shared/core/apiError';
 import { Types } from 'mongoose';
 import { FlagFilter } from './interface';
@@ -16,6 +19,7 @@ import {
   DTORegistrationNumber,
   DTORegistrationIdNumber,
 } from './interface';
+
 export default class RecipentProfileService {
   private dacRepository: DACRepository;
   private infoUserRepository: InfoUserRepository;
@@ -44,19 +48,24 @@ export default class RecipentProfileService {
     queryParamaterGetListRecipientProfile: QueryParamaterGetListRecipientProfile,
     identityUniversity: string,
   ): Promise<DAC[] | null> {
-    const listRecipientProfiles =  await this.dacRepository.findByIUniAndPaginationOfRecipientProfile(
-      queryParamaterGetListRecipientProfile,
-      identityUniversity,
-    );
-    
-    if(!listRecipientProfiles) return [];
+    const listRecipientProfiles =
+      await this.dacRepository.findByIUniAndPaginationOfRecipientProfile(
+        queryParamaterGetListRecipientProfile,
+        identityUniversity,
+      );
+
+    if (!listRecipientProfiles) return [];
 
     const flagFilter: FlagFilter = {
-      registrationNumber: queryParamaterGetListRecipientProfile.registrationNumber,
-      idNumber: queryParamaterGetListRecipientProfile.idNumber
-    }
+      registrationNumber:
+        queryParamaterGetListRecipientProfile.registrationNumber,
+      idNumber: queryParamaterGetListRecipientProfile.idNumber,
+    };
 
-    return await filterConditionRecipientProfileAndIdNumber(flagFilter, listRecipientProfiles);
+    return await filterConditionRecipientProfileAndIdNumber(
+      flagFilter,
+      listRecipientProfiles,
+    );
   }
 
   public async updateInfo(idDAC: Types.ObjectId, body: any): Promise<void> {
@@ -92,19 +101,19 @@ export default class RecipentProfileService {
     listRegistrationNum: DTORegistrationNumber[],
     identityUniversity: string,
   ): Promise<DAC[]> {
-    for (const element of listRegistrationNum) {
-      const regisNum = element;
-      const dac = await this.dacRepository.findById(regisNum._id);
-
+    const idRecipientProfileMap = new Map();
+    for (const regisNum of listRegistrationNum) {
+      const dac = await this.dacRepository.findByIdDAC(regisNum.idDAC);
       switch (true) {
-        case !(await this.dacRepository.isExisted(regisNum._id)):
-          throw new BadRequestError('Invalid DAC at ' + dac?.id);
-
+        case !dac:
+          throw new BadRequestError(
+            'Invalid recipient profile at ' + regisNum.idDAC,
+          );
         case !(await this.dacRepository.isValidRegistrationNumber(
           regisNum.registrationNumber,
         )):
           throw new BadRequestError(
-            'Invalid dac at ' +
+            'Invalid recipient profile at ' +
               dac?.id +
               ' registration number existed in list',
           );
@@ -116,7 +125,7 @@ export default class RecipentProfileService {
 
         case dac?.iU !== identityUniversity:
           throw new BadRequestError(
-            'field iU of DAC invalid identityUniversityParam ' +
+            'field iU of recipient profile invalid identityUniversityParam ' +
               identityUniversity +
               'at' +
               dac?.id,
@@ -130,12 +139,16 @@ export default class RecipentProfileService {
         default:
         // handle the case where none of the above conditions are true
       }
+      idRecipientProfileMap.set(dac?.id, dac?._id);
     }
     const promises: DAC[] = [];
     await Promise.all(
       listRegistrationNum.map(
         async (registrationNumber: DTORegistrationNumber) => {
-          const dac = await this.updateRegistrationNumber(registrationNumber);
+          const dac = await this.updateRegistrationNumber(
+            idRecipientProfileMap.get(registrationNumber.idDAC),
+            registrationNumber.registrationNumber,
+          );
           dac && promises.push(dac);
         },
       ),
@@ -150,12 +163,16 @@ export default class RecipentProfileService {
     listIdNumber: DTORegistrationIdNumber[],
     identityUniversity: string,
   ): Promise<DAC[]> {
-    for (const element of listIdNumber) {
-      const entityIdNumber = element;
-      const dac = await this.detail(entityIdNumber._id);
+    const idRecipientProfilesMap = new Map();
+    for (const entityIdNumber of listIdNumber) {
+      const dac = await this.dacRepository.findByIdDAC(entityIdNumber.idDAC);
+      if (!dac)
+        throw new BadRequestError(
+          `Recepient profile not exist ${entityIdNumber.idDAC}`,
+        );
       switch (true) {
-        case !(await this.dacRepository.isExisted(entityIdNumber._id)):
-          throw new BadRequestError('Invalid DAC at ' + dac?.id);
+        case !(await this.dacRepository.isExistedRegistrationNumber(dac?._id)):
+          throw new BadRequestError('Invalid recepient profile at ' + dac?.id);
 
         case !(await this.dacRepository.isValidRegisIdNumber(
           entityIdNumber.idNumber,
@@ -173,7 +190,7 @@ export default class RecipentProfileService {
 
         case Boolean(dac?.idNumber):
           throw new BadRequestError(
-            `DAC idNumber have already at ID ${dac?.id}`,
+            `Recipient profile idNumber have already at ID ${dac?.id}`,
           );
 
         case dac?.dispensingStatus:
@@ -192,12 +209,13 @@ export default class RecipentProfileService {
         default:
         // handle the case where none of the above conditions are true
       }
+      idRecipientProfilesMap.set(entityIdNumber.idDAC, dac._id);
     }
 
     const promises: DAC[] = [];
     await Promise.all(
       listIdNumber.map(async (entityIdNumber: DTORegistrationIdNumber) => {
-        const dac = await this.updateRegistrationIdNumber(entityIdNumber);
+        const dac = await this.updateRegistrationIdNumber(idRecipientProfilesMap.get(entityIdNumber.idDAC),entityIdNumber.idNumber);
 
         dac && promises.push(dac);
       }),
@@ -277,7 +295,7 @@ export default class RecipentProfileService {
       entityValidate.identity,
     );
 
-    const isExistedIdOfDAC = await this.dacRepository.findByIdDAC(dac.id);
+    const isExistedIdOfDAC = await this.dacRepository.findIdDAC(dac.id);
 
     if (isExistedIdOfDAC && isExistedIdOfDAC.length > 0)
       throw new BadRequestError(`Id diploma and certificate have`);
@@ -286,8 +304,7 @@ export default class RecipentProfileService {
       throw new BadRequestError(
         `Identity ${entityValidate.identity} not existed , create user student`,
       );
-   
-    
+
     const dateBirthInfo = new Date(
       infoUser.dateOfBirth || new Date(),
     ).getTime();
@@ -352,10 +369,10 @@ export default class RecipentProfileService {
       throw new BadRequestError(`Not match graduation course ${nameCourse}`);
   }
 
-  private async updateRegistrationNumber({
-    _id,
-    registrationNumber,
-  }: DTORegistrationNumber): Promise<DAC | null> {
+  private async updateRegistrationNumber(
+    _id: Types.ObjectId,
+    registrationNumber: string,
+  ): Promise<DAC | null> {
     const body = {
       registrationNum: registrationNumber,
     };
@@ -364,10 +381,10 @@ export default class RecipentProfileService {
     return dac;
   }
 
-  private async updateRegistrationIdNumber({
-    _id,
-    idNumber,
-  }: DTORegistrationIdNumber): Promise<DAC | null> {
+  private async updateRegistrationIdNumber(
+    _id: Types.ObjectId,
+    idNumber: string,
+  ): Promise<DAC | null> {
     const body = {
       idNumber,
     };

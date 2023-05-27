@@ -21,12 +21,13 @@ export interface DataDACUpdate {
 }
 
 export interface DTORegistrationNumber{
-  _id : Types.ObjectId;
+  idDAC : string;
   registrationNumber : string;
 }
 
 export interface DTORegistrationIdNumber{
-  _id : Types.ObjectId;
+  
+  idDAC : string;
   idNumber : string;
 }
 

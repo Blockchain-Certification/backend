@@ -84,13 +84,13 @@ export default {
   }),
   registrationNum: Joi.array().items(
     Joi.object({
-      _id: JoiObjectId().required(),
+      idDAC: Joi.string().required(),
       registrationNumber: Joi.string().required(),
     }),
   ),
   regisIdNumber: Joi.array().items(
     Joi.object({
-      _id: JoiObjectId().required(),
+      idDAC: Joi.string().required(),
       idNumber: Joi.string().required(),
     }),
   ),
