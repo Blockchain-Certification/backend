@@ -22,7 +22,6 @@ router.get(
   authentication,
   role(Role.UNIVERSITY, Role.DOET),
   authorization,
-  role(Role.DOET, Role.),
   validator(schema.pagination, ValidationSource.QUERY),
   graduationYearController.getList,
 );
