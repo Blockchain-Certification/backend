@@ -16,13 +16,19 @@ const dacRepository = new DACRepository();
 const graduationYearService = new Service(graduationYearRepo, dacRepository);
 const graduationYearController = new Controller(graduationYearService);
 
-router.use(authentication, role(Role.DOET), authorization);
 
 router.get(
   '/',
+  authentication,
+  role(Role.UNIVERSITY, Role.DOET),
+  authorization,
+  role(Role.DOET, Role.),
   validator(schema.pagination, ValidationSource.QUERY),
   graduationYearController.getList,
 );
+
+
+router.use(authentication, role(Role.DOET), authorization);
 
 router.get(
   '/:id',
