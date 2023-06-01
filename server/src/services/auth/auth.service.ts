@@ -4,7 +4,7 @@ import {
   KeyStoreRepository,
 } from '../../shared/database/repository';
 import { User, Role, Gender } from '../../shared/database/model';
-import { BadRequestError, AuthFailureError } from '../../shared/core/apiError';
+import { BadRequestError, AuthFailureError, InternalError } from '../../shared/core/apiError';
 import crypto from 'crypto';
 import {
   checkRegisterIdentityOfWalletKey,
@@ -21,6 +21,7 @@ import {
 } from '../../shared/helpers/jwt.utils';
 import { Tokens } from '../../shared/types/app-request';
 import JWT from '../../shared/core/JWT';
+import InfoUser from '../../shared/database/model/InfoUser';
 export interface newUser {
   userName: string;
   password: string;
@@ -60,16 +61,18 @@ export default class AuthService {
   public async login({ userName, password }: userLogin) {
     const user = await this.userRepository.findByUserName(userName);
     if (!user) throw new BadRequestError('User does not exist');
-
+  
     const isValidPassword = await user.isValidPassword(password);
     if (!isValidPassword) throw new AuthFailureError('Invalid password');
 
+    const infoUser = await this.infoUserRepository.findByIdUser(user._id);
+    if (!infoUser) throw new InternalError('User not found');
     const tokens = await this.createTokens(user);
-    const userData = await getUserData(user);
+    const userData = await getUserData(user, infoUser);
 
     return {
       tokens,
-      userData,
+      userData
     };
   }
 

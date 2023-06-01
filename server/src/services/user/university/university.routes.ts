@@ -39,6 +39,14 @@ router.get(
   universityController.detail,
 );
 
+// detail student
+router.get(
+  '/detail/:id',
+  validator(schema.id, ValidationSource.PARAM),
+  universityController.detail,
+);
+
+
 // search keyword
 router.get('/search',
 validator(schema.search, ValidationSource.QUERY),
