@@ -80,6 +80,7 @@ export default class DACStudentService {
       proof: mTreeProof,
       disclosedData,
       dacID: dac._id,
+      identityStudent : dac.iSt,
       key,
     };
     const modelCryptoVerify : CryptoVerify = {
