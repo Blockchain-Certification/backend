@@ -43,6 +43,7 @@ export default {
     .required()
     .regex(/^[0-9]{12}$/),
     name: Joi.string().required(),
+    idDAC: Joi.string().required(),
     key: Joi.string()
     .regex(/^[0-9]{10}$/)
     .required(),

@@ -24,5 +24,6 @@ export interface VerifyProof{
 export interface VerifyCrypto{
   key : string,
   name : string,
-  identity : string
+  identity : string,
+  idDAC: string
 }
