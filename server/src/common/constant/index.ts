@@ -2,22 +2,26 @@ export const fieldDefault = [
   'id',
   'idNumber',
   'registrationNum',
+  'iU',
+  'iSt',
   'studentName',
   'universityName',
-  'placeOfBirth',
-  'gender',
+  'departmentName',
   'dateOfBirth',
-  'nation',
+  'nameCourse',
+  'major',
   'nameTypeCertificate',
   'typeCertificate',
   'levelCertificate',
-  'departmentName',
-  'major'
+  'placeOfBirth',
+  'nation',
+  'gender', 
 ];
 export const fieldShareExtend = [
   'CGPA',
   'formOfTraining',
-  'ranking'
+  'ranking',
+  'year'
 ];
 
 export const DATE_OF_BIRTH = "dateOfBirth";

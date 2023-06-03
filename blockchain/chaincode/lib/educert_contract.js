@@ -36,11 +36,9 @@ class EducertContract extends Contract {
       'placeOfBirth',
       'nation',
       'ranking',
-      'dateOfIssuing',
       'formOfTraining',
       'CGPA',
       'gender',
-      'dispensingStatus',
     ]);
 
     await ctx.stub.putState(

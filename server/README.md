@@ -3,6 +3,33 @@ checkk list user
 check list dac
 check verify 
 
+
+```
+// const ordering =  [
+//   'id',
+//   'idNumber',
+//   'registrationNum',
+//   'iU',
+//   'iSt',
+//   'studentName',
+//   'universityName',
+//   'departmentName',
+//   'dateOfBirth',
+//   'year',
+//   'nameCourse',
+//   'major',
+//   'nameTypeCertificate',
+//   'typeCertificate',
+//   'levelCertificate',
+//   'placeOfBirth',
+//   'nation',
+//   'ranking',
+//   'formOfTraining',
+//   'CGPA',
+//   'gender',
+// ];
+```
+
 =====
 Sure, here's an example of how to use the getHexLayersFlat() method to obtain the flattened layers of a simple Merkle tree in hexadecimal format:
 
