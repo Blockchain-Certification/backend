@@ -4,11 +4,10 @@ import { invokeChaincode } from './chaincode';
 import { loadHexKeysFromWallet } from './wallet-utils';
 import { queryCertificateSchema } from './callFuncChainCode';
 import { KJUR } from 'jsrsasign';
-import { InfoProof } from '../../services/dac/student/interface';
+import { InfoProof } from '../../services/dac/student/interfaces';
 import { DAC } from '../database/model';
 import { VerifyProof } from '../../services/dac/general/interface';
 import { fabric } from '../../config';
-import { ObjectId } from 'mongodb';
 import { DATE_OF_BIRTH, DATE_OF_ISSUING } from '../../common/constant';
 
 interface InfoProofEncryption extends InfoProof {
