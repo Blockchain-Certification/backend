@@ -12,7 +12,7 @@ export const mergeCertificateData = async (
   dbRecordArray: DAC[],
   ledgerRecordArray: any,
 ) => {
-  const certMergedDataArray = []; //merge data from db and chaincode to create data for ejs view.
+  const certMergedDataArray = []; //merge data from db and chaincode to create data 
 
   for (let i = 0; i < dbRecordArray.length; i++) {
     const dbEntry = dbRecordArray[i];

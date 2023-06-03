@@ -8,6 +8,7 @@ export const fieldDefault = [
   'universityName',
   'departmentName',
   'dateOfBirth',
+  'year',
   'nameCourse',
   'major',
   'nameTypeCertificate',
@@ -15,13 +16,12 @@ export const fieldDefault = [
   'levelCertificate',
   'placeOfBirth',
   'nation',
-  'gender', 
+  'gender',
 ];
 export const fieldShareExtend = [
   'CGPA',
   'formOfTraining',
   'ranking',
-  'year'
 ];
 
 export const DATE_OF_BIRTH = "dateOfBirth";

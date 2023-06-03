@@ -1,26 +1,27 @@
-import { CryptoVerifyRepository, DACRepository } from '../../../shared/database/repository';
+import {
+  CryptoVerifyRepository,
+  DACRepository,
+} from '../../../shared/database/repository';
 import { Pagination } from '../manage/interface';
 import { InfoUserRepository } from '../../../shared/database/repository/infoUser.repository';
 import { BadRequestError } from '../../../shared/core/apiError';
-import {
-  getAllCertificateByStudent,
-} from '../../../shared/fabric/callFuncChainCode/index';
+import { getAllCertificateByStudent } from '../../../shared/fabric/callFuncChainCode/index';
 import { mergeCertificateData } from '../utils';
-import { InfoProof, Proof } from './interface';
+import { InfoProof, Proof } from './interfaces';
 import { generateDACProof } from '../../../shared/fabric';
 import { Types } from 'mongoose';
-import { CryptoVerify, DAC } from '../../../shared/database/model';
-import { randomKey } from './utils';
+import { CryptoVerify, DAC, Gender } from '../../../shared/database/model';
+import { formatSchemaDisclosedData, randomKey } from './utils';
 
 export default class DACStudentService {
   private dacRepository: DACRepository;
   private infoUserRepository: InfoUserRepository;
-  private cryptoVerifyRepository : CryptoVerifyRepository;
+  private cryptoVerifyRepository: CryptoVerifyRepository;
   constructor(
     dacRepository: DACRepository,
     infoUserRepository: InfoUserRepository,
-    cryptoVerifyRepository : CryptoVerifyRepository,
-    ) {
+    cryptoVerifyRepository: CryptoVerifyRepository,
+  ) {
     this.dacRepository = dacRepository;
     this.infoUserRepository = infoUserRepository;
     this.cryptoVerifyRepository = cryptoVerifyRepository;
@@ -58,6 +59,8 @@ export default class DACStudentService {
     identityStudent: string,
   ): Promise<Proof> {
     const dac = await this.dacRepository.findById(idDAC);
+
+    console.log(dac);
     if (!dac) throw new BadRequestError('DAC not existed');
     if (dac.iSt !== identityStudent)
       throw new BadRequestError('User not authorized of DAC ' + dac.id);
@@ -71,31 +74,31 @@ export default class DACStudentService {
       identityStudent,
     );
 
-    const disclosedData = await this.dacRepository.findByIdSelectField(
+    const disclosedData : DAC | null= await this.dacRepository.findByIdSelectField(
       idDAC,
       sharedFields,
     );
+    if(!disclosedData) throw new BadRequestError(`DAC is not found ${idDAC}`);
     const key = await randomKey();
-    const proofResponse  =  {
+    const proofResponse = {
       proof: mTreeProof,
-      disclosedData,
+      disclosedData: formatSchemaDisclosedData(disclosedData),
       dacID: dac._id,
-      identityStudent : dac.iSt,
+      identityStudent: dac.iSt,
       key,
     };
-    const modelCryptoVerify : CryptoVerify = {
+    const modelCryptoVerify: CryptoVerify = {
       key,
-      properties : JSON.stringify(proofResponse)
-    }
+      properties: JSON.stringify(proofResponse),
+    };
     await this.cryptoVerifyRepository.create(modelCryptoVerify);
-    
+
     return proofResponse;
   }
 
   public async count(): Promise<number> {
     return this.dacRepository.count();
   }
-
 
   public async detail(id: Types.ObjectId): Promise<DAC | null> {
     return await this.dacRepository.findById(id);
