@@ -23,7 +23,7 @@ export default {
       name: Joi.string()
         .min(3)
         .max(50)
-        .pattern(/^[a-zA-Z ]+$/)
+        .pattern(/^[^\d!"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~0-9]+$/)
         .required(),
       email: Joi.string().email().required(),
       phone: Joi.string()
@@ -55,7 +55,7 @@ export default {
       name: Joi.string()
         .min(3)
         .max(50)
-        .pattern(/^[a-zA-Z ]+$/)
+        .pattern(/^[^\d!"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~0-9]+$/)
         .required(),
       email: Joi.string().email().required(),
       address: Joi.string().required(),
