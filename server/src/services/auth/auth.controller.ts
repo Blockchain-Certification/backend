@@ -7,7 +7,6 @@ import {
   SuccessMsgResponse,
 } from '../../shared/core/apiResponse';
 import { ProtectedRequest } from '../../shared/types/app-request';
-import { tokenInfo } from '../../config';
 export default class AuthController {
   private authService: AuthService;
   constructor(authService: AuthService) {

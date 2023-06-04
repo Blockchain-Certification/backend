@@ -14,6 +14,6 @@ export class CheckCert implements CheckUpBlockchain{
       const cert: CertificateType | null = await this.certRepository.findById(id);
       if(!cert) throw new BadRequestError(`Cert not found`);
       const listDAC = await getAllCertificatesByNameCertificate(cert.name, identity);
-      if(listDAC.length > 0) throw new BadRequestError(`Cert have up to blockchain`);
+      if(listDAC.length > 0) throw new BadRequestError(`Cert already exist on blockchain`);
   }
 }
