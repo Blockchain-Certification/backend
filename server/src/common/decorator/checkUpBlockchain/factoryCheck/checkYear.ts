@@ -12,6 +12,6 @@ export class CheckYear implements CheckUpBlockchain{
       const graduationYear : GraduationYear | null = await this.graduationYearRepository.findById(id);
       if(!graduationYear) throw new BadRequestError(`graduation year not found`);
       const listDAC = await getAllCertificatesByYear(graduationYear.year, identity);
-      if(listDAC.length > 0) throw new BadRequestError(`Graduation Year have up to blockchain`);
+      if(listDAC.length > 0) throw new BadRequestError(`Graduation Year already exist on blockchain`);
   }
 }

@@ -38,12 +38,13 @@ export default class ManageDACService {
     identityUniversity: string,
   ): Promise<DAC[]> {
     const { listDAC, idCertificate } = listIssue;
-    for (const dac of listDAC) {
-      await this.validateDAC(dac._id, identityUniversity);
-    }
 
     const certificateTypes = await this.certRepository.findById(idCertificate);
     if (!certificateTypes) throw new BadRequestError('Certificate not exited');
+
+    for (const dac of listDAC) {
+      await this.validateDAC(dac._id, identityUniversity,certificateTypes.name);
+    }
 
     const listDACIssue: DAC[] = [];
     for (const dac of listDAC) {
@@ -80,11 +81,12 @@ export default class ManageDACService {
   private async validateDAC(
     id: Types.ObjectId,
     identityUniversity: string,
+    nameCertificate: string
   ): Promise<void> {
     const dac = await this.detail(id);
 
     if (!dac) throw new BadRequestError(`DAC not existed `);
-
+    
     const {
       idNumber,
       registrationNum,
@@ -115,7 +117,17 @@ export default class ManageDACService {
         throw new BadRequestError(`Date Of Issuing  is existed at id ${id}`);
       case Boolean(dispensingStatus):
         throw new BadRequestError(`Dispensing Status is updated at id ${id}`);
+      
     }
+
+    const listDAC : DAC[] = await this.dacRepository.findAllByIdentityUniversityAndIdentityStudent(identityUniversity,dac.iSt);
+    if(listDAC.length > 0){
+      const DACHaveCertificate = listDAC.filter((dac: DAC) =>{
+        return dac.nameTypeCertificate === nameCertificate;
+      })
+      if(DACHaveCertificate.length > 0) throw new BadRequestError(`DAC have certificate at idDAC ${dac.id}}`);
+    }
+
   }
 
   private async createDACBlockChain(id: Types.ObjectId): Promise<void> {

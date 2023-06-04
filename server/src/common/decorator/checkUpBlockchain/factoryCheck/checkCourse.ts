@@ -12,6 +12,6 @@ export class CheckCourse implements CheckUpBlockchain{
       const course : GraduationCourse | null = await this.courseRepository.findById(id);
       if(!course) throw new BadRequestError(`Course not found`);
       const listCourse = await getAllCertificatesByCourse(course.name, identity);
-      if(listCourse.length > 0) throw new BadRequestError(`Course have up to blockchain`);
+      if(listCourse.length > 0) throw new BadRequestError(`Course  already exist on blockchain`);
   }
 }

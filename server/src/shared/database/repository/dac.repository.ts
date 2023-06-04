@@ -128,6 +128,14 @@ export class DACRepository {
     }).count();
   }
 
+  public async findAllByIdentityUniversityAndIdentityStudent(identityUniversity: string, identityStudent: string): Promise<DAC[] | []> {
+    return await DACModel.find({
+      iU: identityUniversity,
+      iSt: identityStudent
+    });
+  }
+
+
   public async count(): Promise<number> {
     return await DACModel.find({ dispensingStatus: true }).count();
   }
