@@ -26,3 +26,8 @@ export const fieldShareExtend = [
 
 export const DATE_OF_BIRTH = "dateOfBirth";
 export const DATE_OF_ISSUING = "dateOfIssuing";
+
+
+export const TYPE_YEAR = "year";
+export const TYPE_NAME_CERT = "nameCertificate";
+export const TYPE_COURSE = "nameCourse";

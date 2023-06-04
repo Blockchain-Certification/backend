@@ -18,27 +18,27 @@ class EducertContract extends Contract {
     );
 
     let schemaCertificate = new Schema("university degree", "v1", [
-      'id',
-      'idNumber',
-      'registrationNum',
-      'iU',
-      'iSt',
-      'studentName',
-      'universityName',
-      'departmentName',
-      'dateOfBirth',
-      'year',
-      'nameCourse',
-      'major',
-      'nameTypeCertificate',
-      'typeCertificate',
-      'levelCertificate',
-      'placeOfBirth',
-      'nation',
-      'ranking',
-      'formOfTraining',
-      'CGPA',
-      'gender',
+      "id",
+      "idNumber",
+      "registrationNum",
+      "iU",
+      "iSt",
+      "studentName",
+      "universityName",
+      "departmentName",
+      "dateOfBirth",
+      "year",
+      "nameCourse",
+      "major",
+      "nameTypeCertificate",
+      "typeCertificate",
+      "levelCertificate",
+      "placeOfBirth",
+      "nation",
+      "gender",
+      "ranking",
+      "formOfTraining",
+      "CGPA",
     ]);
 
     await ctx.stub.putState(
@@ -62,6 +62,10 @@ class EducertContract extends Contract {
    */
   async issueCertificate(
     ctx,
+    year,
+    nameCertificate,
+    course,
+    properties,
     certHash,
     universitySignature,
     studentSignature,
@@ -74,6 +78,10 @@ class EducertContract extends Contract {
     //todo: Validate data.
 
     const certificate = new Certificate(
+      year,
+      nameCertificate,
+      course,
+      properties,
       certHash,
       universitySignature,
       studentSignature,
@@ -86,7 +94,7 @@ class EducertContract extends Contract {
       "CERT" + certUUID,
       Buffer.from(JSON.stringify(certificate))
     );
- 
+
     console.log("============= END : Issue Certificate ===========");
     return certificate;
   }
@@ -200,6 +208,113 @@ class EducertContract extends Contract {
     return certArray;
   }
 
+  /**
+   * Returns all the certificates received by a specific student
+   * @param {Context} ctx The transaction context
+   * @param {*}
+   * @returns {[Certificate]}
+   */
+  async getAllCertificatesByCourse(ctx, course) {
+    let queryString = {
+      selector: {
+        course: course,
+        dataType: "certificate",
+      },
+    };
+
+    let queryResults = await this.queryWithQueryString(
+      ctx,
+      JSON.stringify(queryString)
+    );
+
+    let certArray = [];
+    for (let i = 0; i < queryResults.length; i++) {
+      try {
+        certArray.push(Certificate.deserialize(queryResults[i].value));
+      } catch (err) {
+        console.log(
+          "Failed to instantiate Certificate object from JSON in getAllCertificateByStudent\n" +
+            err
+        );
+        console.log("DATA TYPE:  " + typeof queryResults[i]);
+        certArray.push(queryResults[i]);
+      }
+    }
+
+    return certArray;
+  }
+
+  /**
+   * Returns all the certificates received by a specific student
+   * @param {Context} ctx The transaction context
+   * @param {*}
+   * @returns {[Certificate]}
+   */
+  async getAllCertificatesByYear(ctx, year) {
+    let queryString = {
+      selector: {
+        year: year,
+        dataType: "certificate",
+      },
+    };
+
+    let queryResults = await this.queryWithQueryString(
+      ctx,
+      JSON.stringify(queryString)
+    );
+
+    let certArray = [];
+    for (let i = 0; i < queryResults.length; i++) {
+      try {
+        certArray.push(Certificate.deserialize(queryResults[i].value));
+      } catch (err) {
+        console.log(
+          "Failed to instantiate Certificate object from JSON in getAllCertificateByStudent\n" +
+            err
+        );
+        console.log("DATA TYPE:  " + typeof queryResults[i]);
+        certArray.push(queryResults[i]);
+      }
+    }
+
+    return certArray;
+  }
+
+  /**
+   * Returns all the certificates received by a specific student
+   * @param {Context} ctx The transaction context
+   * @param {*}
+   * @returns {[Certificate]}
+   */
+  async getAllCertificatesByNameCertificate(ctx, nameCertificate) {
+    let queryString = {
+      selector: {
+        nameCertificate: nameCertificate,
+        dataType: "certificate",
+      },
+    };
+
+    let queryResults = await this.queryWithQueryString(
+      ctx,
+      JSON.stringify(queryString)
+    );
+
+    let certArray = [];
+    for (let i = 0; i < queryResults.length; i++) {
+      try {
+        certArray.push(Certificate.deserialize(queryResults[i].value));
+      } catch (err) {
+        console.log(
+          "Failed to instantiate Certificate object from JSON in getAllCertificateByStudent\n" +
+            err
+        );
+        console.log("DATA TYPE:  " + typeof queryResults[i]);
+        certArray.push(queryResults[i]);
+      }
+    }
+
+    return certArray;
+  }
   /**
    * Returns al the certificates issued by a specific university
    * @param {Context} ctx The transaction context
