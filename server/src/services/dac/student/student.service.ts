@@ -8,7 +8,7 @@ import { BadRequestError } from '../../../shared/core/apiError';
 import { getAllCertificateByStudent } from '../../../shared/fabric/callFuncChainCode/index';
 import { mergeCertificateData } from '../utils';
 import { InfoProof, Proof } from './interfaces';
-import { generateDACProof } from '../../../shared/fabric';
+import { generateDACProof, validateRoot } from '../../../shared/fabric';
 import { Types } from 'mongoose';
 import { CryptoVerify, DAC, Gender } from '../../../shared/database/model';
 import { formatSchemaDisclosedData, randomKey } from './utils';
@@ -60,7 +60,6 @@ export default class DACStudentService {
   ): Promise<Proof> {
     const dac = await this.dacRepository.findById(idDAC);
 
-    console.log(dac);
     if (!dac) throw new BadRequestError('DAC not existed');
     if (dac.iSt !== identityStudent)
       throw new BadRequestError('User not authorized of DAC ' + dac.id);
@@ -69,6 +68,9 @@ export default class DACStudentService {
       idDAC,
       dac,
     };
+
+    await validateRoot(dac);
+    
     const mTreeProof = await generateDACProof(
       infoProofEncryption,
       identityStudent,

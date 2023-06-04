@@ -27,7 +27,6 @@ export default class CertificateTypeService {
     dataEdit: any,
   ): Promise<CertificateType | null> {
     await this.validId(_id, dataEdit.id);
-    await this.checkUpBlockchain(_id);
     const name = dataEdit.name || dataEdit.year;
     await this.isValidName(name);
     await this.repositoryMain.update(_id, dataEdit);
@@ -35,7 +34,6 @@ export default class CertificateTypeService {
   }
 
   public async delete(id: Types.ObjectId): Promise<void> {
-    await this.checkUpBlockchain(id);
     await this.repositoryMain.delete(id);
   }
 
@@ -46,16 +44,7 @@ export default class CertificateTypeService {
     return this.repositoryMain.count();
   }
 
-  private async checkUpBlockchain(id: Types.ObjectId): Promise<void> {
-    const cert = await this.repositoryMain.findById(id);
-    if (!cert) throw new BadRequestError('Certificate type not exist');
 
-    const existedDAC = await this.dacRepository.findByTypeCert(cert.name);
-    if (existedDAC && existedDAC.length > 0)
-      throw new BadRequestError(
-        'Data that is on the DAC cannot be change',
-      );
-  }
 
   private async isValidName(name: string): Promise<void> {
     const list = await this.repositoryMain.findAll();

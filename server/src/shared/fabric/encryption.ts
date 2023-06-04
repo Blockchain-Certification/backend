@@ -1,4 +1,4 @@
-const { MerkleTree } = require('merkletreejs');
+import MerkleTree from 'merkletreejs';
 import * as crypto from 'crypto-js';
 import { invokeChaincode } from './chaincode';
 import { loadHexKeysFromWallet } from './wallet-utils';
@@ -9,7 +9,31 @@ import { DAC } from '../database/model';
 import { VerifyProof } from '../../services/dac/general/interface';
 import { fabric } from '../../config';
 import { DATE_OF_BIRTH, DATE_OF_ISSUING } from '../../common/constant';
+import { dacOmitDataTrash } from './utils';
 
+// const ordering =  [
+//   'id',
+//   'idNumber',
+//   'registrationNum',
+//   'iU',
+//   'iSt',
+//   'studentName',
+//   'universityName',
+//   'departmentName',
+//   'dateOfBirth',
+//   'year',
+//   'nameCourse',
+//   'major',
+//   'nameTypeCertificate',
+//   'typeCertificate',
+//   'levelCertificate',
+//   'placeOfBirth',
+//   'nation',
+//   'gender',
+//   'ranking',
+//   'formOfTraining',
+//   'CGPA',
+// ];
 interface InfoProofEncryption extends InfoProof {
   dac: DAC;
 }
@@ -34,7 +58,7 @@ async function generateMerkleTree(certData: any) {
   };
   const certSchema = await invokeChaincode(args);
 
-  let certDataArray = [];
+  const certDataArray = [];
 
   //certSchema used to order the certificate elements appropriately.
   //ordering[i] = key of i'th item that should go in the certificate array.
@@ -99,6 +123,19 @@ async function generateDACProof(
   return multiProofs;
 }
 
+async function validateRoot(dac: DAC){
+
+  const dacTrash = dacOmitDataTrash(dac);
+  const rootDB = await generateMerkleRoot(dacTrash);
+
+  const rootBlockchain = await generateMerkleRoot(dacTrash);
+  
+ 
+}
+
+
+
+
 async function verifyCertificateProof({
   proof,
   disclosedData,
@@ -162,9 +199,12 @@ function getParamsIndexArray(paramsToShare: string[], ordering: string[]) {
   return paramsToShareIndex.sort((a, b) => a - b);
 }
 
+
+
 export {
   generateMerkleRoot,
   createDigitalSignature,
   generateDACProof,
   verifyCertificateProof,
+  validateRoot
 };

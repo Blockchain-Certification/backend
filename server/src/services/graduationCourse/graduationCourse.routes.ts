@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authentication, authorization } from '../../shared/middlewares';
+import { authentication, authorization,checkUpToBlockchain } from '../../shared/middlewares';
 import { Role } from '../../shared/database/model';
 import { role } from '../../shared/helpers/utils';
 import validator, { ValidationSource } from '../../shared/helpers/validator';
@@ -9,6 +9,8 @@ import {
   DACRepository,
 } from '../../shared/database/repository';
 import { Controller, Service } from '../../common/abtractService';
+import { TYPE_COURSE } from '../../common/constant';
+
 
 const router = Router();
 const graduationCourseRepo = new GraduationCourseRepository();
@@ -41,12 +43,14 @@ router.put(
   '/:id',
   validator(schema.courseTypeId, ValidationSource.PARAM),
   validator(schema.edit),
+  checkUpToBlockchain(TYPE_COURSE),
   graduationCourseController.edit,
 );
 
 router.delete(
   '/:id',
   validator(schema.courseTypeId, ValidationSource.PARAM),
+  checkUpToBlockchain(TYPE_COURSE),
   graduationCourseController.delete,
 );
 export default router;
