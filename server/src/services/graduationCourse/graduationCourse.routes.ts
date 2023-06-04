@@ -18,7 +18,7 @@ const dacRepository = new DACRepository();
 const graduationService = new Service(graduationCourseRepo, dacRepository);
 const graduationCourseController = new Controller(graduationService);
 
-router.use(authentication, role(Role.DOET,Role.UNIVERSITY), authorization);
+router.use(authentication, role(Role.DOET), authorization);
 
 router.get(
   '/',
