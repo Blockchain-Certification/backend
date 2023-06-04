@@ -76,4 +76,16 @@ export default {
       identity,
     };
   },
+  queryCertificateByUUID: (
+    idDAC: string,
+    identity: string,
+  ): ArgsFunctionCallChainCode => {
+    return {
+      func: 'queryCertificateByUUID',
+      args: [idDAC],
+      isQuery: true,
+      identity: identity,
+    };
+  },
+  
 };

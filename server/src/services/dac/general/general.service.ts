@@ -1,55 +1,81 @@
 import {
   DACRepository,
-  InfoUserRepository,
-  CryptoVerifyRepository
+  CryptoVerifyRepository,
 } from '../../../shared/database/repository';
-import { BadRequestError } from '../../../shared/core/apiError';
-import { Proof, VerifyCrypto, VerifyProof } from './interface';
-import { verifyCertificateProof } from '../../../shared/fabric';
-import { Types } from 'mongoose';
+import { BadRequestError, InternalError } from '../../../shared/core/apiError';
+import { VerifyCrypto, VerifyProof } from './interface';
+import {  verifyCertificateProof } from '../../../shared/fabric';
+import DACStudentService from '../student/student.service';
+import { queryCertificateByUUID } from '../../../shared/fabric/callFuncChainCode';
+import { ADMIN_ID } from '../../../common/constant';
+import { DAC } from '../../../shared/database/model';
 
 export default class DACGeneralService {
   private dacRepository: DACRepository;
-  private infoUserRepository: InfoUserRepository;
-  private cryptoVerifyRepository: CryptoVerifyRepository; 
+  private cryptoVerifyRepository: CryptoVerifyRepository;
+  private dacStudentService: DACStudentService;
+
   constructor(
     dacRepository: DACRepository,
-    infoUserRepository: InfoUserRepository,
-    cryptoVerifyRepository: CryptoVerifyRepository
+    cryptoVerifyRepository: CryptoVerifyRepository,
+    dacStudentService: DACStudentService,
   ) {
     this.dacRepository = dacRepository;
-    this.infoUserRepository = infoUserRepository;
     this.cryptoVerifyRepository = cryptoVerifyRepository;
+    this.dacStudentService = dacStudentService;
   }
 
   public async verify(infoVerify: VerifyProof): Promise<any> {
-    
     const dac = await this.dacRepository.findById(infoVerify.dacID);
     if (!dac) throw new BadRequestError('DAC not exist');
 
-    const proofIsCorrect = await verifyCertificateProof({ ...infoVerify, dac });
-    if (!proofIsCorrect) throw new BadRequestError('Proof is not correct');
+    const numberStatus = await verifyCertificateProof({ ...infoVerify, dac });
+    await this.checkStatus(numberStatus, dac);
+
     return infoVerify.disclosedData;
   }
 
-  public async verifyCrypto({key, identity, name, idDAC} : VerifyCrypto): Promise<any> {
+  public async verifyCrypto({
+    key,
+    identity,
+    name,
+    idDAC,
+  }: VerifyCrypto): Promise<any> {
     const cryptoVerify = await this.cryptoVerifyRepository.findByKey(key);
-    if(!cryptoVerify) throw new BadRequestError('Key is not valid');
-    
-    const proof : Proof = JSON.parse(cryptoVerify.properties);
-    
-    const dac = await this.dacRepository.findById(proof.dacID); 
-    if(!dac) throw new BadRequestError(`dac not found ${proof.dacID}`);
-    
-    if(dac.id !== idDAC) throw new BadRequestError(`ID DAC is not valid ${idDAC}`);
-    if(dac.iSt !==  identity) throw new BadRequestError(`identity  is not valid ${identity}`);
-    if(dac.studentName?.toLowerCase().trim() !== name.toLowerCase().trim())
+    if (!cryptoVerify) throw new BadRequestError('Key is not valid');
+
+    const proof: VerifyProof = JSON.parse(cryptoVerify.properties);
+
+    const dac = await this.dacRepository.findById(proof.dacID);
+    if (!dac) throw new BadRequestError(`dac not found ${proof.dacID}`);
+
+    if (dac.id !== idDAC)
+      throw new BadRequestError(`ID DAC is not valid ${idDAC}`);
+    if (dac.iSt !== identity)
+      throw new BadRequestError(`identity  is not valid ${identity}`);
+    if (dac.studentName?.toLowerCase().trim() !== name.toLowerCase().trim())
       throw new BadRequestError(`student name is not valid ${name}`);
-    
-    const proofIsCorrect = await verifyCertificateProof({ ...proof, dac });
-    if (!proofIsCorrect) throw new BadRequestError('Proof is not correct');
-  
-    cryptoVerify._id && await this.cryptoVerifyRepository.remove(cryptoVerify?._id);
+
+    const numberStatus = await verifyCertificateProof({ ...proof, dac });
+    await this.checkStatus(numberStatus, dac);
+
+    cryptoVerify._id &&
+      (await this.cryptoVerifyRepository.remove(cryptoVerify?._id));
+
     return proof.disclosedData;
+  }
+
+  private async checkStatus(numberStatus: number, dac: DAC) {
+    switch (numberStatus) {
+      case 0:
+        throw new BadRequestError('Proof is not correct');
+      case 3:
+        const idDACDB = dac._id.toString();
+        const certBlockchain = await queryCertificateByUUID(idDACDB, ADMIN_ID);
+        await this.dacStudentService.backUpDatabase(certBlockchain, dac);
+        throw new InternalError(
+          'There was a data error. Please contact student create again certificate',
+        );
+    }
   }
 }
