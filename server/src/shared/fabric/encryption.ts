@@ -2,38 +2,15 @@ import MerkleTree from 'merkletreejs';
 import * as crypto from 'crypto-js';
 import { invokeChaincode } from './chaincode';
 import { loadHexKeysFromWallet } from './wallet-utils';
-import { queryCertificateSchema } from './callFuncChainCode';
+import { queryCertificateByUUID, queryCertificateSchema } from './callFuncChainCode';
 import { KJUR } from 'jsrsasign';
 import { InfoProof } from '../../services/dac/student/interfaces';
 import { DAC } from '../database/model';
 import { VerifyProof } from '../../services/dac/general/interface';
 import { fabric } from '../../config';
-import { DATE_OF_BIRTH, DATE_OF_ISSUING } from '../../common/constant';
+import { ADMIN_ID, DATE_OF_BIRTH, DATE_OF_ISSUING } from '../../common/constant';
 import { dacOmitDataTrash } from './utils';
 
-// const ordering =  [
-//   'id',
-//   'idNumber',
-//   'registrationNum',
-//   'iU',
-//   'iSt',
-//   'studentName',
-//   'universityName',
-//   'departmentName',
-//   'dateOfBirth',
-//   'year',
-//   'nameCourse',
-//   'major',
-//   'nameTypeCertificate',
-//   'typeCertificate',
-//   'levelCertificate',
-//   'placeOfBirth',
-//   'nation',
-//   'gender',
-//   'ranking',
-//   'formOfTraining',
-//   'CGPA',
-// ];
 interface InfoProofEncryption extends InfoProof {
   dac: DAC;
 }
@@ -126,13 +103,18 @@ async function generateDACProof(
 async function validateRoot(dac: DAC){
 
   const dacTrash = dacOmitDataTrash(dac);
-  const rootDB = await generateMerkleRoot(dacTrash);
-
-  const rootBlockchain = await generateMerkleRoot(dacTrash);
   
- 
+  const mTreeDB = await generateMerkleTree(dacTrash);
+  const rootDB = await mTreeDB.getRoot().toString('hex');
+  
+  const certBlockchain = await queryCertificateByUUID(dac._id.toString(), ADMIN_ID);
+  const rootBlockchain = certBlockchain.certHash;
+  
+  return {
+    isValid: rootDB === rootBlockchain,
+    certBlockchain: certBlockchain
+  };
 }
-
 
 
 
@@ -140,10 +122,17 @@ async function verifyCertificateProof({
   proof,
   disclosedData,
   dacID,
+  mTreeRootBlockchain,
   dac,
 }: InfoVerifyProof) {
   const dacSchema = await queryCertificateSchema(fabric.enrollAdminName);
+  
+  
   const mTree = await generateMerkleTree(dac); //
+  const mTreeRoot = mTree.getRoot().toString('hex');
+
+  if(mTreeRoot !== mTreeRootBlockchain) return 3;
+
   const disclosedDataParamNames = [];
   const disclosedDataValues = [];
 
@@ -159,7 +148,6 @@ async function verifyCertificateProof({
     disclosedDataParamNames,
     dacSchema.ordering,
   );
-  const mTreeRoot = mTree.getRoot().toString('hex');
 
   const disclosedDataHash: any = disclosedDataValues.map((x) => {
     return crypto.SHA256(x).toString(crypto.enc.Hex);
@@ -174,8 +162,10 @@ async function verifyCertificateProof({
     mTree.getLeafCount(),
     multiProofs,
   );
-  return isValid;
+  return isValid ? 1 : 0;
 }
+
+
 
 /**
  * Map parameter names to their indexes in certificate ordering schema.

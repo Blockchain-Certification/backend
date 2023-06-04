@@ -4,13 +4,13 @@ import {
 } from '../../../shared/database/repository';
 import { Pagination } from '../manage/interface';
 import { InfoUserRepository } from '../../../shared/database/repository/infoUser.repository';
-import { BadRequestError } from '../../../shared/core/apiError';
+import { BadRequestError, InternalError } from '../../../shared/core/apiError';
 import { getAllCertificateByStudent } from '../../../shared/fabric/callFuncChainCode/index';
 import { mergeCertificateData } from '../utils';
 import { InfoProof, Proof } from './interfaces';
 import { generateDACProof, validateRoot } from '../../../shared/fabric';
 import { Types } from 'mongoose';
-import { CryptoVerify, DAC, Gender } from '../../../shared/database/model';
+import { CryptoVerify, DAC } from '../../../shared/database/model';
 import { formatSchemaDisclosedData, randomKey } from './utils';
 
 export default class DACStudentService {
@@ -63,14 +63,21 @@ export default class DACStudentService {
     if (!dac) throw new BadRequestError('DAC not existed');
     if (dac.iSt !== identityStudent)
       throw new BadRequestError('User not authorized of DAC ' + dac.id);
-    const infoProofEncryption = {
+    
+      const infoProofEncryption = {
       sharedFields,
       idDAC,
       dac,
     };
 
-    await validateRoot(dac);
+    const certBlockchainPayload = await validateRoot(dac);
     
+    if(!certBlockchainPayload.isValid){
+        await this.backUpDatabase(certBlockchainPayload.certBlockchain, dac);
+        throw new InternalError('There was a data error. Please try again');
+
+    }
+
     const mTreeProof = await generateDACProof(
       infoProofEncryption,
       identityStudent,
@@ -81,12 +88,14 @@ export default class DACStudentService {
       sharedFields,
     );
     if(!disclosedData) throw new BadRequestError(`DAC is not found ${idDAC}`);
+
     const key = await randomKey();
     const proofResponse = {
       proof: mTreeProof,
       disclosedData: formatSchemaDisclosedData(disclosedData),
       dacID: dac._id,
       identityStudent: dac.iSt,
+      mTreeRootBlockchain: certBlockchainPayload.certBlockchain.certHash,
       key,
     };
     const modelCryptoVerify: CryptoVerify = {
@@ -104,5 +113,10 @@ export default class DACStudentService {
 
   public async detail(id: Types.ObjectId): Promise<DAC | null> {
     return await this.dacRepository.findById(id);
+  }
+
+  public async backUpDatabase(certBlockchain: any, dac : DAC){
+    const dacBlockchain = JSON.parse(certBlockchain.properties);
+    await this.dacRepository.update(dac._id, dacBlockchain);
   }
 }

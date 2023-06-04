@@ -3,9 +3,7 @@ import { Types } from 'mongoose';
 import DACGeneralService from './general.service';
 import asyncHandler from '../../../shared/helpers/asyncHandler';
 import { ProtectedRequest } from '../../../shared/types/app-request';
-import { Pagination } from '../manage/interface';
 import {
-  SuccessMsgResponse,
   SuccessResponse,
 } from '../../../shared/core/apiResponse';
 import DACStudentService from '../student/student.service';

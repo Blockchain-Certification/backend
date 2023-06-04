@@ -5,12 +5,6 @@ export interface InfoProof{
   sharedFields : string[];
 }
 
-export interface Proof{ 
-  proof : any,
-  disclosedData : any,
-  dacID : Types.ObjectId,
-  key ?: string
-}
 export interface ProofData {
   type: string;
   data: number[];
@@ -19,6 +13,7 @@ export interface VerifyProof{
   proof : any,
   disclosedData : any,
   dacID : Types.ObjectId
+  mTreeRootBlockchain: string
 }
 
 export interface VerifyCrypto{

@@ -16,8 +16,8 @@ const dacRepository = new DACRepository();
 const cryptoVerifyRepository = new CryptoVerifyRepository();
 const dacGeneralService = new DACGeneralService(
   dacRepository,
-  infoUserRepository,
-  cryptoVerifyRepository
+  cryptoVerifyRepository,
+  dacStudentService,
 );
 const dacGeneralController = new DACGeneralController(dacGeneralService,dacStudentService);
 

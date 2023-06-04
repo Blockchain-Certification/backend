@@ -74,3 +74,14 @@ export const getAllCertificatesByNameCertificate = async (
   );
   return await invokeChaincode(func);
 };
+
+export const queryCertificateByUUID = async (
+  idDAC: string,
+  identity: string,
+) => {
+  const func = await argsCallFunc.queryCertificateByUUID(
+    idDAC,
+    identity,
+  );
+  return await invokeChaincode(func);
+};

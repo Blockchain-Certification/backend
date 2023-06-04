@@ -34,6 +34,7 @@ export default {
       .or(...allowedFields),
     dacID: JoiObjectId().required(),
     key :Joi.string(),
+    
   }),
   idDAC: Joi.object().keys({
     idDAC: JoiObjectId().required(),
