@@ -5,7 +5,10 @@ class Certificate {
     /**
      * constructor for the certificate transaction object. This will be written to the blockchain ledger for each
      * certificate issued. 
-     *  
+     *   @param {String} properties - .properties 
+     * @param {Object} year
+     * @param {String} nameCertificate
+     * @param {String} course
      * @param {String} certHash - Hash created from the certificate data. 
      * @param {String} universitySignature - Signature of @certHash signed by private key of issuer(university)
      * @param {String} studentSignature - Signature of @certHash signed by private key of holder(student)
@@ -17,7 +20,8 @@ class Certificate {
 
      //todo: universityPK and studentPK should ideally be public keys. If you can't accomplish this, look into using 
      // some kind of UUID instead. 
-    constructor(certHash, universitySignature, studentSignature, dateOfIssuing, certUUID, universityPK, studentPK) {
+    constructor(year, nameCertificate, course, properties, certHash, universitySignature, studentSignature, dateOfIssuing, certUUID, universityPK, studentPK) {
+        this.properties = properties;
         this.certHash = certHash;
         this.universityPK = universityPK;
         this.studentPK = studentPK;
@@ -25,6 +29,9 @@ class Certificate {
         this.studentSignature = studentSignature;
         this.dateOfIssuing = dateOfIssuing;
         this.certUUID = certUUID;
+        this.nameCertificate = nameCertificate
+        this.course = course
+        this.year = year
         this.dataType = "certificate"
     }
 
@@ -37,7 +44,7 @@ class Certificate {
      */
 
     static deserialize(data) {
-        return new Certificate(data.certHash, data.universitySignature, data.studentSignature, data.dateOfIssuing, data.certUUID, data.universityPK, data.studentPK);
+        return new Certificate(data.year, data.nameCertificate, data.course, data.properties, data.certHash, data.universitySignature, data.studentSignature, data.dateOfIssuing, data.certUUID, data.universityPK, data.studentPK);
     }
     
 

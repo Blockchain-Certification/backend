@@ -1,4 +1,5 @@
 import { ArgsFunctionCallChainCode } from '../chaincode';
+import { queryCertificateSchema } from './index';
 
 export default {
   queryUniversityProfileByName: (
@@ -40,6 +41,39 @@ export default {
       args: ['v1'],
       isQuery: true,
       identity
+    };
+  },
+  getAllCertificatesByCourse: (
+    course: string,
+    identity: string,
+  ): ArgsFunctionCallChainCode => {
+    return {
+      func: 'getAllCertificatesByCourse',
+      args: [course],
+      isQuery: true,
+      identity,
+    };
+  },
+  getAllCertificatesByYear: (
+    year: string,
+    identity: string,
+  ): ArgsFunctionCallChainCode => {
+    return {
+      func: 'getAllCertificatesByYear',
+      args: [year],
+      isQuery: true,
+      identity,
+    };
+  },
+  getAllCertificatesByNameCertificate: (
+    nameCertificate: string,
+    identity: string,
+  ): ArgsFunctionCallChainCode => {
+    return {
+      func: 'getAllCertificatesByNameCertificate',
+      args: [nameCertificate],
+      isQuery: true,
+      identity,
     };
   },
 };

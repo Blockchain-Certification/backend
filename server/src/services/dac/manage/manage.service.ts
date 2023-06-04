@@ -149,9 +149,15 @@ export default class ManageDACService {
         dacDBModel?.iSt,
       );
 
+      const properties = JSON.stringify(dacDBModel);
+
       const args: ArgsFunctionCallChainCode = {
         func: 'issueCertificate',
         args: [
+          dacDBModel.year,
+          dacDBModel.nameTypeCertificate,
+          dacDBModel.nameCourse,
+          properties,
           mTreeHash,
           universitySignature,
           studentSignature,

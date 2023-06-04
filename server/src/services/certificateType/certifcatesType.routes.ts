@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authentication, authorization } from '../../shared/middlewares';
+import { authentication, authorization, checkUpToBlockchain } from '../../shared/middlewares';
 import { Role } from '../../shared/database/model';
 import { role } from '../../shared/helpers/utils';
 import {
@@ -10,14 +10,14 @@ import {
 import validator, { ValidationSource } from '../../shared/helpers/validator';
 import schema from './schema';
 import { Controller, Service } from '../../common/abtractService';
+import { TYPE_NAME_CERT } from '../../common/constant';
+
 
 const router = Router();
 const certTypeRepository = new CertificateTypeRepository();
 const dacRepository = new DACRepository();
 const certTypeService = new Service(certTypeRepository, dacRepository);
 const certTypeController = new Controller(certTypeService);
-
-
 router.get(
   '/',
   validator(schema.pagination, ValidationSource.QUERY),
@@ -39,6 +39,7 @@ router.put(
   validator(schema.certTypeId, ValidationSource.PARAM),
   validator(schema.edit),
   authentication, role(Role.DOET), authorization,
+  checkUpToBlockchain(TYPE_NAME_CERT),
   certTypeController.edit,
 );
 
@@ -46,6 +47,7 @@ router.delete(
   '/:id',
   validator(schema.certTypeId, ValidationSource.PARAM),
   authentication, role(Role.DOET), authorization,
+  checkUpToBlockchain(TYPE_NAME_CERT),
   certTypeController.delete,
 );
 
