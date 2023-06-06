@@ -1,5 +1,4 @@
 import {
-  SuccessMsgResponse,
   SuccessResponse,
 } from '../../../shared/core/apiResponse';
 import asyncHandler from '../../../shared/helpers/asyncHandler';
@@ -8,6 +7,7 @@ import { ProtectedRequest } from 'app-request';
 import { Pagination } from './interface';
 import { caculateTotalPage } from '../../../shared/helpers/utils';
 import { Types } from 'mongoose';
+import client from '../../../shared/cache';
 
 export default class ManageDACController {
   private dacManageService: DACManageService;
@@ -21,6 +21,8 @@ export default class ManageDACController {
       req.body,
       identityUniversity,
     );
+
+    await client.del(`${req.baseUrl}/${identityUniversity}*`);
     return new SuccessResponse('Issue successfully', {
       success: true,
       data: listDACIssue,
@@ -40,6 +42,12 @@ export default class ManageDACController {
         identityUniversity,
         pagination,
       );
+     
+      const value = JSON.stringify(data);
+      await client.set(req.originalUrl, value, {
+                    EX: 60,
+                    NX: true,
+                });
 
       return new SuccessResponse('Get List DAC successfully', {
         success: true,
