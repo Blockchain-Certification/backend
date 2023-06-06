@@ -6,6 +6,7 @@ import Logger from '../shared/core/logger';
 import cors from 'cors';
 import {  environment } from '../config';
 import '../shared/database/index'; // initialize database
+import '../shared/cache';
 import { limiter, fabricLoader } from '../shared/core/utils';
 import {
   NotFoundError,
@@ -18,7 +19,9 @@ import router from './router';
 process.on('uncaughtException', (e) => {
   Logger.error(e);
 });
+
 fabricLoader;
+
 const app = express();
 
 app.enable('trust proxy');
