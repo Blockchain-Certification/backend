@@ -39,7 +39,7 @@ app.use(
 
 
 app.use(cors({ 
-  origin: ['http://194.163.180.21', 'http://localhost:3007'], 
+  origin: ['http://194.163.180.21', 'http://localhost:3007', 'https://vbcc.high3ar.club'], 
   optionsSuccessStatus: 200, 
   credentials: true 
 }));
