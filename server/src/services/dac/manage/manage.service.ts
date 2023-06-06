@@ -12,6 +12,7 @@ import {
 import logger from '../../../shared/core/logger';
 import { invokeChaincode } from '../../../shared/fabric';
 import { ArgsFunctionCallChainCode } from '../../../shared/fabric/chaincode';
+import client from '../../../shared/cache';
 
 export default class ManageDACService {
   private dacRepository: DACRepository;
@@ -66,12 +67,13 @@ export default class ManageDACService {
   public async getListDACOfUniversity(
     identityUniversity: string,
     pagination: Pagination,
-  ): Promise<DAC[]> {
+  ): Promise<any> {
     const dacOfUniversity = await this.dacRepository.findByIUniAndPaginationOfDAC(
      pagination
     , identityUniversity
     );
     
+
     return dacOfUniversity;
   }
 

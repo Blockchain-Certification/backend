@@ -41,3 +41,11 @@ export const fabric = {
   enrollAdminName: env.FABRIC_ENROLL_ADMIN_NAME || 'admin',
   enrollAdminPassword: env.FABRIC_ENROLL_PASSWORD || 'adminpw',
 };
+
+
+export const redis = {
+  host: process.env.REDIS_HOST || '',
+  port: parseInt(process.env.REDIS_PORT || '0'),
+  password: process.env.REDIS_PASSWORD || '',
+};
+

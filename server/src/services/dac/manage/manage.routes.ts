@@ -12,6 +12,7 @@ import {
   CertificateTypeRepository,
   InfoUserRepository,
 } from '../../../shared/database/repository';
+import { cacheAside } from '../../../shared/middlewares/cacheMiddleWare';
 const router = Router();
 
 const dacRepository = new DACRepository();
@@ -45,6 +46,7 @@ router.get(
   authorizationUniversity,
   validator(schema.iUni, ValidationSource.PARAM),
   validator(schema.pagination, ValidationSource.QUERY),
+  cacheAside,
   manageDACController.getListDACOfUniversity,
 );
 
