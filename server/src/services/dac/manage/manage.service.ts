@@ -11,13 +11,8 @@ import {
 } from '../../../shared/fabric';
 import logger from '../../../shared/core/logger';
 import { invokeChaincode } from '../../../shared/fabric';
-import {
-  queryUniversityProfileByName,
-  getAllCertificateByUniversity,
-} from '../../../shared/fabric/callFuncChainCode';
 import { ArgsFunctionCallChainCode } from '../../../shared/fabric/chaincode';
-import { mergeCertificateData } from '../utils';
-import { dac } from '../..';
+
 export default class ManageDACService {
   private dacRepository: DACRepository;
   private certRepository: CertificateTypeRepository;
@@ -42,8 +37,18 @@ export default class ManageDACService {
     const certificateTypes = await this.certRepository.findById(idCertificate);
     if (!certificateTypes) throw new BadRequestError('Certificate not exited');
 
-    for (const dac of listDAC) {
-      await this.validateDAC(dac._id, identityUniversity,certificateTypes.name);
+    const mapListIdentityCert = new Set();
+    for (const idDAC of listDAC) {
+     
+      const dac = await this.validateDAC(idDAC._id, identityUniversity,certificateTypes.name);
+      
+      if(!mapListIdentityCert.has(dac.iSt)){
+        mapListIdentityCert.add(dac.iSt);
+        continue;
+      }
+      
+      throw new BadRequestError(`Invalid certificate duplicate diploma or certificate at identity student ${dac.iSt} `)
+      
     }
 
     const listDACIssue: DAC[] = [];
@@ -82,7 +87,7 @@ export default class ManageDACService {
     id: Types.ObjectId,
     identityUniversity: string,
     nameCertificate: string
-  ): Promise<void> {
+  ): Promise<DAC> {
     const dac = await this.detail(id);
 
     if (!dac) throw new BadRequestError(`DAC not existed `);
@@ -127,6 +132,8 @@ export default class ManageDACService {
       })
       if(DACHaveCertificate.length > 0) throw new BadRequestError(`DAC have certificate at idDAC ${dac.id}}`);
     }
+
+    return dac;
 
   }
 
