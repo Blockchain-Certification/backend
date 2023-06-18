@@ -56,7 +56,7 @@ export default class ManageDACController {
           page: pagination.page,
           limit: pagination.limit,
           totalPage: await caculateTotalPage(
-            await this.dacManageService.count(),
+            data.totalPage,
             pagination.limit,
           ),
         },

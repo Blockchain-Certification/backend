@@ -1,7 +1,5 @@
 import { DAC } from "../../../shared/database/model";
 import { CHARACTERS as characters } from "./constants";
-import { Gender } from '../../../shared/database/model/InfoUser';
-import { Ranking } from '../../../shared/database/model/DAC';
 import { DisclosedData } from "./interfaces";
 export const randomKey = ()=>{
   const charactersLength = characters.length;
@@ -50,4 +48,12 @@ export const formatSchemaDisclosedData = (dac: DAC) : DisclosedData =>{
     disclosedData.CGPA = dac.CGPA;
   }
   return disclosedData;
+}
+
+export const formatStringToDate = (dacStringtify: any ) =>{
+  dacStringtify.createdAt = new Date(dacStringtify.createdAt);
+  dacStringtify.updatedAt = new Date(dacStringtify.updatedAt);
+  dacStringtify.dateOfBirth = new Date(dacStringtify.dateOfBirth);
+  dacStringtify.dateOfIssuing = new Date(dacStringtify.dateOfIssuing);
+  return dacStringtify;
 }

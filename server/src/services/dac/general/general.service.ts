@@ -4,7 +4,7 @@ import {
 } from '../../../shared/database/repository';
 import { BadRequestError, InternalError } from '../../../shared/core/apiError';
 import { VerifyCrypto, VerifyProof } from './interface';
-import {  verifyCertificateProof } from '../../../shared/fabric';
+import { verifyCertificateProof } from '../../../shared/fabric';
 import DACStudentService from '../student/student.service';
 import { queryCertificateByUUID } from '../../../shared/fabric/callFuncChainCode';
 import { ADMIN_ID } from '../../../common/constant';
@@ -13,22 +13,20 @@ import { DAC } from '../../../shared/database/model';
 export default class DACGeneralService {
   private dacRepository: DACRepository;
   private cryptoVerifyRepository: CryptoVerifyRepository;
-  private dacStudentService: DACStudentService;
 
   constructor(
     dacRepository: DACRepository,
     cryptoVerifyRepository: CryptoVerifyRepository,
-    dacStudentService: DACStudentService,
   ) {
     this.dacRepository = dacRepository;
     this.cryptoVerifyRepository = cryptoVerifyRepository;
-    this.dacStudentService = dacStudentService;
   }
 
   public async verify(infoVerify: VerifyProof): Promise<any> {
+    
     const dac = await this.dacRepository.findById(infoVerify.dacID);
     if (!dac) throw new BadRequestError('DAC not exist');
-
+    
     const numberStatus = await verifyCertificateProof({ ...infoVerify, dac });
     await this.checkStatus(numberStatus, dac);
 
@@ -72,10 +70,17 @@ export default class DACGeneralService {
       case 3:
         const idDACDB = dac._id.toString();
         const certBlockchain = await queryCertificateByUUID(idDACDB, ADMIN_ID);
-        await this.dacStudentService.backUpDatabase(certBlockchain, dac);
+        await this.backUpDatabase(certBlockchain, dac);
         throw new InternalError(
           'There was a data error. Please contact student create again certificate',
         );
     }
   }
+
+  public async backUpDatabase(certBlockchain: any, dac : DAC){
+    const dacBlockchain = JSON.parse(certBlockchain.properties);
+    await this.dacRepository.update(dac._id, dacBlockchain);
+  }
+
+  
 }

@@ -97,23 +97,22 @@ async function generateDACProof(
   
   const layers = mTree.getLayersFlat().map((x: any) => x.toString('hex'));
   const multiProofs = mTree.getMultiProof(layers, paramsToShareIndex);
-  return multiProofs;
+  return {
+    multiProofs,
+    rootHash : mTree.getRoot().toString('hex')
+  };
 }
 
-async function validateRoot(dac: DAC){
+async function validateRoot(dac: DAC, rootHashBlockchain: string){
 
-  const dacTrash = dacOmitDataTrash(dac);
+  const dacFilter = dacOmitDataTrash(dac);
   
-  const mTreeDB = await generateMerkleTree(dacTrash);
+  const mTreeDB = await generateMerkleTree(dacFilter);
   const rootDB = await mTreeDB.getRoot().toString('hex');
   
-  const certBlockchain = await queryCertificateByUUID(dac._id.toString(), ADMIN_ID);
-  const rootBlockchain = certBlockchain.certHash;
+
   
-  return {
-    isValid: rootDB === rootBlockchain,
-    certBlockchain: certBlockchain
-  };
+  return rootDB === rootHashBlockchain;
 }
 
 
@@ -121,7 +120,6 @@ async function validateRoot(dac: DAC){
 async function verifyCertificateProof({
   proof,
   disclosedData,
-  dacID,
   mTreeRootBlockchain,
   dac,
 }: InfoVerifyProof) {

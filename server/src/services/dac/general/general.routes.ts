@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import {
-  InfoUserRepository,
   DACRepository,
 } from '../../../shared/database/repository';
 import DACGeneralService from './general.service';
@@ -11,13 +10,11 @@ import schema from './schema';
 import CryptoVerifyRepository from '../../../shared/database/repository/cryptoVerify.repository';
 const router = Router();
 
-const infoUserRepository = new InfoUserRepository();
 const dacRepository = new DACRepository();
 const cryptoVerifyRepository = new CryptoVerifyRepository();
 const dacGeneralService = new DACGeneralService(
   dacRepository,
   cryptoVerifyRepository,
-  dacStudentService,
 );
 const dacGeneralController = new DACGeneralController(dacGeneralService,dacStudentService);
 

@@ -61,3 +61,13 @@ export const paramsToShareAddFieldNeedShareDefault = async (
 ): Promise<string[]> => {
   return paramsToShare.concat(fieldDefault);
 };
+
+
+
+export const paginationManual = async (listDAC: any[], pagination : Pagination) => {
+  const { page, limit } = pagination;
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + page;
+
+  return listDAC.slice(startIndex, endIndex);
+}

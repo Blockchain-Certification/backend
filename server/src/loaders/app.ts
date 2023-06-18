@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
-import morgan = require('morgan');
+import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import Logger from '../shared/core/logger';
