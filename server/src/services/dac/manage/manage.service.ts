@@ -13,6 +13,8 @@ import logger from '../../../shared/core/logger';
 import { invokeChaincode } from '../../../shared/fabric';
 import { ArgsFunctionCallChainCode } from '../../../shared/fabric/chaincode';
 import client from '../../../shared/cache';
+import { getAllCertificateByUniversity } from '../../../shared/fabric/callFuncChainCode';
+import { paginationManual } from '../../../shared/helpers/utils';
 
 export default class ManageDACService {
   private dacRepository: DACRepository;
@@ -68,13 +70,26 @@ export default class ManageDACService {
     identityUniversity: string,
     pagination: Pagination,
   ): Promise<any> {
-    const dacOfUniversity = await this.dacRepository.findByIUniAndPaginationOfDAC(
-     pagination
-    , identityUniversity
+    const university =
+    await this.infoUserRepository.findByIdentityAndAccountUserFromUniversity(
+      identityUniversity,
     );
-    
+  if (!university) throw new BadRequestError('University not exist');
 
-    return dacOfUniversity;
+
+    const dacLedgerDataList = await getAllCertificateByUniversity(
+      university.idUser.publicKey,
+      university.identity,
+    );
+
+    const listDAC = await dacLedgerDataList.map((el: any) => {
+      return JSON.parse(el.properties);
+    });
+
+    return {
+      listDAC: await paginationManual(listDAC, pagination),
+      totalPage: dacLedgerDataList.length
+    };
   }
 
   public async detail(id: Types.ObjectId): Promise<DAC | null> {

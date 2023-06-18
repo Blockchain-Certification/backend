@@ -4,7 +4,6 @@ import { ProtectedRequest } from '../../../shared/types/app-request';
 import { Pagination } from '../manage/interface';
 import { SuccessResponse } from '../../../shared/core/apiResponse';
 import { Types } from 'mongoose';
-
 import {
   caculateTotalPage,
   paramsToShareAddFieldNeedShareDefault,
@@ -36,8 +35,8 @@ export default class DACStudentController {
         pagination: {
           page: pagination.page,
           limit: pagination.limit,
-          total: caculateTotalPage(
-            await this.dacStudentService.count(),
+          total: await caculateTotalPage(
+            data.totalPage,
             pagination.limit,
           ),
         },
