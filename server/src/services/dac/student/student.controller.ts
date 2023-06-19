@@ -31,9 +31,7 @@ export default class DACStudentController {
 
       return new SuccessResponse('Get List DAC successfully', {
         success: true,
-        data: {
-          data: data.listDAC
-        },
+        data: data.listDAC,
         pagination: {
           page: pagination.page,
           limit: pagination.limit,
