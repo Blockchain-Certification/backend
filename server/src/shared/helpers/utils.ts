@@ -66,8 +66,9 @@ export const paramsToShareAddFieldNeedShareDefault = async (
 
 export const paginationManual = async (listDAC: any[], pagination : Pagination) => {
   const { page, limit } = pagination;
+
   const startIndex = (page - 1) * limit;
-  const endIndex = startIndex + page;
+  const endIndex = startIndex + limit;
 
   return listDAC.slice(startIndex, endIndex);
 }
