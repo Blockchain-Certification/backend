@@ -4,7 +4,7 @@ import {
 } from '../../../shared/database/repository';
 import { Pagination } from '../manage/interface';
 import { InfoUserRepository } from '../../../shared/database/repository/infoUser.repository';
-import { BadRequestError } from '../../../shared/core/apiError';
+import { BadRequestError, InternalError } from '../../../shared/core/apiError';
 import { getAllCertificateByStudent, queryCertificateByUUID } from '../../../shared/fabric/callFuncChainCode/index';
 import { InfoProof, Proof } from './interfaces';
 import { generateDACProof } from '../../../shared/fabric';
@@ -77,7 +77,16 @@ export default class DACStudentService {
       idDAC,
       sharedFields,
     );
-    if(!disclosedData) throw new BadRequestError(`DAC is not found ${idDAC}`);
+    if(!disclosedData){
+      try{
+        const certBlockchain = await this.queryCertByUUID(idDAC.toString());
+        this.dacRepository.create(JSON.parse(certBlockchain.properties));
+      }
+      catch(err){
+        throw new BadRequestError('DAC not exist');
+      }
+      throw new InternalError('There was a data error. Please create again certificate');  
+    }
 
     const key = await randomKey();
     const proofResponse = {
@@ -103,8 +112,14 @@ export default class DACStudentService {
   }
 
 
-  public async detail(id: Types.ObjectId): Promise<any> {
+  public async detail(id: string): Promise<any> {
     const certBlockchain = await queryCertificateByUUID(id.toString(), ADMIN_ID);
-    return await formatStringToDate(JSON.parse(certBlockchain.properties)) ;
+    return JSON.parse(certBlockchain.properties);
+  }
+
+  private async queryCertByUUID(idDAC: any){
+    const idDACDB = idDAC.toString();
+    const certBlockchain = await queryCertificateByUUID(idDACDB, ADMIN_ID);
+    return certBlockchain;
   }
 }

@@ -66,7 +66,7 @@ export default class DACGeneralService {
             throw new BadRequestError('DAC not exist');
         }
         throw new InternalError('There was a data error. Please contact student create again certificate');
-      }
+    }
 
     if (dac.id !== idDAC)
       throw new BadRequestError(`ID DAC is not valid ${idDAC}`);

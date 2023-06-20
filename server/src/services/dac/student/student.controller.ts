@@ -63,7 +63,7 @@ export default class DACStudentController {
       },
       userName,
     );
-
+      
     return new SuccessResponse('Create proof', {
       success: true,
       data,
@@ -74,7 +74,7 @@ export default class DACStudentController {
   public detail = asyncHandler(
     async (req: ProtectedRequest, res) => {
       const {idDAC} = req.params;
-      const dac = await this.dacStudentService.detail(new Types.ObjectId(idDAC));
+      const dac = await this.dacStudentService.detail(idDAC);
       return new SuccessResponse('Detail successfully', {
         success: true,
         data: dac,
