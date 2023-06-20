@@ -11,10 +11,7 @@ export const cacheAside = asyncHandler(
     const data: string | null = await client.get(key);
     if (data) {
       // Data exists in cache, send the response with the cached data
-      return new SuccessResponse("Get data successfully",{
-        success : true,
-        data : JSON.parse(data)
-      }).send(res);
+      return new SuccessResponse("Get data successfully",JSON.parse(data)).send(res);
     }
 
     // Data doesn't exist in cache, continue with the next middleware or handler

@@ -38,18 +38,12 @@ export default class ManageDACController {
         limit: parseInt(limit as string),
       }))(req.query);
 
-      const data = await this.dacManageService.getListDACOfUniversity(
+      let data = await this.dacManageService.getListDACOfUniversity(
         identityUniversity,
         pagination,
       );
      
-      const value = JSON.stringify(data);
-      await client.set(req.originalUrl, value, {
-                    EX: 60,
-                    NX: true,
-                });
-
-      return await new SuccessResponse('Get List DAC successfully', {
+      data = {
         success: true,
         data: data.listDAC,
         pagination: {
@@ -60,7 +54,14 @@ export default class ManageDACController {
             pagination.limit,
           ),
         },
-      }).send(res);
+      }
+      const value = JSON.stringify(data);
+      await client.set(req.originalUrl, value, {
+                    EX: 60,
+                    NX: true,
+                });
+
+      return new SuccessResponse('Get List DAC successfully', data).send(res);
     },
   );
 
