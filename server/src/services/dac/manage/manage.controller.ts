@@ -49,7 +49,7 @@ export default class ManageDACController {
                     NX: true,
                 });
 
-      return new SuccessResponse('Get List DAC successfully', {
+      return await new SuccessResponse('Get List DAC successfully', {
         success: true,
         data: data.listDAC,
         pagination: {
