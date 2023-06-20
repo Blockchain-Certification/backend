@@ -103,9 +103,8 @@ export default class DACStudentService {
   }
 
 
-  public async detail(id: Types.ObjectId): Promise<DAC | null> {
-    return await this.dacRepository.findById(id);
+  public async detail(id: Types.ObjectId): Promise<any> {
+    const certBlockchain = await queryCertificateByUUID(idDAC.toString(), ADMIN_ID);
+    return await formatStringToDate(JSON.parse(certBlockchain.properties)) ;
   }
-
-
 }
