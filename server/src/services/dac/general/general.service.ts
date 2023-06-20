@@ -5,12 +5,13 @@ import {
 import { BadRequestError, InternalError } from '../../../shared/core/apiError';
 import { VerifyCrypto, VerifyProof } from './interface';
 import { verifyCertificateProof } from '../../../shared/fabric';
-import DACStudentService from '../student/student.service';
 import { queryCertificateByUUID } from '../../../shared/fabric/callFuncChainCode';
 import { ADMIN_ID } from '../../../common/constant';
 import { DAC } from '../../../shared/database/model';
+import { Type } from '../../../shared/database/model/CertificateType';
 
 export default class DACGeneralService {
+
   private dacRepository: DACRepository;
   private cryptoVerifyRepository: CryptoVerifyRepository;
 
@@ -25,7 +26,17 @@ export default class DACGeneralService {
   public async verify(infoVerify: VerifyProof): Promise<any> {
     
     const dac = await this.dacRepository.findById(infoVerify.dacID);
-    if (!dac) throw new BadRequestError('DAC not exist');
+    if (!dac){
+    try{
+          const certBlockchain = await this.queryCertByUUID(infoVerify.dacID);
+          console.log(certBlockchain);
+          this.dacRepository.create(JSON.parse(certBlockchain.properties));
+      }
+      catch(err){
+          throw new BadRequestError('DAC not exist');
+      }
+      throw new InternalError('There was a data error. Please contact student create again certificate');
+    }
     
     const numberStatus = await verifyCertificateProof({ ...infoVerify, dac });
     await this.checkStatus(numberStatus, dac);
@@ -45,7 +56,17 @@ export default class DACGeneralService {
     const proof: VerifyProof = JSON.parse(cryptoVerify.properties);
 
     const dac = await this.dacRepository.findById(proof.dacID);
-    if (!dac) throw new BadRequestError(`dac not found ${proof.dacID}`);
+    if (!dac){
+      try{
+            const certBlockchain = await this.queryCertByUUID(proof.dacID);
+            console.log(certBlockchain);
+            this.dacRepository.create(JSON.parse(certBlockchain.properties));
+        }
+        catch(err){
+            throw new BadRequestError('DAC not exist');
+        }
+        throw new InternalError('There was a data error. Please contact student create again certificate');
+      }
 
     if (dac.id !== idDAC)
       throw new BadRequestError(`ID DAC is not valid ${idDAC}`);
@@ -63,13 +84,17 @@ export default class DACGeneralService {
     return proof.disclosedData;
   }
 
+  public async backUpDatabase(certBlockchain: any, dac : DAC){
+    const dacBlockchain = JSON.parse(certBlockchain.properties);
+    await this.dacRepository.update(dac._id, dacBlockchain);
+  }
+
   private async checkStatus(numberStatus: number, dac: DAC) {
     switch (numberStatus) {
       case 0:
         throw new BadRequestError('Proof is not correct');
       case 3:
-        const idDACDB = dac._id.toString();
-        const certBlockchain = await queryCertificateByUUID(idDACDB, ADMIN_ID);
+        const certBlockchain = await this.queryCertByUUID(dac._id);
         await this.backUpDatabase(certBlockchain, dac);
         throw new InternalError(
           'There was a data error. Please contact student create again certificate',
@@ -77,10 +102,9 @@ export default class DACGeneralService {
     }
   }
 
-  public async backUpDatabase(certBlockchain: any, dac : DAC){
-    const dacBlockchain = JSON.parse(certBlockchain.properties);
-    await this.dacRepository.update(dac._id, dacBlockchain);
+  private async queryCertByUUID(idDAC: any){
+    const idDACDB = idDAC.toString();
+    const certBlockchain = await queryCertificateByUUID(idDACDB, ADMIN_ID);
+    return certBlockchain;
   }
-
-  
 }
